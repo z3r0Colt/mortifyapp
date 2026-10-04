@@ -2,28 +2,98 @@
   "id": "lust",
   "name": "Lust and Pornography",
   "screenBased": true,
-  "verses": ["Romans 8:13", "Psalm 119:9-11"],
+  "verses": [
+    "Romans 8:13",
+    "Psalm 119:9-11",
+    "1 Corinthians 6:18-20",
+    "Psalm 101:3",
+    "2 Timothy 2:22",
+    "1 Corinthians 10:13",
+    "Hebrews 4:15-16",
+    "Galatians 5:16",
+    "Romans 13:14",
+    "Matthew 5:8"
+  ],
   "counsel": [
     {
-      "text": "PLACEHOLDER COUNSEL",
-      "author": "PLACEHOLDER AUTHOR",
-      "source": "PLACEHOLDER SOURCE"
+      "text": "Set faith at work on Christ for the killing of thy sin. His blood is the great sovereign remedy for sin-sick souls. Live in this, and thou wilt die a conqueror; yea, thou wilt, through the good providence of God, live to see thy lust dead at thy feet.",
+      "author": "John Owen",
+      "source": "Of the Mortification of Sin in Believers, ch. 14"
+    },
+    {
+      "text": "Sin aims always at the utmost; every time it rises up to tempt or entice, might it have its own course, it would go out to the utmost sin in that kind. Every unclean thought or glance would be adultery if it could; every covetous desire would be oppression, every thought of unbelief would be atheism, might it grow to its head.",
+      "author": "John Owen",
+      "source": "Of the Mortification of Sin in Believers, ch. 2"
+    },
+    {
+      "text": "Know that he that dares to dally with occasions of sin will dare to sin. He that will venture upon temptations unto wickedness will venture upon wickedness.",
+      "author": "John Owen",
+      "source": "Of the Mortification of Sin in Believers, ch. 11"
+    },
+    {
+      "text": "For the provision to be laid up, it is that which is provided in the gospel for us. Gospel provisions will do this work; that is, keep the heart full of a sense of the love of God in Christ. This is the greatest preservative against the power of temptation in the world.",
+      "author": "John Owen",
+      "source": "Of Temptation, ch. 7"
+    },
+    {
+      "text": "The eye tempts the fancy, and the fancy works upon the heart. A wanton amorous eye may usher in sin. Eve first saw the tree of knowledge, and then she took. Gen 3: 6. First she looked and then she loved.",
+      "author": "Thomas Watson",
+      "source": "The Ten Commandments, the seventh commandment"
+    },
+    {
+      "text": "To lascivious books I may add lascivious pictures, which bewitch the eye, and are incendiaries to lust. They secretly convey poison to the heart.",
+      "author": "Thomas Watson",
+      "source": "The Ten Commandments, the seventh commandment"
     }
   ],
   "prayers": [
-    { "title": "PLACEHOLDER PRAYER TITLE", "text": "PLACEHOLDER PRAYER" }
+    {
+      "title": "A prayer of confession",
+      "text": "Father, I have sinned against you with my eyes and my heart. I knew it was wrong, and I chose it anyway. I will not hide it or make excuses. I bring it to you because you have promised to forgive and cleanse all who confess their sins to you. I do not stand on my own promises, which I have broken, but on the blood of Jesus your Son, which was shed for sins like this one. He is my advocate at your right hand, and he pleads for me now. For his sake, forgive me and wash my conscience clean. Holy Spirit, make me hate this sin, and not only its shame. Show me the occasions I allowed, give me courage to bring this into the light with my brethren, and give me a pure heart that delights in Christ more than in anything this world can show me. Amen."
+    },
+    {
+      "title": "In the moment of temptation",
+      "text": "Lord Jesus, I am tempted right now, and I am weak. You were tempted as I am, and you never sinned, so you know how to help me. I will not look, and I will not stay here. Holy Spirit, put this desire to death in me and give me strength to get up and leave. My body is not my own. You bought me with your blood, and I belong to you. Fill my heart with your love so that this sin loses its pull. Keep me through this hour. Amen."
+    },
+    {
+      "title": "When the desire is strong",
+      "text": "Father, this desire is loud, and it is lying to me. It promises rest and comfort, but it brings only darkness and distance from you. You are my true good, and nothing on this screen can satisfy me like you. I am joined to Christ, who died for this sin and rose to make me new. Do not let me trade you for a few minutes of pleasure. Guard my eyes, my mind, and my hands. Turn my heart toward the people you have given me to love and serve. Amen."
+    }
   ],
   "examinationQuestions": [
-    "PLACEHOLDER EXAMINATION QUESTION 1",
-    "PLACEHOLDER EXAMINATION QUESTION 2",
-    "PLACEHOLDER EXAMINATION QUESTION 3"
+    "When this desire stirred today, what were you seeking in it that you were not seeking from Christ: comfort, escape, rest, or to feel wanted?",
+    "What occasions of sin did you allow, such as a place, an hour, a device, or a thought you let linger, and where did you first turn toward it?",
+    "Do you grieve over this sin because it offends God and grieves his Spirit, or mostly because of the shame it brings you?",
+    "What does this sin whisper to you about God: that he does not see, or that he is keeping some good thing from you?",
+    "Have you thought of the people on the screen as someone's son or daughter, made in God's image and needing Christ, or only as things to use?",
+    "Have you brought this sin into the light with one of your brethren or your pastor, or are you still keeping it in the dark?"
   ],
-  "fleeActions": ["PLACEHOLDER FLEE ACTION"],
+  "fleeActions": [
+    "Put the phone or computer down now. Leave it in another room, and do not go back to it for at least an hour.",
+    "Get up and leave the place where you are. Go where other people are, or step outside and walk, and then take up the next duty in front of you.",
+    "Text or call one of your brethren now. Say plainly, \"I am being tempted. Please pray for me.\"",
+    "Open a paper Bible, not a screen, and read Psalm 51 or Psalm 119:9-16 out loud.",
+    "If it is late, go to bed now. Leave every screen outside the room, and pray before you lie down.",
+    "Today, put a filter and accountability on every device you use, and give the passwords to someone you trust in your church."
+  ],
   "afterFallReadings": [
     {
-      "text": "PLACEHOLDER READING",
-      "author": "PLACEHOLDER AUTHOR",
-      "source": "PLACEHOLDER SOURCE"
+      "text": "Hast thou not often been ready to conclude thyself, that it was utterly impossible that he should bear any longer with thee; that he would cast thee off, and be gracious no more; that all his forbearance was exhausted, and hell and wrath was even ready prepared for thee? and yet, above all thy expectation, he hath returned with visitations of love.",
+      "author": "John Owen",
+      "source": "Of the Mortification of Sin in Believers, ch. 11"
+    },
+    {
+      "text": "A soul steeped in the briny tears of repentance, and bathed in the blood of Christ, is made pure.",
+      "author": "Thomas Watson",
+      "source": "The Ten Commandments, the seventh commandment"
+    },
+    {
+      "text": "I also saw, moreover, that it was not my good frame of heart that made my righteousness better, nor yet my bad frame that made my righteousness worse; for my righteousness was Jesus Christ Himself, the same yesterday, and to-day, and for ever (Heb. 13.8).",
+      "author": "John Bunyan",
+      "source": "Grace Abounding to the Chief of Sinners, §229"
+    },
+    {
+      "ref": "1 John 1:9"
     }
   ]
 }

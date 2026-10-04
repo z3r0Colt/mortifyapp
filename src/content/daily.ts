@@ -10,6 +10,18 @@ const catechismSchema = z
     }),
   )
   .min(1);
+const lordsDayEntry = z.object({
+  title: z.string().min(1),
+  text: z.string().min(1),
+});
+export const lordsDaySchema = z.object({
+  saturday: lordsDayEntry,
+  sunday: lordsDayEntry,
+});
+// Saturday prepares for the Lord's Day; Sunday is the day itself.
+export function lordsDayKey(now: Date) {
+  return now.getDay() === 6 ? "saturday" : now.getDay() === 0 ? "sunday" : null;
+}
 export async function rotate<T>(
   key: string,
   items: T[],
@@ -30,13 +42,11 @@ export async function rotate<T>(
   });
 }
 export async function dailyReading(packs: Pack[], now = new Date()) {
+  const day = lordsDayKey(now);
   const [catechism, lordsDay] = await Promise.all([
     loadJson("catechism.json", catechismSchema),
-    now.getDay() === 6
-      ? loadJson(
-          "lords-day.json",
-          z.object({ title: z.string().min(1), text: z.string().min(1) }),
-        )
+    day
+      ? loadJson("lords-day.json", lordsDaySchema).then((d) => d[day])
       : Promise.resolve(null),
   ]);
   const group = packs

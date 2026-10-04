@@ -3,7 +3,7 @@ import { loadPacks, packSchema } from "./loader";
 import pack from "../../public/content/lust.json";
 afterEach(() => vi.unstubAllGlobals());
 describe("content validation", () => {
-  it("accepts the placeholder pack and rejects incomplete packs", () => {
+  it("accepts the lust pack and rejects incomplete packs", () => {
     expect(packSchema.parse(pack).id).toBe("lust");
     expect(packSchema.safeParse({ ...pack, verses: [] }).success).toBe(false);
     expect(

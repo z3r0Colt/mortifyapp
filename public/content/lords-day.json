@@ -1,1 +1,10 @@
-{"title":"Prepare for the Lord's Day","text":"PLACEHOLDER LORD'S DAY READING"}
+{
+  "saturday": {
+    "title": "Prepare for the Lord's Day",
+    "text": "Tomorrow is the Lord's Day. God gives it as a day of rest and worship, and as a means of grace in your fight against sin.\n\nPrepare tonight. Finish what you can of tomorrow's work today, so it does not crowd the day. Go to bed in good time, so you can worship awake. Before you sleep, confess your sins to God and ask him to bless the preaching of his Word to you and to your church."
+  },
+  "sunday": {
+    "title": "Today is the Lord's Day",
+    "text": "This is the day the Lord Jesus rose from the dead. God has set it apart for rest and worship, and it is one of his chief means of grace in your fight against sin.\n\nGather with God's people. Hear the Word preached, join in prayer and song, and come to the Lord's Supper when it is given. Set aside your ordinary work and recreations, and give the day to worship, both with the church and at home, and to works of necessity and mercy.\n\nSpeak with a fellow believer about the sermon, and pray together. Rest in Christ, who has finished the work of your salvation. Put this app down, and spend the day with the Lord and his people."
+  }
+}
