@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:padding="12dp" android:background="@color/mortify_background">
+<Button android:id="@+id/widget_flee" android:layout_width="108dp" android:layout_height="108dp" android:layout_gravity="center" android:text="Flee" android:textSize="30sp" android:fontFamily="serif" android:textAllCaps="false" android:textColor="#F5F0E6" android:background="@drawable/flee_widget_circle" android:contentDescription="Open the Mortify flee sequence" />
+</FrameLayout>

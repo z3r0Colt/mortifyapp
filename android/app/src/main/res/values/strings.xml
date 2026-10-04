@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Mortify</string>
+    <string name="title_activity_main">Mortify</string>
+    <string name="package_name">com.gentleking.mortify</string>
+    <string name="custom_url_scheme">com.gentleking.mortify</string>
+</resources>

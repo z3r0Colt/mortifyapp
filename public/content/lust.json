@@ -1,0 +1,29 @@
+{
+  "id": "lust",
+  "name": "Lust and Pornography",
+  "screenBased": true,
+  "verses": ["Romans 8:13", "Psalm 119:9-11"],
+  "counsel": [
+    {
+      "text": "PLACEHOLDER COUNSEL",
+      "author": "PLACEHOLDER AUTHOR",
+      "source": "PLACEHOLDER SOURCE"
+    }
+  ],
+  "prayers": [
+    { "title": "PLACEHOLDER PRAYER TITLE", "text": "PLACEHOLDER PRAYER" }
+  ],
+  "examinationQuestions": [
+    "PLACEHOLDER EXAMINATION QUESTION 1",
+    "PLACEHOLDER EXAMINATION QUESTION 2",
+    "PLACEHOLDER EXAMINATION QUESTION 3"
+  ],
+  "fleeActions": ["PLACEHOLDER FLEE ACTION"],
+  "afterFallReadings": [
+    {
+      "text": "PLACEHOLDER READING",
+      "author": "PLACEHOLDER AUTHOR",
+      "source": "PLACEHOLDER SOURCE"
+    }
+  ]
+}

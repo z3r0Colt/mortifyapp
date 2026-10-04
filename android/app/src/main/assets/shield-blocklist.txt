@@ -1,0 +1,15 @@
+# Domain and subdomain entries. Family DNS supplies a maintained adult filter too.
+pornhub.com
+xvideos.com
+xnxx.com
+xhamster.com
+redtube.com
+dns.google
+cloudflare-dns.com
+mozilla.cloudflare-dns.com
+dns.quad9.net
+doh.opendns.com
+dns.nextdns.io
+dns.adguard-dns.com
+doh.cleanbrowsing.org
+use-application-dns.net

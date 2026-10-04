@@ -1,0 +1,3 @@
+hev-socks5-tunnel 2cdc169a248ced7097a7931aea5bf81540dc7759
+Source: https://github.com/heiher/hev-socks5-tunnel
+License: MIT (retain all bundled license files)

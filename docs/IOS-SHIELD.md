@@ -1,0 +1,13 @@
+# iPhone protection and Apple entitlement
+
+MortifyShield uses individual Family Controls authorization on iOS 16+, then sets a named ManagedSettingsStore's webContent.blockedByFilter to Apple's automatic adult-content policy. start/stop/status match Android; unsupported systems retain the Screen Time guide. Stop clears only Mortify's own settings. Each foreground/open checks authorization and chosen sharing permits a blocker_off event after revocation.
+
+1. On a Mac, sync the Capacitor iOS project. Ensure MortifyShieldPlugin.swift, MortifyVaultPlugin.swift and MortifyViewController.swift belong to the App target (the project script adds them). Use com.gentleking.mortify and your actual Apple Developer Team.
+2. Add Family Controls in Signing & Capabilities for development. The App/App.entitlements file includes com.apple.developer.family-controls. Development signing alone does not grant distribution approval.
+3. The Apple Developer Account Holder must request Family Controls distribution permission through Apple's [entitlement instructions](https://developer.apple.com/documentation/familycontrols/requesting-the-family-controls-entitlement) / [request form](https://developer.apple.com/contact/request/family-controls-distribution). Supply the requested team, app identifiers and contact information. Describe voluntary adult self-control, individual authorization, adult web filtering, user revocation, and the lack of browsing-history collection. Request only the app identifier that actually uses the API; the static widget does not use Family Controls.
+4. After Apple grants approval, check the app identifier's distribution capabilities in Certificates, Identifiers & Profiles, regenerate/download provisioning profiles or refresh automatic signing in Xcode, and verify the archive's signed entitlements include Family Controls. Confirm Push Notifications separately. Do not submit to App Store review before entitlement approval.
+5. Build and test on a physical iPhone: grant/deny individual authorization, start filter, check allowed and blocked sites, stop it, revoke authorization in Settings, reopen Mortify and verify its status/event. Other apps' ManagedSettingsStores must remain untouched.
+
+This source has not been compiled on this Windows machine. Entitlement approval and signed device behavior cannot be verified without the owner's Apple account and Mac. Individual authorization remains revocable; the app does not promise unremovable protection.
+
+Sources: [Family Controls](https://developer.apple.com/documentation/familycontrols), [adult web-filter policy](https://developer.apple.com/documentation/managedsettings/webcontentsettings/filterpolicy).

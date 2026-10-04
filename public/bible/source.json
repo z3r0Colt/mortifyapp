@@ -1,0 +1,33 @@
+{
+  "translation": "Berean Standard Bible",
+  "abbreviation": "BSB",
+  "downloadsPage": "https://berean.bible/downloads.htm",
+  "downloadUrl": "https://bereanbible.com/bsb.txt",
+  "licensingPage": "https://berean.bible/licensing.htm",
+  "publicDomain": true,
+  "downloadedAt": "2026-10-03T19:21:25.472Z",
+  "sourceSha256": "2ac3af1de52d4e68261cba91d85c320b7eadc6560e830d99e591767b8ff5ca96",
+  "jsonSha256": "b194d961b81616ff02a47bb02870d8deca0a4ced26958a0272a5b96b11892a88",
+  "books": 66,
+  "chapters": 1189,
+  "verses": 31102,
+  "versesWithText": 31086,
+  "omittedReferences": [
+    "Matthew 17:21",
+    "Matthew 18:11",
+    "Matthew 23:14",
+    "Mark 7:16",
+    "Mark 9:44",
+    "Mark 9:46",
+    "Mark 11:26",
+    "Mark 15:28",
+    "Luke 17:36",
+    "Luke 23:17",
+    "John 5:4",
+    "Acts 8:37",
+    "Acts 15:34",
+    "Acts 24:7",
+    "Acts 28:29",
+    "Romans 16:24"
+  ]
+}

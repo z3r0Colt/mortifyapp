@@ -1,0 +1,10 @@
+project_id = "mortify"
+
+[functions.push-message]
+verify_jwt = false
+
+[functions.reminders]
+verify_jwt = false
+
+[functions.delete-account]
+verify_jwt = false
