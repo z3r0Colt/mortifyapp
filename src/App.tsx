@@ -255,7 +255,7 @@ export default function App() {
   }, [loadPrivacy]);
   useEffect(watchAuth, []);
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, "") || "/"}>
       <Router />
     </BrowserRouter>
   );

@@ -38,7 +38,7 @@ export async function loadJson<T>(
   file: string,
   schema: z.ZodType<T>,
 ): Promise<T> {
-  const response = await fetch(`/content/${file}`);
+  const response = await fetch(`${import.meta.env.BASE_URL}content/${file}`);
   if (!response.ok)
     throw new Error(`Could not load ${file}. Please try again when connected.`);
   return schema.parse(await response.json());

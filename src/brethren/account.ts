@@ -29,7 +29,7 @@ export async function signOut() {
   useAuth.setState({ user: null, ready: true });
   useBrethren.getState().clear();
   useMessages.setState({ rows: [], error: "" });
-  window.location.replace("/");
+  window.location.replace(import.meta.env.BASE_URL);
 }
 export async function deleteAccount() {
   if (!navigator.onLine)

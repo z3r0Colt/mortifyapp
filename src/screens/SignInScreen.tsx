@@ -30,7 +30,7 @@ export default function SignInScreen() {
               await result(
                 cloud().auth.signInWithOtp({
                   email,
-                  options: { emailRedirectTo: `${location.origin}/brethren` },
+                  options: { emailRedirectTo: `${location.origin}${import.meta.env.BASE_URL}brethren` },
                 }),
               );
               setSent(true);

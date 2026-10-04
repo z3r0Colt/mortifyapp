@@ -3,7 +3,7 @@ import { registerRoute, NavigationRoute } from "workbox-routing";
 import { createHandlerBoundToURL } from "workbox-precaching";
 precacheAndRoute(self.__WB_MANIFEST);
 cleanupOutdatedCaches();
-registerRoute(new NavigationRoute(createHandlerBoundToURL("/index.html")));
+registerRoute(new NavigationRoute(createHandlerBoundToURL("index.html")));
 self.addEventListener("message", (event) => {
   if (event.data?.type === "SKIP_WAITING") self.skipWaiting();
 });
@@ -21,8 +21,8 @@ self.addEventListener("push", (event) => {
   event.waitUntil(
     self.registration.showNotification(data.title, {
       body: data.body,
-      icon: "/icon-192.png",
-      badge: "/icon-192.png",
+      icon: "icon-192.png",
+      badge: "icon-192.png",
       data: { url: data.url },
       tag: data.tag,
     }),
@@ -30,11 +30,13 @@ self.addEventListener("push", (event) => {
 });
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
-  const path = ["/brethren/messages", "/reading", "/examine"].includes(
+  const route = ["/brethren/messages", "/reading", "/examine"].includes(
     event.notification.data?.url,
   )
     ? event.notification.data.url
     : "/brethren/messages";
+  // Routes are app-relative; resolve under the scope so a subfolder host works.
+  const path = new URL(route.slice(1), self.registration.scope).href;
   event.waitUntil(
     (async () => {
       const windows = await self.clients.matchAll({

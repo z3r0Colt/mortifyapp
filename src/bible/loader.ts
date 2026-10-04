@@ -10,7 +10,7 @@ const bibleSchema = z.record(
 let pending: Promise<Bible> | undefined;
 export function loadBible(): Promise<Bible> {
   if (!pending)
-    pending = fetch("/bible/bsb.json")
+    pending = fetch(`${import.meta.env.BASE_URL}bible/bsb.json`)
       .then(async (response) => {
         if (!response.ok)
           throw new Error(

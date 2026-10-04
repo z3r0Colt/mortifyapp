@@ -75,5 +75,5 @@ export async function deleteDeviceData() {
       await registration.unregister();
   if ("caches" in window)
     for (const key of await caches.keys()) await caches.delete(key);
-  window.location.replace("/");
+  window.location.replace(import.meta.env.BASE_URL);
 }
