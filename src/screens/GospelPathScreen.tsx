@@ -11,7 +11,7 @@ export default function GospelPathScreen() {
     <Page
       bare
       title="You may bring your questions"
-      bar={<OnboardingBar step={1} />}
+      bar={<OnboardingBar step={2} />}
     >
       {data ? (
         <div className="fade">

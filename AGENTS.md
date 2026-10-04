@@ -40,12 +40,12 @@ Plain, warm, pastoral, about a 10th grade level. Say "temptation" and "occasions
 - Tailwind CSS using the CSS variables above
 - React Router for navigation
 - Zustand for app state
-- Dexie (IndexedDB) for all local data
+- Supabase (supabase-js) for all user data: preferences, logs, encrypted journal entries, and the brethren system. Every table is owner-only under row-level security
+- Dexie (IndexedDB) only as an on-device cache for opening offline, a queue of entries waiting to upload, and settings for this one device
 - Zod to validate content packs
-- vite-plugin-pwa for offline support and install
-- Supabase (supabase-js) for the brethren system only
+- vite-plugin-pwa for install and offline reading: the app, Bible and content packs stay cached so Flee and the readings work without signal. Saving needs a connection or waits in the upload queue
 - Capacitor added later for native builds and native plugins
-- Deploy the PWA to GitHub Pages at https://z3r0colt.github.io/mortifyapp/ (public repo, built by `.github/workflows/pages.yml` on every push to `main`). The site lives under `/mortifyapp/`, so never hard-code root paths like `/content/`; build them from `import.meta.env.BASE_URL`
+- Deploy the PWA to GitHub Pages at https://mortify.gentleking.org (public repo, built by `.github/workflows/pages.yml` on every push to `main`). Never hard-code root paths like `/content/`; build them from `import.meta.env.BASE_URL` so a subfolder build still works
 
 Write all code so it runs in a browser first. Anything that needs native power goes behind a small wrapper in `src/native/` that checks `Capacitor.isNativePlatform()` and falls back quietly on the web.
 
@@ -55,7 +55,7 @@ Mortify has a small closed circle of brethren (up to 8, same sex only) who pray 
 
 ## Privacy
 
-Journal text never leaves the device and is encrypted with Web Crypto (AES-GCM) using a key derived from the user's PIN. Only events and messages the user chooses to share go to Supabase. No analytics, ads, or tracking scripts.
+Everyone signs in with an email code during onboarding. Journal, confession and reflection text is encrypted on the device with Web Crypto (AES-GCM) using a key derived from the user's PIN, and only the ciphertext goes to Supabase. The PIN and the key never leave the device; the account holds only a salt and an encrypted check value so the same PIN works on a new phone. No one else, including whoever runs Mortify, can read the text, and a forgotten PIN cannot be recovered. Brethren see only the events and messages the user chooses to share. No analytics, ads, or tracking scripts.
 
 ## How to Work
 

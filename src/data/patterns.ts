@@ -1,4 +1,9 @@
-import type { Journal } from "./db";
+/** What the weekly patterns need from each examination. */
+export type PatternEntry = {
+  time: number;
+  roots: string[];
+  occasions: string[];
+};
 export const heartRoots = [
   "loneliness",
   "weariness",
@@ -20,7 +25,7 @@ export const occasionTags = [
   "using a screen",
   "resting",
 ];
-export function weeklyPatterns(rows: Journal[], now = Date.now()) {
+export function weeklyPatterns(rows: PatternEntry[], now = Date.now()) {
   const week = rows.filter(
     (row) => row.time >= now - 7 * 86400000 && row.time <= now,
   );

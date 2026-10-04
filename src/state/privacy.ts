@@ -9,6 +9,8 @@ import {
 const check = "Mortify private storage v1";
 import { isNative } from "../native/platform";
 import { readNativeKey, storeNativeKey, clearNativeKey } from "../native/vault";
+import { clearPrivateEntries, fetchVault, saveVault } from "../data/remote";
+import { useAuth } from "./auth";
 type State = {
   loaded: boolean;
   security: Security | null;
@@ -29,11 +31,41 @@ export const usePrivacy = create<State>((set, get) => ({
   key: null,
   error: "",
   load: async () => {
+    const user = useAuth.getState().user;
     try {
-      const security = (await db.security.get("main")) ?? null;
+      let security = (await db.security.get("main")) ?? null;
+      if (security && security.userId !== user?.id) {
+        await db.security.clear();
+        security = null;
+      }
+      if (user && navigator.onLine)
+        try {
+          // The account holds the PIN check; this device keeps a copy for
+          // opening offline and its own lock settings.
+          const vault = await fetchVault(user.id);
+          if (!vault) {
+            if (security) {
+              await clearNativeKey().catch(() => {});
+              await db.security.clear();
+            }
+            security = null;
+          } else if (!security || security.salt !== vault.salt) {
+            security = {
+              id: "main",
+              userId: user.id,
+              salt: vault.salt,
+              verifier: vault.verifier,
+              lockEnabled: true,
+            };
+            await db.security.put(security);
+          }
+        } catch {
+          /* Offline or unreachable: use the copy on this device. */
+        }
       set({
         security,
         loaded: true,
+        error: "",
         key:
           security && !security.lockEnabled
             ? isNative()
@@ -48,49 +80,22 @@ export const usePrivacy = create<State>((set, get) => ({
   setup: async (pin) => {
     if (!/^\d{6,12}$/.test(pin))
       throw new Error("Use a PIN of 6 to 12 digits.");
+    const user = useAuth.getState().user;
+    if (!user) throw new Error("Sign in first.");
+    if (!navigator.onLine)
+      throw new Error("Connect to the internet to set your PIN.");
     const salt = newSalt();
     const key = await deriveKey(pin, salt);
     const verifier = await encryptText(key, check);
+    await saveVault(user.id, { salt, verifier });
     const security: Security = {
       id: "main",
+      userId: user.id,
       salt,
       verifier,
       lockEnabled: true,
     };
-    // Encrypt early-phase plaintext before committing the new security record.
-    const journals = await db.journals.toArray();
-    const falls = await db.falls.toArray();
-    const encryptedJournals = await Promise.all(
-      journals.map(async (row) => ({
-        ...row,
-        text:
-          typeof row.text === "string"
-            ? await encryptText(key, row.text)
-            : row.text,
-      })),
-    );
-    const encryptedFalls = await Promise.all(
-      falls.map(async (row) => ({
-        ...row,
-        confession:
-          typeof row.confession === "string"
-            ? await encryptText(key, row.confession)
-            : row.confession,
-        reflection:
-          typeof row.reflection === "string"
-            ? await encryptText(key, row.reflection)
-            : row.reflection,
-      })),
-    );
-    await db.transaction(
-      "rw",
-      [db.journals, db.falls, db.security],
-      async () => {
-        await db.journals.bulkPut(encryptedJournals);
-        await db.falls.bulkPut(encryptedFalls);
-        await db.security.put(security);
-      },
-    );
+    await db.security.put(security);
     set({ security, key });
   },
   unlock: async (pin) => {
@@ -153,16 +158,18 @@ export const usePrivacy = create<State>((set, get) => ({
     set({ key });
   },
   forget: async () => {
+    const user = useAuth.getState().user;
+    if (!user) throw new Error("Sign in first.");
+    if (!navigator.onLine)
+      throw new Error("Connect to the internet to clear your journal.");
+    await clearPrivateEntries(user.id);
     await clearNativeKey();
-    await db.transaction(
-      "rw",
-      [db.journals, db.falls, db.security],
-      async () => {
-        await db.journals.clear();
-        await db.falls.clear();
-        await db.security.clear();
-      },
-    );
+    await db.pending
+      .where("userId")
+      .equals(user.id)
+      .filter((item) => item.table !== "flee_logs")
+      .delete();
+    await db.security.clear();
     set({ security: null, key: null });
   },
 }));

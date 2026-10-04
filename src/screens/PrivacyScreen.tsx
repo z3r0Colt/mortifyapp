@@ -29,12 +29,12 @@ export default function PrivacyScreen() {
     <Page
       title="Privacy"
       back={{ to: "/settings", label: "Settings" }}
-      lede="Your journal and confessions are encrypted on this device. They never go to your brethren or a server."
+      lede="Your journal and confessions are encrypted with your PIN before they leave this phone. Only you can read them, not your brethren and not anyone who runs Mortify."
     >
       <ListGroup>
         <SwitchRow
           label="PIN lock"
-          detail="Ask for your PIN each time Mortify opens. If this is off, anyone who can open Mortify on this device can read your journal."
+          detail="Ask for your PIN each time Mortify opens on this phone. If this is off, anyone who can open Mortify here can read your journal."
           checked={!!security?.lockEnabled}
           onChange={async (on) => {
             if (!on && native) {
@@ -119,22 +119,18 @@ export default function PrivacyScreen() {
         </Action>
       </article>
       <article className="card">
-        <h2>Delete device data</h2>
+        <h2>Clear this phone</h2>
         <p>
-          This permanently removes your local entries, PIN, preferences, and
-          offline files.
+          Signs you out and removes everything Mortify keeps on this phone. Your
+          account and journal stay safe; sign in again to get them back.
         </p>
         <Action
           run={async () => {
-            if (
-              window.confirm(
-                "Permanently delete all Mortify data on this device?",
-              )
-            )
+            if (window.confirm("Sign out and clear Mortify from this phone?"))
               await deleteDeviceData();
           }}
         >
-          Delete everything on this device
+          Sign out and clear this phone
         </Action>
       </article>
     </Page>

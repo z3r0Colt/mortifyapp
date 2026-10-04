@@ -5,6 +5,11 @@ const db = new PGlite();
 await db.exec(
   `create role anon; create role authenticated; create role service_role bypassrls; create schema auth; create table auth.users(id uuid primary key); create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid $$; grant usage on schema auth to authenticated,anon; grant execute on function auth.uid() to authenticated,anon;`,
 );
+// Match Supabase: new public tables and functions are granted to every API role
+// unless a migration revokes them.
+await db.exec(
+  `grant usage on schema public to anon,authenticated; alter default privileges in schema public grant all on tables to anon,authenticated,service_role; alter default privileges in schema public grant all on functions to anon,authenticated,service_role;`,
+);
 for (const file of (await readdir("supabase/migrations")).sort())
   await db.exec(await readFile(`supabase/migrations/${file}`, "utf8"));
 const ids = Array.from(
@@ -266,9 +271,64 @@ assert.equal(
   0,
   "messages deletion cascades",
 );
+// Private data: each user sees and writes only their own rows.
+await asUser(ids[5]);
+await db.query(
+  "insert into user_preferences(onboarded,battles) values(true,'{lust}')",
+);
+await db.query(
+  `insert into journals(id,battle,body) values(gen_random_uuid(),'lust','{"v":1,"iv":"a","data":"b"}')`,
+);
+await db.query(
+  `insert into user_vault(salt,verifier) values('salt','{"v":1,"iv":"a","data":"b"}')`,
+);
+assert.equal(
+  (await db.query("select public.rotate_reading('k',3,'2026-10-04') i")).rows[0]
+    .i,
+  0,
+  "first reading starts at zero",
+);
+assert.equal(
+  (await db.query("select public.rotate_reading('k',3,'2026-10-04') i")).rows[0]
+    .i,
+  0,
+  "same day keeps the reading",
+);
+assert.equal(
+  (await db.query("select public.rotate_reading('k',3,'2026-10-05') i")).rows[0]
+    .i,
+  1,
+  "next day advances the reading",
+);
+await asUser(ids[6]);
+for (const table of [
+  "user_preferences",
+  "journals",
+  "user_vault",
+  "reading_history",
+])
+  assert.equal(
+    (await db.query(`select * from ${table}`)).rows.length,
+    0,
+    `${table} stays private`,
+  );
+await assert.rejects(
+  db.query(
+    `insert into journals(id,user_id,battle,body) values(gen_random_uuid(),$1,'lust','{}')`,
+    [ids[5]],
+  ),
+  /row-level security/,
+  "cannot write another user's journal",
+);
+await assert.rejects(
+  db.query("update journals set battle='pride'"),
+  /permission denied/,
+  "journal entries cannot be edited",
+);
 await db.exec("set role anon");
 await assert.rejects(db.query("select * from profiles"), /permission denied/);
+await assert.rejects(db.query("select * from journals"), /permission denied/);
 await db.close();
 console.log(
-  "Database checks passed: profiles, links, same sex, both-side acceptance, sharing revocation, capacity, mutation permissions, and anonymous access.",
+  "Database checks passed: profiles, links, same sex, both-side acceptance, sharing revocation, capacity, mutation permissions, private data isolation, reading rotation, and anonymous access.",
 );

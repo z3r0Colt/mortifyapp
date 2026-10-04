@@ -18,7 +18,7 @@ export default function TimesScreen() {
       bare
       title="Make room for the Word"
       lede="Choose a time each morning for Scripture and each evening to examine the day."
-      bar={value.onboarded ? undefined : <OnboardingBar step={3} />}
+      bar={value.onboarded ? undefined : <OnboardingBar step={4} />}
       back={
         value.onboarded ? { to: "/settings", label: "Settings" } : undefined
       }

@@ -42,6 +42,9 @@ import { useAuth } from "./state/auth";
 import { useMessages, watchMessages } from "./state/messages";
 import SharedProfileScreen from "./screens/SharedProfileScreen";
 import { watchOutbox, publishBattles } from "./brethren/outbox";
+import { watchPending } from "./data/pending";
+import { AppNotice } from "./components/AppNotice";
+import { watchConnection } from "./state/pwa";
 import { useBrethren } from "./state/brethren";
 import { nativeLifecycle } from "./native/lifecycle";
 import { scheduleReminders } from "./native/reminders";
@@ -91,7 +94,12 @@ function Router() {
     useBrethren.getState().clear();
     if (user) {
       void useBrethren.getState().load();
-      return watchOutbox();
+      const stopOutbox = watchOutbox();
+      const stopPending = watchPending();
+      return () => {
+        stopOutbox();
+        stopPending();
+      };
     }
   }, [user?.id]);
   useEffect(() => {
@@ -121,13 +129,22 @@ function Router() {
         <p role="alert">{privacy.error}</p>
       </Page>
     );
-  if (!loaded || !app.ready || !privacy.loaded)
+  if (!authReady || !loaded || !app.ready || !privacy.loaded)
     return (
       <Page title="Mortify">
-        <p>Opening your study…</p>
+        <p className="label" role="status">
+          Opening your study…
+        </p>
       </Page>
     );
-  if (value.onboarded && !privacy.key) return <PinScreen />;
+  if (
+    !user &&
+    !["/onboarding/gospel", "/onboarding/sign-in", "/debug"].includes(
+      location.pathname,
+    )
+  )
+    return <Navigate to="/onboarding/gospel" replace />;
+  if (user && value.onboarded && !privacy.key) return <PinScreen />;
   if (
     !value.onboarded &&
     !location.pathname.startsWith("/onboarding") &&
@@ -142,7 +159,8 @@ function Router() {
           <Route path="/privacy" element={<PrivacyScreen />} />
           <Route path="/discreet" element={<DiscreetScreen />} />
           <Route path="/protection" element={<ProtectionScreen />} />
-          <Route path="/sign-in" element={<SignInScreen />} />
+          <Route path="/sign-in" element={<Navigate to="/" replace />} />
+          <Route path="/onboarding/sign-in" element={<SignInScreen />} />
           <Route path="/notifications" element={<NotificationsScreen />} />
           <Route
             path="/brethren"
@@ -228,6 +246,7 @@ function Router() {
           <Route path="/bible/:book/:chapter" element={<ChapterScreen />} />
         </Routes>
       )}
+      <AppNotice />
       {value.onboarded &&
         !chapterOpen &&
         !["/flee", "/fall"].includes(location.pathname) &&
@@ -242,15 +261,22 @@ export default function App() {
   useEffect(() => {
     void load();
   }, [load]);
-  useEffect(() => {
-    void loadPreferences();
-  }, [loadPreferences]);
-  useEffect(() => {
-    void loadPrivacy();
-  }, [loadPrivacy]);
+  const user = useAuth((s) => s.user);
+  const authReady = useAuth((s) => s.ready);
   useEffect(watchAuth, []);
+  useEffect(watchConnection, []);
+  // Everything private belongs to an account, so load it once we know whose.
+  useEffect(() => {
+    if (!authReady) return;
+    usePreferences.setState({ loaded: false, error: null });
+    usePrivacy.setState({ loaded: false, key: null, error: "" });
+    void loadPreferences();
+    void loadPrivacy();
+  }, [authReady, user?.id, loadPreferences, loadPrivacy]);
   return (
-    <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, "") || "/"}>
+    <BrowserRouter
+      basename={import.meta.env.BASE_URL.replace(/\/$/, "") || "/"}
+    >
       <Router />
     </BrowserRouter>
   );

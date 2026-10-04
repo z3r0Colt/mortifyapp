@@ -5,8 +5,10 @@ import { Icon } from "../components/Icon";
 import { useContent } from "../content/useContent";
 import { loadGospel } from "../content/gospel";
 import { Paragraphs } from "../components/Paragraphs";
+import { useAuth } from "../state/auth";
 export default function GospelScreen() {
   const { data, error } = useContent(loadGospel);
+  const user = useAuth((s) => s.user);
   return (
     <Page
       bare
@@ -26,7 +28,10 @@ export default function GospelScreen() {
       )}
       {data && (
         <div className="dock">
-          <Link className="button primary" to="/onboarding/trust">
+          <Link
+            className="button primary"
+            to={user ? "/onboarding/trust" : "/onboarding/sign-in"}
+          >
             Continue
             <Icon name="arrow" size={18} />
           </Link>

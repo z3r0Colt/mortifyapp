@@ -23,7 +23,7 @@ export default function PinScreen() {
           ? undefined
           : security
             ? "Enter your PIN to continue."
-            : "Choose a PIN of 6 to 12 digits. Keep it safely: it is needed to open your private text."
+            : "Choose a PIN of 6 to 12 digits. Your journal is encrypted with it before it leaves this phone, so only you can read it. Keep it safely: if it is forgotten, your journal cannot be recovered."
       }
       bar={
         <span className="mark large" aria-hidden="true">
@@ -35,15 +35,15 @@ export default function PinScreen() {
         <>
           <p className="notice">
             Without your PIN, your encrypted journal and confessions cannot be
-            recovered. You may clear them and choose a new PIN. Your selected
-            battles and reading times remain.
+            recovered by anyone. You may clear them from your account and choose
+            a new PIN. Your battles, times and brethren remain.
           </p>
           <div className="stack">
             <Action
               run={async () => {
                 if (
                   window.confirm(
-                    "Permanently clear all journal entries and confessions on this device?",
+                    "Permanently clear all journal entries and confessions from your account?",
                   )
                 ) {
                   await forget();
@@ -130,7 +130,7 @@ export default function PinScreen() {
           ) : (
             <p className="hint">
               <Icon name="lock" size={16} />
-              Your journal is encrypted with this PIN on this device.
+              The same PIN opens your journal on any phone you sign in on.
             </p>
           )}
         </form>

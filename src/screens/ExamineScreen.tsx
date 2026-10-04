@@ -6,7 +6,7 @@ import { Tags } from "../components/Tags";
 import { Icon } from "../components/Icon";
 import { ListGroup, ListLink } from "../components/List";
 import { useBattlePacks } from "../content/selection";
-import { db } from "../data/db";
+import { saveEntry } from "../data/pending";
 import { heartRoots, occasionTags } from "../data/patterns";
 import { encryptText } from "../privacy/crypto";
 import { journalKey } from "../state/privacy";
@@ -17,7 +17,7 @@ export default function ExamineScreen() {
   const [roots, setRoots] = useState<string[]>([]);
   const [occasions, setOccasions] = useState<string[]>([]);
   const [text, setText] = useState("");
-  const [saved, setSaved] = useState(false);
+  const [saved, setSaved] = useState<"saved" | "waiting" | null>(null);
   if (!pack)
     return (
       <Page title="Choose a battle">
@@ -35,9 +35,13 @@ export default function ExamineScreen() {
       {saved ? (
         <div className="card accent fade">
           <p>
-            Your examination is saved on this device. Take these matters to the
-            Lord in prayer.
+            Your examination is saved. Take these matters to the Lord in prayer.
           </p>
+          {saved === "waiting" && (
+            <p className="label">
+              You're offline. It will upload when you reconnect.
+            </p>
+          )}
           <Link className="button block" to="/">
             Return home
           </Link>
@@ -89,20 +93,24 @@ export default function ExamineScreen() {
           </label>
           <p className="hint">
             <Icon name="lock" size={16} />
-            Encrypted and kept only on this device.
+            Encrypted with your PIN. Only you can read it.
           </p>
           <div className="stack">
             <Action
               className="primary"
               run={async () => {
-                await db.journals.add({
-                  time: Date.now(),
-                  battle,
-                  roots,
-                  occasions,
-                  text: await encryptText(journalKey(), text),
+                const uploaded = await saveEntry({
+                  table: "journals",
+                  row: {
+                    id: crypto.randomUUID(),
+                    created_at: new Date().toISOString(),
+                    battle,
+                    roots,
+                    occasions,
+                    body: await encryptText(journalKey(), text),
+                  },
                 });
-                setSaved(true);
+                setSaved(uploaded ? "saved" : "waiting");
               }}
             >
               Save examination

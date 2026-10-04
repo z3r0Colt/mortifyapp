@@ -16,19 +16,36 @@ export default defineConfig({
       registerType: "prompt",
       includeAssets: ["content/*.json", "icon.svg", "icon-*.png"],
       manifest: {
+        id: "./",
         name: "Mortify",
         short_name: "Mortify",
-        description: "Quiet help for prayer and examination.",
+        description:
+          "Quiet help for prayer, examination, and putting sin to death by the Spirit.",
+        start_url: "./",
+        scope: "./",
+        display: "standalone",
+        orientation: "portrait",
         theme_color: "#F5F0E6",
         background_color: "#F5F0E6",
-        display: "standalone",
+        categories: ["books", "lifestyle"],
         icons: [
           { src: "icon-192.png", sizes: "192x192", type: "image/png" },
+          { src: "icon-512.png", sizes: "512x512", type: "image/png" },
           {
-            src: "icon-512.png",
+            src: "icon-maskable-512.png",
             sizes: "512x512",
             type: "image/png",
-            purpose: "any maskable",
+            purpose: "maskable",
+          },
+        ],
+        // Long-press the home screen icon on Android to go straight to Flee.
+        shortcuts: [
+          {
+            name: "Flee",
+            short_name: "Flee",
+            description: "Turn to Christ in the hour of temptation.",
+            url: "./flee",
+            icons: [{ src: "icon-192.png", sizes: "192x192" }],
           },
         ],
       },

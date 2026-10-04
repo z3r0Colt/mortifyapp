@@ -4,6 +4,13 @@ import { Page } from "../components/Page";
 import { Action } from "../components/Action";
 import { cloud, result } from "../brethren/client";
 import { useBrethren } from "../state/brethren";
+import { Icon } from "../components/Icon";
+const points = [
+  "A small closed circle of up to eight believers, ideally from your own church.",
+  "Brothers link with brothers and sisters with sisters, only by a private code.",
+  "No public feed and no strangers.",
+  "You choose what they see. Your journal and confessions are never shared.",
+];
 export default function ProfileSetupScreen() {
   const [name, setName] = useState("");
   const [sex, setSex] = useState<"brother" | "sister">("brother");
@@ -13,8 +20,20 @@ export default function ProfileSetupScreen() {
   return (
     <Page
       title="Your brethren profile"
-      lede="Use the name your church knows you by. Seek a small circle of believers in your own local church."
+      lede="Watch over one another in prayer with a few believers you already know."
     >
+      <article className="card">
+        <ul className="checks">
+          {points.map((point) => (
+            <li key={point}>
+              <Icon name="check" size={18} />
+              {point}
+            </li>
+          ))}
+        </ul>
+      </article>
+      <h2 className="section-title">Your profile</h2>
+      <p className="label">Use the name your church knows you by.</p>
       <label>
         Display name
         <input

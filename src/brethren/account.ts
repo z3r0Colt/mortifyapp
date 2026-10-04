@@ -1,13 +1,22 @@
 import { cloud, result, supabase } from "./client";
 import { db } from "../data/db";
+import { flushPending } from "../data/pending";
+import { clearNativeKey } from "../native/vault";
 import { deviceId } from "./push";
 import { useAuth } from "../state/auth";
 import { useBrethren } from "../state/brethren";
 import { useMessages } from "../state/messages";
 import { disableNativePush } from "../native/push";
 export async function signOut() {
-  await disableNativePush();
   const user = useAuth.getState().user;
+  if (user) {
+    await flushPending();
+    if (await db.pending.where("userId").equals(user.id).count())
+      throw new Error(
+        "Some entries have not uploaded yet. Connect to the internet, then sign out.",
+      );
+  }
+  await disableNativePush();
   if (user && supabase && navigator.onLine) {
     await cloud()
       .from("push_subscriptions")
@@ -21,6 +30,12 @@ export async function signOut() {
     await (await registration?.pushManager?.getSubscription())?.unsubscribe();
   }
   if (user) await db.outbox.where("userId").equals(user.id).delete();
+  await clearNativeKey().catch(() => {});
+  await Promise.all([
+    db.preferences.clear(),
+    db.security.clear(),
+    db.readingHistory.clear(),
+  ]);
   await db.cloudKv
     .filter(
       (row) => row.key.startsWith("sb-") || row.key.startsWith("sharing-"),
@@ -35,5 +50,8 @@ export async function deleteAccount() {
   if (!navigator.onLine)
     throw new Error("Connect to the internet to delete your account.");
   await result(cloud().functions.invoke("delete-account", { body: {} }));
+  // Nothing is left to upload once the account is gone.
+  const user = useAuth.getState().user;
+  if (user) await db.pending.where("userId").equals(user.id).delete();
   await signOut();
 }

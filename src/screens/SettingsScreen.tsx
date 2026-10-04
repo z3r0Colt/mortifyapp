@@ -16,7 +16,7 @@ export default function SettingsScreen() {
   return (
     <Page
       title="Settings"
-      lede="Your readings and examination are kept on this device."
+      lede="Your battles, times and journal are kept in your account. Your journal is encrypted so only you can read it."
     >
       <ListGroup title="Your battles and times">
         <ListLink
@@ -53,20 +53,19 @@ export default function SettingsScreen() {
       <InstallCard />
       {user && (
         <>
-          <h2 className="section-title">Brethren account</h2>
+          <h2 className="section-title">Account</h2>
           <article className="card">
             <p className="label">Signed in as {user.email}</p>
             <Action run={signOut}>Sign out</Action>
             <p className="label" style={{ marginTop: 18 }}>
-              Deleting your account removes your cloud profile, links, events,
-              messages, and push subscriptions. Your local private journal
-              remains on this device.
+              Deleting your account permanently removes everything in it: your
+              preferences, journal, confessions, brethren links and messages.
             </p>
             <Action
               run={async () => {
                 if (
                   window.confirm(
-                    "Permanently delete your Mortify brethren account and all its cloud data?",
+                    "Permanently delete your Mortify account and everything in it? This cannot be undone.",
                   )
                 )
                   await deleteAccount();

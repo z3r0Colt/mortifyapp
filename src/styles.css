@@ -1347,6 +1347,72 @@ div.list-row:hover {
   color: var(--brass);
 }
 
+/* ---------- Installed app ---------- */
+.app-notice {
+  position: fixed;
+  z-index: 20;
+  /* Just above the tab bar or the action dock, clear of back and close buttons. */
+  bottom: calc(104px + env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: max-content;
+  max-width: calc(100% - 24px);
+  padding: 8px 8px 8px 16px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  box-shadow: var(--shadow-md);
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+.app-notice:not(:has(button)) {
+  padding-right: 16px;
+}
+.app-notice button {
+  min-height: 34px;
+  padding: 4px 14px;
+  border-radius: 999px;
+  border-color: transparent;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-size: 0.82rem;
+}
+/* While typing on a phone, the keyboard takes the bottom of the screen.
+   Let the action dock fall back into the page and hide the tab bar so
+   neither covers the text being written. */
+@media (pointer: coarse) {
+  body:has(:is(textarea, input:not([type="checkbox"])):focus) .dock {
+    position: static;
+    transform: none;
+    width: auto;
+    margin: 24px calc(-1 * var(--gutter)) 0;
+    padding-top: 0;
+    background: none;
+  }
+  body:has(:is(textarea, input:not([type="checkbox"])):focus) .tabs {
+    display: none;
+  }
+}
+/* Installed apps should not bounce the whole page or select text on long press. */
+@media (display-mode: standalone) {
+  body {
+    overscroll-behavior-y: none;
+  }
+  .tabs,
+  .page-bar,
+  button,
+  .button {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+}
+
 /* ---------- Motion: simple fades only ---------- */
 @media (prefers-reduced-motion: no-preference) {
   .page,

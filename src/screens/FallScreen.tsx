@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Page } from "../components/Page";
 import { Action } from "../components/Action";
 import { useBattlePacks } from "../content/selection";
-import { db } from "../data/db";
+import { saveEntry } from "../data/pending";
 import { encryptText } from "../privacy/crypto";
 import { journalKey } from "../state/privacy";
 import { TellBrethrenStep } from "../components/TellBrethrenStep";
@@ -97,7 +97,7 @@ export default function FallScreen() {
             </label>
             <p className="hint">
               <Icon name="lock" size={16} />
-              Your confession stays on this device.
+              Encrypted with your PIN. Only you can read it.
             </p>
           </>
         )}
@@ -136,11 +136,15 @@ export default function FallScreen() {
           <Action
             className="primary"
             run={async () => {
-              await db.falls.add({
-                time: Date.now(),
-                battle,
-                confession: await encryptText(journalKey(), confession),
-                reflection: await encryptText(journalKey(), reflection),
+              await saveEntry({
+                table: "falls",
+                row: {
+                  id: crypto.randomUUID(),
+                  created_at: new Date().toISOString(),
+                  battle,
+                  confession: await encryptText(journalKey(), confession),
+                  reflection: await encryptText(journalKey(), reflection),
+                },
               });
               navigate("/", { replace: true });
             }}

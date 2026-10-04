@@ -1,4 +1,8 @@
 import { db } from "../data/db";
+import { allEntries, fetchPreferences } from "../data/remote";
+import { waiting } from "../data/pending";
+import { useAuth } from "../state/auth";
+import { supabase } from "../brethren/client";
 import { decryptText } from "./crypto";
 import { journalKey } from "../state/privacy";
 import { clearNativeKey } from "../native/vault";
@@ -9,48 +13,45 @@ import { isNative } from "../native/platform";
 import { setDiscreet } from "../native/discreet";
 export async function exportData() {
   const key = journalKey();
-  const [preferences, fleeLogs, journals, falls, readingHistory] =
-    await Promise.all([
-      db.preferences.toArray(),
-      db.fleeLogs.toArray(),
-      db.journals.toArray(),
-      db.falls.toArray(),
-      db.readingHistory.toArray(),
-    ]);
-  const plainJournals = await Promise.all(
-    journals.map(async (row) => ({
+  const user = useAuth.getState().user;
+  if (!user) throw new Error("Sign in first.");
+  if (!navigator.onLine)
+    throw new Error("Connect to the internet to download your data.");
+  const [saved, preferences] = await Promise.all([
+    allEntries(user.id),
+    fetchPreferences(user.id),
+  ]);
+  const [waitingJournals, waitingFalls, waitingFlee] = await Promise.all([
+    waiting("journals"),
+    waiting("falls"),
+    waiting("flee_logs"),
+  ]);
+  const journals = await Promise.all(
+    [...saved.journals, ...waitingJournals].map(async ({ body, ...row }) => ({
       ...row,
-      text:
-        typeof row.text === "string"
-          ? row.text
-          : await decryptText(key, row.text),
+      text: await decryptText(key, body),
     })),
   );
-  const plainFalls = await Promise.all(
-    falls.map(async (row) => ({
+  const falls = await Promise.all(
+    [...saved.falls, ...waitingFalls].map(async (row) => ({
       ...row,
-      confession:
-        typeof row.confession === "string"
-          ? row.confession
-          : await decryptText(key, row.confession),
-      reflection:
-        typeof row.reflection === "string"
-          ? row.reflection
-          : await decryptText(key, row.reflection),
+      confession: await decryptText(key, row.confession),
+      reflection: await decryptText(key, row.reflection),
     })),
   );
+  const fleeLogs = [...saved.fleeLogs, ...waitingFlee];
   const url = URL.createObjectURL(
     new Blob(
       [
         JSON.stringify(
           {
-            version: 1,
+            version: 2,
             exportedAt: new Date().toISOString(),
+            account: user.email,
             preferences,
             fleeLogs,
-            journals: plainJournals,
-            falls: plainFalls,
-            readingHistory,
+            journals,
+            falls,
           },
           null,
           2,
@@ -65,7 +66,9 @@ export async function exportData() {
   link.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
+/** Signs out and removes everything Mortify keeps on this device. The account is untouched. */
 export async function deleteDeviceData() {
+  await supabase?.auth.signOut({ scope: "local" }).catch(() => {});
   if ((await shieldStatus())?.running) await stopShield();
   if (isNative()) await setDiscreet(false);
   await Promise.all([clearNativeKey(), cancelReminders(), disableNativePush()]);

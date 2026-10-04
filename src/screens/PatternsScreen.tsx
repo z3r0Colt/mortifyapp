@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { Page } from "../components/Page";
 import { useBattlePacks } from "../content/selection";
-import { db } from "../data/db";
+import { journalsSince } from "../data/remote";
+import { waiting } from "../data/pending";
+import { useAuth } from "../state/auth";
 import { weeklyPatterns } from "../data/patterns";
 import { Scripture } from "../components/Scripture";
 import { ContentReading } from "../components/ContentReading";
@@ -9,14 +11,31 @@ export default function PatternsScreen() {
   const [patterns, setPatterns] = useState<ReturnType<typeof weeklyPatterns>>();
   const [error, setError] = useState("");
   const pack = useBattlePacks()[0];
+  const user = useAuth((s) => s.user);
   useEffect(() => {
-    void db.journals
-      .where("time")
-      .aboveOrEqual(Date.now() - 7 * 86400000)
-      .toArray()
-      .then((rows) => setPatterns(weeklyPatterns(rows)))
-      .catch(() => setError("Unable to read local examinations."));
-  }, []);
+    if (!user) return;
+    const since = Date.now() - 7 * 86400000;
+    // Saved examinations plus any still waiting to upload from this device.
+    void Promise.all([journalsSince(user.id, since), waiting("journals")])
+      .then(([saved, queued]) =>
+        setPatterns(
+          weeklyPatterns(
+            [...saved, ...queued].map((row) => ({
+              time: Date.parse(row.created_at),
+              roots: row.roots,
+              occasions: row.occasions,
+            })),
+          ),
+        ),
+      )
+      .catch(() =>
+        setError(
+          navigator.onLine
+            ? "Unable to read your examinations. Please try again."
+            : "Connect to the internet to see your patterns.",
+        ),
+      );
+  }, [user?.id]);
   const bars = (items: [string, number][]) =>
     items.length ? (
       items.map(([label, count]) => (

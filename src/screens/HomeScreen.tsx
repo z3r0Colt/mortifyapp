@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Page } from "../components/Page";
 import { Icon } from "../components/Icon";
 import { ProtectionReminder } from "../components/ProtectionReminder";
+import { InstallCard } from "../components/InstallCard";
 import { TodayVerse } from "../components/TodayVerse";
 import { fleeTap } from "../native/haptics";
 import { usePreferences } from "../state/preferences";
@@ -65,6 +66,7 @@ export default function HomeScreen() {
         <Icon name="chevron" size={18} className="chevron" />
       </Link>
       <ProtectionReminder />
+      <InstallCard dismissible />
     </Page>
   );
 }

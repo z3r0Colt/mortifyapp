@@ -1,6 +1,9 @@
 import { z } from "zod";
 import { loadJson, type Pack } from "./loader";
 import { db } from "../data/db";
+import { rotateReading } from "../data/remote";
+import { useAuth } from "../state/auth";
+import { supabase } from "../brethren/client";
 const catechismSchema = z
   .array(
     z.object({
@@ -28,6 +31,22 @@ export async function rotate<T>(
   now = new Date(),
 ): Promise<T> {
   if (!items.length) throw new Error("No reading is available.");
+  // The account keeps the place so every device shows the same reading.
+  // Offline, this device carries on from its own copy.
+  const user = useAuth.getState().user;
+  if (user && supabase && navigator.onLine)
+    try {
+      const day = [
+        now.getFullYear(),
+        String(now.getMonth() + 1).padStart(2, "0"),
+        String(now.getDate()).padStart(2, "0"),
+      ].join("-");
+      const index = await rotateReading(key, items.length, day);
+      await db.readingHistory.put({ key, index, last: now.getTime() });
+      return items[index % items.length];
+    } catch {
+      /* Fall back to this device's copy. */
+    }
   return db.transaction("rw", db.readingHistory, async () => {
     const history = await db.readingHistory.get(key);
     const sameDay =

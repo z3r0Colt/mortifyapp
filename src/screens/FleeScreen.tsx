@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Page } from "../components/Page";
 import { Action } from "../components/Action";
 import { randomItem, useBattlePacks } from "../content/selection";
-import { db } from "../data/db";
+import { saveEntry } from "../data/pending";
 import { PrayerStep } from "../components/PrayerStep";
 import { queueEvent } from "../brethren/outbox";
 import { Scripture } from "../components/Scripture";
@@ -62,7 +62,15 @@ export default function FleeScreen() {
     );
   const { pack, verse, counsel, prayer, action } = selection;
   const finish = async (answer: "stood" | "not-yet") => {
-    await db.fleeLogs.add({ time: Date.now(), battle: pack.id, answer });
+    await saveEntry({
+      table: "flee_logs",
+      row: {
+        id: crypto.randomUUID(),
+        created_at: new Date().toISOString(),
+        battle: pack.id,
+        answer,
+      },
+    });
     if (answer === "stood")
       await queueEvent("stood_firm", pack.id).catch(() => {});
     navigate("/", { replace: true });

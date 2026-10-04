@@ -1,6 +1,6 @@
 # Mortify
 
-A browser-first, offline Christian app for Scripture, prayer, private examination, and a small accepted circle of brethren. Work followed the three prompt files in order. The phase-by-phase file list and test instructions are in [docs/PHASES.md](docs/PHASES.md).
+A browser-first Christian app for Scripture, prayer, private examination, and a small accepted circle of brethren. Work followed the three prompt files in order. The phase-by-phase file list and test instructions are in [docs/PHASES.md](docs/PHASES.md).
 
 ## Run locally
 
@@ -35,7 +35,7 @@ Install/offline behavior should be tested against the production preview, not th
 - [Signed bundles and TestFlight](docs/STORE-RELEASE.md)
 - [Store listing drafts](docs/STORE-LISTINGS.md) and [privacy policy draft](docs/PRIVACY-POLICY-DRAFT.md)
 
-Copy `.env.example` to `.env.local` and fill only public client configuration. For the GitHub Pages build, add the same three `VITE_` values as repository secrets. Service-role, webhook, VAPID private and Firebase service-account credentials belong in server secrets. Never put journal text in Supabase.
+Copy `.env.example` to `.env.local` and fill only public client configuration. For the GitHub Pages build, add the same three `VITE_` values as repository secrets. Service-role, webhook, VAPID private and Firebase service-account credentials belong in server secrets. Journal text reaches Supabase only as ciphertext encrypted on the device with the user's PIN.
 
 ## Validation status
 

@@ -25,7 +25,7 @@ export function BrethrenGate({
         </p>
       </Page>
     );
-  if (!user) return <Navigate to="/sign-in" replace />;
+  if (!user) return <Navigate to="/onboarding/sign-in" replace />;
   if (!loaded)
     return (
       <Page title="Brethren">
@@ -38,7 +38,7 @@ export function BrethrenGate({
     return (
       <Page title="Brethren">
         <p role="alert">{error}</p>
-        <p>Your private readings and entries are still available offline.</p>
+        <p>Your readings and Flee still work without a connection.</p>
         <Action run={load}>Try again</Action>
       </Page>
     );

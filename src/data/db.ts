@@ -1,6 +1,8 @@
 import Dexie, { type EntityTable } from "dexie";
 import type { CipherText } from "../privacy/crypto";
 import type { OutboxItem } from "../brethren/outbox";
+// The user's data lives in Supabase. This device keeps only a cache for
+// opening offline, entries waiting to upload, and settings for this device.
 export type Preferences = {
   id: "main";
   onboarded: boolean;
@@ -12,29 +14,41 @@ export type Preferences = {
   protectionCheckedAt?: number;
   protectionEnabled?: boolean;
 };
-export type FleeLog = {
-  id?: number;
-  time: number;
+export type FleeRow = {
+  id: string;
+  created_at: string;
   battle: string;
   answer: "stood" | "not-yet";
 };
-export type Journal = {
-  id?: number;
-  time: number;
+export type JournalRow = {
+  id: string;
+  created_at: string;
   battle: string;
   roots: string[];
   occasions: string[];
-  text: string | CipherText;
+  body: CipherText;
 };
-export type FallLog = {
-  id?: number;
-  time: number;
+export type FallRow = {
+  id: string;
+  created_at: string;
   battle: string;
-  confession: string | CipherText;
-  reflection: string | CipherText;
+  confession: CipherText;
+  reflection: CipherText;
 };
+export type PendingEntry =
+  | { table: "flee_logs"; row: FleeRow }
+  | { table: "journals"; row: JournalRow }
+  | { table: "falls"; row: FallRow };
+/** An entry saved while offline, uploaded when the connection returns. */
+export type Pending = PendingEntry & {
+  id: string;
+  userId: string;
+  time: number;
+};
+/** The PIN check copied from the account, plus how this device unlocks. */
 export type Security = {
   id: "main";
+  userId: string;
   salt: string;
   verifier: CipherText;
   lockEnabled: boolean;
@@ -43,14 +57,12 @@ export type Security = {
 };
 export type ReadingHistory = { key: string; last: number; index: number };
 export const db = new Dexie("mortify") as Dexie & {
-  preferences: EntityTable<Preferences, "id">;
-  fleeLogs: EntityTable<FleeLog, "id">;
-  journals: EntityTable<Journal, "id">;
-  falls: EntityTable<FallLog, "id">;
+  preferences: EntityTable<Preferences & { userId?: string }, "id">;
   readingHistory: EntityTable<ReadingHistory, "key">;
   security: EntityTable<Security, "id">;
   cloudKv: EntityTable<{ key: string; value: string }, "key">;
   outbox: EntityTable<OutboxItem, "id">;
+  pending: EntityTable<Pending, "id">;
 };
 db.version(1).stores({
   preferences: "id",
@@ -62,6 +74,15 @@ db.version(1).stores({
 db.version(2).stores({ security: "id" });
 db.version(3).stores({ cloudKv: "key" });
 db.version(4).stores({ outbox: "id,userId,time" });
+// Entries moved to Supabase. Earlier on-device entries and PIN are dropped.
+db.version(5)
+  .stores({
+    fleeLogs: null,
+    journals: null,
+    falls: null,
+    pending: "id,userId,time",
+  })
+  .upgrade((tx) => tx.table("security").clear());
 export const defaultPreferences: Preferences = {
   id: "main",
   onboarded: false,
