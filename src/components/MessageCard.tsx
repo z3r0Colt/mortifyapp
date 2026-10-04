@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Action } from "./Action";
+import { Icon } from "./Icon";
 import { MessageComposer } from "./MessageComposer";
 import { messageText, sendMessage, type Message } from "../brethren/messages";
 import { useAuth } from "../state/auth";
@@ -7,10 +8,18 @@ import { useMessages } from "../state/messages";
 import { useApp } from "../state/app";
 import { cloud, result } from "../brethren/client";
 import { useBrethren } from "../state/brethren";
-export function MessageCard({ message }: { message: Message }) {
+export function MessageCard({
+  message,
+  fresh = false,
+}: {
+  message: Message;
+  /** Unread when the screen was opened, so it still shows as new. */
+  fresh?: boolean;
+}) {
   const user = useAuth((s) => s.user);
   const rows = useMessages((s) => s.rows);
   const [reply, setReply] = useState(false);
+  const [menu, setMenu] = useState(false);
   const outgoing = message.sender_id === user?.id;
   const activePrayer =
     message.message_type === "pray_for_me" &&
@@ -52,10 +61,45 @@ export function MessageCard({ message }: { message: Message }) {
             minute: "2-digit",
           })}
         </span>
-        {!outgoing && !message.read && (
-          <span className="dot" aria-label="Unread" />
-        )}
+        <span className="row">
+          {!outgoing && (fresh || !message.read) && (
+            <span className="dot" aria-label="New" />
+          )}
+          {!outgoing && (
+            <button
+              className="icon-button small"
+              aria-label="More options for this message"
+              aria-expanded={menu}
+              onClick={() => setMenu(!menu)}
+            >
+              <Icon name="more" size={18} />
+            </button>
+          )}
+        </span>
       </div>
+      {menu && (
+        <div className="stack fade" style={{ marginBottom: 12 }}>
+          <Action
+            run={async () => {
+              if (
+                window.confirm(
+                  "Report this message as abusive and remove this person from your circle?",
+                )
+              ) {
+                await result(
+                  cloud().rpc("report_message", { p_message: message.id }),
+                );
+                await Promise.all([
+                  useBrethren.getState().load(),
+                  useMessages.getState().load(),
+                ]);
+              }
+            }}
+          >
+            Report abusive message
+          </Action>
+        </div>
+      )}
       <p className="message-body">{messageText(message)}</p>
       {battle && <span className="tag">{battle}</span>}
       {message.message_type === "pray_for_me" && outgoing && (
@@ -92,43 +136,9 @@ export function MessageCard({ message }: { message: Message }) {
               Mark answered
             </Action>
           )}
-        {!outgoing && !message.read && (
-          <Action
-            run={async () => {
-              await result(
-                cloud().rpc("mark_message_read", { p_message: message.id }),
-              );
-              await useMessages.getState().load();
-            }}
-          >
-            Mark read
-          </Action>
-        )}
         <button aria-expanded={reply} onClick={() => setReply(!reply)}>
           Reply
         </button>
-        {!outgoing && (
-          <Action
-            className="quiet"
-            run={async () => {
-              if (
-                window.confirm(
-                  "Report this message as abusive and remove this person from your circle?",
-                )
-              ) {
-                await result(
-                  cloud().rpc("report_message", { p_message: message.id }),
-                );
-                await Promise.all([
-                  useBrethren.getState().load(),
-                  useMessages.getState().load(),
-                ]);
-              }
-            }}
-          >
-            Report abusive message
-          </Action>
-        )}
       </div>
       {reply && <MessageComposer receiver={other} parent={message.id} />}
       {replies.length > 0 && (

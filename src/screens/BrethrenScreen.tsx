@@ -93,7 +93,7 @@ export default function BrethrenScreen() {
           No accepted links yet. Share your code with someone you know.
         </p>
       )}
-      <ListGroup title="Together">
+      <ListGroup>
         <ListLink
           to="/brethren/messages"
           icon="message"
@@ -107,20 +107,12 @@ export default function BrethrenScreen() {
           }
         />
         <ListLink to="/brethren/add" icon="plus" label="Add by code" />
-      </ListGroup>
-      <ListGroup title="What they see">
-        <ListLink to="/brethren/sharing" icon="share" label="What I share" />
         <ListLink
-          to="/brethren/preview"
+          to="/brethren/sharing"
           icon="eye"
-          label={`What my ${circle} see`}
+          label="My profile and sharing"
+          detail={`What your ${circle} see, and your phone number`}
         />
-        <ListLink
-          to="/brethren/contact"
-          icon="phone"
-          label="Phone for my circle"
-        />
-        <ListLink to="/notifications" icon="bell" label="Notifications" />
       </ListGroup>
       <Action className="quiet" run={load}>
         <Icon name="refresh" size={16} />

@@ -38,7 +38,11 @@ export default function SharedProfileScreen({
     packs.find((p) => p.id === battle)?.name ?? battle;
   return (
     <Page
-      back={{ to: "/brethren", label: "Brethren" }}
+      back={
+        preview
+          ? { to: "/brethren/sharing", label: "My profile and sharing" }
+          : { to: "/brethren", label: "Brethren" }
+      }
       title={
         preview
           ? `What my ${data?.profile.sex === "sister" ? "sisters" : "brethren"} see`

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { Action } from "./Action";
 import { Icon } from "./Icon";
 import { useAuth } from "../state/auth";
@@ -24,15 +23,17 @@ export function PrayerStep({ battle }: { battle: string }) {
           Ask my {sister ? "sisters" : "brethren"} to pray
         </Action>
       ) : (
-        <Link className="button" to="/sign-in">
-          Sign in to ask your brethren to pray
-        </Link>
+        <p className="notice">
+          Call a trusted believer from your own contacts and ask for prayer.
+        </p>
       )}
       {status && <p role="status">{status}</p>}
-      <button aria-expanded={calls} onClick={() => setCalls(!calls)}>
-        <Icon name="phone" size={18} />
-        Call a {sister ? "sister" : "brother"}
-      </button>
+      {user && (
+        <button aria-expanded={calls} onClick={() => setCalls(!calls)}>
+          <Icon name="phone" size={18} />
+          Call a {sister ? "sister" : "brother"}
+        </button>
+      )}
       {calls && (
         <div className="stack fade">
           {peers

@@ -7,6 +7,7 @@ import { ListGroup, ListLink } from "../components/List";
 import { useAuth } from "../state/auth";
 import { signOut, deleteAccount } from "../brethren/account";
 import { isNative } from "../native/platform";
+import { clock } from "../data/clock";
 export default function SettingsScreen() {
   const value = usePreferences((s) => s.value);
   const user = useAuth((s) => s.user);
@@ -28,7 +29,7 @@ export default function SettingsScreen() {
           to="/onboarding/times"
           icon="clock"
           label="Reading and examination times"
-          detail={`Morning ${value.morning} · Evening ${value.evening}`}
+          detail={`Morning ${clock(value.morning)} · Evening ${clock(value.evening)}`}
         />
       </ListGroup>
       <ListGroup title="Privacy and protection">
@@ -48,9 +49,6 @@ export default function SettingsScreen() {
           icon="bell"
           label="Notifications and reminders"
         />
-      </ListGroup>
-      <ListGroup title="About">
-        <ListLink to="/debug" icon="box" label="Content packs" />
       </ListGroup>
       <InstallCard />
       {user && (

@@ -59,19 +59,21 @@ export default function FallScreen() {
       <div className="flow fade" key={step}>
         {step === 0 && (
           <>
-            <label>
-              Battle
-              <select
-                value={battle}
-                onChange={(e) => setBattle(e.target.value)}
-              >
-                {packs.map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {p.name}
-                  </option>
-                ))}
-              </select>
-            </label>
+            {packs.length > 1 && (
+              <label>
+                Battle
+                <select
+                  value={battle}
+                  onChange={(e) => setBattle(e.target.value)}
+                >
+                  {packs.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            )}
             {pack.afterFallReadings.map((r, i) => (
               <article className="card" key={i}>
                 <ContentReading reading={r} />

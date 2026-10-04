@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Page } from "../components/Page";
 import { Action } from "../components/Action";
 import { Icon } from "../components/Icon";
@@ -8,12 +8,35 @@ import { MessageComposer } from "../components/MessageComposer";
 import { useMessages } from "../state/messages";
 import { useBrethren } from "../state/brethren";
 import { useAuth } from "../state/auth";
+import { cloud, result } from "../brethren/client";
 export default function MessagesScreen() {
   const { rows, error, load } = useMessages();
   const { peers, profile } = useBrethren();
   const user = useAuth((s) => s.user);
   const [compose, setCompose] = useState("");
   const [, refreshTime] = useState(0);
+  // Opening Messages marks what you received as read. Those messages still
+  // show as new until you leave, so nothing slips past unseen.
+  const [fresh] = useState(() => new Set<string>());
+  const marking = useRef(new Set<string>());
+  useEffect(() => {
+    const unread = rows.filter(
+      (m) =>
+        m.receiver_id === user?.id && !m.read && !marking.current.has(m.id),
+    );
+    if (!unread.length) return;
+    for (const m of unread) {
+      marking.current.add(m.id);
+      fresh.add(m.id);
+    }
+    void Promise.all(
+      unread.map(async (m) =>
+        result(cloud().rpc("mark_message_read", { p_message: m.id })),
+      ),
+    )
+      .then(() => useMessages.getState().load())
+      .catch(() => {});
+  }, [rows, user?.id]);
   useEffect(() => {
     const delays = rows
       .filter((m) => m.message_type === "pray_for_me" && !m.answered_at)
@@ -66,7 +89,7 @@ export default function MessagesScreen() {
                   ? "Your request"
                   : peers.find((p) => p.id === m.sender_id)?.display_name}
               </h3>
-              <MessageCard message={m} />
+              <MessageCard message={m} fresh={fresh.has(m.id)} />
             </div>
           ))}
         </>
@@ -92,7 +115,7 @@ export default function MessagesScreen() {
             {group.peer.display_name}
           </h2>
           {group.messages.map((m) => (
-            <MessageCard key={m.id} message={m} />
+            <MessageCard key={m.id} message={m} fresh={fresh.has(m.id)} />
           ))}
         </section>
       ))}

@@ -46,3 +46,28 @@ export async function enableWebPush(userId: string) {
       ),
   );
 }
+/** Whether this device is registered to receive notifications. */
+export async function devicePushEnabled(userId: string) {
+  const rows = await result(
+    cloud()
+      .from("push_subscriptions")
+      .select("device_id")
+      .eq("user_id", userId)
+      .eq("device_id", await deviceId()),
+  );
+  return (rows?.length ?? 0) > 0;
+}
+/** Stops notifications on this device by removing its registration. */
+export async function disableWebPush(userId: string) {
+  await result(
+    cloud()
+      .from("push_subscriptions")
+      .delete()
+      .eq("user_id", userId)
+      .eq("device_id", await deviceId()),
+  );
+  if ("serviceWorker" in navigator) {
+    const registration = await navigator.serviceWorker.getRegistration();
+    await (await registration?.pushManager.getSubscription())?.unsubscribe();
+  }
+}

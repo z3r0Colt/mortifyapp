@@ -1,77 +1,112 @@
+import { useState } from "react";
 import { Page } from "../components/Page";
 import { Action } from "../components/Action";
 import { Icon } from "../components/Icon";
+import { ListGroup, SwitchRow } from "../components/List";
 import { usePrivacy } from "../state/privacy";
 import { exportData, deleteDeviceData } from "../privacy/data";
-import { useState } from "react";
 import { isNative } from "../native/platform";
 import { biometricAvailable } from "../native/vault";
+// Changes that must confirm the PIN before the phone can store the key.
+type Pending = "lock-off" | "biometric-on" | "biometric-off";
+const confirmLabel: Record<Pending, string> = {
+  "lock-off": "Turn off PIN lock",
+  "biometric-on": "Use fingerprint or Face ID",
+  "biometric-off": "Turn off fingerprint or Face ID",
+};
 export default function PrivacyScreen() {
   const { security, setLock, lock, setBiometrics } = usePrivacy();
+  const [pending, setPending] = useState<Pending | null>(null);
   const [pin, setPin] = useState("");
+  const native = isNative();
+  const finish = async () => {
+    if (pending === "lock-off") await setLock(false, pin);
+    else await setBiometrics(pending === "biometric-on", pin);
+    setPending(null);
+    setPin("");
+  };
   return (
     <Page
       title="Privacy"
       back={{ to: "/settings", label: "Settings" }}
       lede="Your journal and confessions are encrypted on this device. They never go to your brethren or a server."
     >
-      <article className="card">
-        <div className="person" style={{ marginBottom: 14 }}>
-          <span className="tile">
-            <Icon name="lock" size={20} />
-          </span>
-          <span className="row-text">
-            <strong>PIN lock</strong>
-            <span
-              className={`status-pill${security?.lockEnabled ? " on" : ""}`}
-            >
-              {security?.lockEnabled ? "On" : "Off"}
-            </span>
-          </span>
-        </div>
-        <p className="label">
-          Turning off the PIN lock saves an unlocking key on this device. Anyone
-          who can open Mortify here can read your text.
-        </p>
-        {isNative() && (
-          <label>
-            Current PIN (for native key settings)
+      <ListGroup>
+        <SwitchRow
+          label="PIN lock"
+          detail="Ask for your PIN each time Mortify opens. If this is off, anyone who can open Mortify on this device can read your journal."
+          checked={!!security?.lockEnabled}
+          onChange={async (on) => {
+            if (!on && native) {
+              setPending("lock-off");
+              return;
+            }
+            await setLock(on);
+          }}
+        />
+        {native && (
+          <SwitchRow
+            label="Fingerprint or Face ID"
+            detail="Open Mortify without typing your PIN."
+            checked={!!security?.biometricEnabled}
+            onChange={async (on) => {
+              if (on && !(await biometricAvailable()))
+                throw new Error(
+                  "Set up fingerprint or Face ID in your phone settings first.",
+                );
+              setPending(on ? "biometric-on" : "biometric-off");
+            }}
+          />
+        )}
+      </ListGroup>
+      {pending && (
+        <form
+          className="card fade"
+          onSubmit={(e) => {
+            e.preventDefault();
+            (
+              e.currentTarget.querySelector(
+                "button.primary",
+              ) as HTMLButtonElement | null
+            )?.click();
+          }}
+        >
+          <label style={{ marginTop: 0 }}>
+            Confirm with your PIN
             <input
               className="pin-input"
               type="password"
               inputMode="numeric"
+              autoComplete="current-password"
               maxLength={12}
               value={pin}
-              onChange={(e) => setPin(e.target.value)}
+              autoFocus
+              onChange={(e) => setPin(e.target.value.replace(/\D/g, ""))}
             />
           </label>
-        )}
-        <div className="stack">
-          <Action run={() => setLock(!security?.lockEnabled, pin)}>
-            {security?.lockEnabled ? "Turn off PIN lock" : "Turn on PIN lock"}
-          </Action>
-          {security?.lockEnabled && <button onClick={lock}>Lock now</button>}
-          {isNative() && (
-            <Action
-              run={async () => {
-                if (
-                  !security?.biometricEnabled &&
-                  !(await biometricAvailable())
-                )
-                  throw new Error(
-                    "Set up fingerprint or Face ID in your phone settings first.",
-                  );
-                await setBiometrics(!security?.biometricEnabled, pin);
+          <div className="stack">
+            <Action className="primary" run={finish}>
+              {confirmLabel[pending]}
+            </Action>
+            <button
+              type="button"
+              className="quiet"
+              onClick={() => {
+                setPending(null);
                 setPin("");
               }}
             >
-              {security?.biometricEnabled
-                ? "Turn off biometric unlock"
-                : "Use fingerprint or Face ID"}
-            </Action>
-          )}
-        </div>
-      </article>
+              Cancel
+            </button>
+          </div>
+        </form>
+      )}
+      {security?.lockEnabled && (
+        <button className="quiet" onClick={lock}>
+          <Icon name="lock" size={16} />
+          Lock now
+        </button>
+      )}
       <article className="card">
         <h2>Export your data</h2>
         <p>

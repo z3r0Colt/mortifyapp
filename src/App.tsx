@@ -41,7 +41,6 @@ import MessagesScreen from "./screens/MessagesScreen";
 import { useAuth } from "./state/auth";
 import { useMessages, watchMessages } from "./state/messages";
 import SharedProfileScreen from "./screens/SharedProfileScreen";
-import ContactSettingsScreen from "./screens/ContactSettingsScreen";
 import { watchOutbox, publishBattles } from "./brethren/outbox";
 import { useBrethren } from "./state/brethren";
 import { nativeLifecycle } from "./native/lifecycle";
@@ -188,11 +187,7 @@ function Router() {
           <Route path="/debug" element={<DebugScreen />} />
           <Route
             path="/brethren/contact"
-            element={
-              <BrethrenGate>
-                <ContactSettingsScreen />
-              </BrethrenGate>
-            }
+            element={<Navigate to="/brethren/sharing" replace />}
           />
           <Route
             path="/brethren/profile/:id"

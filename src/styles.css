@@ -1286,6 +1286,7 @@ p[role="status"] {
 }
 .message-actions .quiet {
   margin: 0;
+  padding-inline: 6px;
 }
 .card-foot .label {
   display: inline-flex;
@@ -1305,6 +1306,45 @@ div.list-row:hover {
 .stack + .hint,
 .stack + .quiet {
   margin-top: 16px;
+}
+
+.icon-button.small {
+  width: 36px;
+  min-height: 36px;
+  height: 36px;
+}
+.message-meta .row {
+  flex-wrap: nowrap;
+  gap: 4px;
+}
+.switch-row {
+  align-items: flex-start;
+}
+.switch-row .switch {
+  margin-top: 2px;
+}
+.row-error {
+  margin: 0 16px 14px;
+}
+
+.checks {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.checks li {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 14px;
+  line-height: 1.55;
+}
+.checks li:last-child {
+  margin-bottom: 0;
+}
+.checks svg {
+  flex: none;
+  margin-top: 4px;
+  color: var(--brass);
 }
 
 /* ---------- Motion: simple fades only ---------- */

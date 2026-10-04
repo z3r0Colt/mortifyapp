@@ -5,15 +5,7 @@ import { ProtectionReminder } from "../components/ProtectionReminder";
 import { TodayVerse } from "../components/TodayVerse";
 import { fleeTap } from "../native/haptics";
 import { usePreferences } from "../state/preferences";
-function clock(time: string) {
-  const [h, m] = time.split(":").map(Number);
-  const date = new Date();
-  date.setHours(h, m, 0, 0);
-  return date.toLocaleTimeString(undefined, {
-    hour: "numeric",
-    minute: "2-digit",
-  });
-}
+import { clock } from "../data/clock";
 export default function HomeScreen() {
   const { morning, evening } = usePreferences((s) => s.value);
   const now = new Date();
