@@ -20,14 +20,18 @@ export function BrethrenGate({
   if (!ready)
     return (
       <Page title="Brethren">
-        <p>Opening brethren…</p>
+        <p className="label" role="status">
+          Opening brethren…
+        </p>
       </Page>
     );
   if (!user) return <Navigate to="/sign-in" replace />;
   if (!loaded)
     return (
       <Page title="Brethren">
-        <p>Reading your circle…</p>
+        <p className="label" role="status">
+          Reading your circle…
+        </p>
       </Page>
     );
   if (error)

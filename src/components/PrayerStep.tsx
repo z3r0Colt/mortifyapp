@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Action } from "./Action";
+import { Icon } from "./Icon";
 import { useAuth } from "../state/auth";
 import { useBrethren } from "../state/brethren";
 import { requestPrayer } from "../brethren/outbox";
@@ -23,14 +24,17 @@ export function PrayerStep({ battle }: { battle: string }) {
           Ask my {sister ? "sisters" : "brethren"} to pray
         </Action>
       ) : (
-        <Link to="/sign-in">Sign in to ask your brethren to pray</Link>
+        <Link className="button" to="/sign-in">
+          Sign in to ask your brethren to pray
+        </Link>
       )}
       {status && <p role="status">{status}</p>}
-      <button onClick={() => setCalls(!calls)}>
+      <button aria-expanded={calls} onClick={() => setCalls(!calls)}>
+        <Icon name="phone" size={18} />
         Call a {sister ? "sister" : "brother"}
       </button>
       {calls && (
-        <div className="stack">
+        <div className="stack fade">
           {peers
             .filter((p) => p.phone)
             .map((p) => (
@@ -43,7 +47,7 @@ export function PrayerStep({ battle }: { battle: string }) {
               </a>
             ))}
           {!peers.some((p) => p.phone) && (
-            <p>
+            <p className="notice">
               No phone numbers are shared here. You may call a trusted believer
               from your own contacts.
             </p>

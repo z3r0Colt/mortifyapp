@@ -24,29 +24,39 @@ export default function ProtectionScreen() {
   }, []);
   if (!packs.some((p) => p.screenBased))
     return (
-      <Page title="Protection setup">
-        <p>
+      <Page
+        title="Protection setup"
+        back={{ to: "/settings", label: "Settings" }}
+      >
+        <p className="notice">
           This guide appears for screen based battles. Your chosen battles do
           not need this setup.
         </p>
       </Page>
     );
   return (
-    <Page title="Guard occasions of sin">
+    <Page
+      title="Guard occasions of sin"
+      back={{ to: "/settings", label: "Settings" }}
+    >
       <NativeProtectionCard />
       {isNative() && (
-        <button onClick={() => setGuide(!guide)}>
+        <button
+          className="block"
+          aria-expanded={guide}
+          onClick={() => setGuide(!guide)}
+        >
           {guide ? "Close setup guide" : "Open fallback setup guide"}
         </button>
       )}
       {guide && (
-        <>
+        <div className="fade">
           <p>
             Mortify on the web cannot filter your phone's internet. Set
             protection in your phone's settings, and ask a trusted believer to
             help you keep it in place.
           </p>
-          <div className="row">
+          <div className="segmented">
             <button
               aria-pressed={platform === "android"}
               onClick={() => setPlatform("android")}
@@ -61,8 +71,8 @@ export default function ProtectionScreen() {
             </button>
           </div>
           {platform === "android" ? (
-            <>
-              <ol>
+            <article className="card">
+              <ol className="numbered">
                 <li>
                   Open Android Settings and search for Private DNS (Android 9 or
                   later).
@@ -85,10 +95,10 @@ export default function ProtectionScreen() {
               >
                 CleanBrowsing setup guide
               </a>
-            </>
+            </article>
           ) : (
-            <>
-              <ol>
+            <article className="card">
+              <ol className="numbered">
                 <li>Open Settings, then Screen Time.</li>
                 <li>Turn on Content &amp; Privacy Restrictions.</li>
                 <li>
@@ -112,11 +122,11 @@ export default function ProtectionScreen() {
               >
                 Apple's Screen Time guide
               </a>
-            </>
+            </article>
           )}
           {!nativeAvailable && (
-            <>
-              <label className="row">
+            <article className="card">
+              <label className="row" style={{ marginTop: 0 }}>
                 <input
                   type="checkbox"
                   checked={checked}
@@ -125,6 +135,7 @@ export default function ProtectionScreen() {
                 My protection is set up
               </label>
               <Action
+                className="primary"
                 run={async () => {
                   await save({
                     protectionEnabled: checked,
@@ -140,9 +151,9 @@ export default function ProtectionScreen() {
                 This records your confirmation. The web app cannot check your
                 phone's settings.
               </p>
-            </>
+            </article>
           )}
-        </>
+        </div>
       )}
     </Page>
   );

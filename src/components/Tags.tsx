@@ -1,3 +1,4 @@
+import { Icon } from "./Icon";
 export function Tags({
   title,
   options,
@@ -10,24 +11,29 @@ export function Tags({
   onChange: (value: string[]) => void;
 }) {
   return (
-    <fieldset className="card">
+    <fieldset className="chips">
       <legend>{title}</legend>
-      {options.map((tag) => (
-        <label className="row" key={tag}>
-          <input
-            type="checkbox"
-            checked={value.includes(tag)}
-            onChange={(e) =>
-              onChange(
-                e.target.checked
-                  ? [...value, tag]
-                  : value.filter((v) => v !== tag),
-              )
-            }
-          />
-          {tag}
-        </label>
-      ))}
+      <div className="chip-list">
+        {options.map((tag) => (
+          <label className="chip" key={tag}>
+            <input
+              type="checkbox"
+              checked={value.includes(tag)}
+              onChange={(e) =>
+                onChange(
+                  e.target.checked
+                    ? [...value, tag]
+                    : value.filter((v) => v !== tag),
+                )
+              }
+            />
+            <span className="chip-check">
+              <Icon name="check" size={16} />
+            </span>
+            {tag}
+          </label>
+        ))}
+      </div>
     </fieldset>
   );
 }

@@ -1,30 +1,76 @@
 import { Link } from "react-router-dom";
 import { Page } from "../components/Page";
+import { Icon } from "../components/Icon";
 import { ProtectionReminder } from "../components/ProtectionReminder";
+import { TodayVerse } from "../components/TodayVerse";
 import { fleeTap } from "../native/haptics";
+import { usePreferences } from "../state/preferences";
+function clock(time: string) {
+  const [h, m] = time.split(":").map(Number);
+  const date = new Date();
+  date.setHours(h, m, 0, 0);
+  return date.toLocaleTimeString(undefined, {
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}
 export default function HomeScreen() {
+  const { morning, evening } = usePreferences((s) => s.value);
+  const now = new Date();
+  const day = now.toLocaleDateString(undefined, {
+    month: "long",
+    day: "numeric",
+  });
+  const eyebrow =
+    now.getDay() === 0
+      ? `The Lord's Day · ${day}`
+      : `${now.toLocaleDateString(undefined, { weekday: "long" })} · ${day}`;
   return (
-    <Page title="Watch and pray">
-      <p>Turn to Christ in the hour of temptation.</p>
+    <Page title="Watch and pray" eyebrow={eyebrow}>
+      <TodayVerse />
       <Link
-        className="button flee"
+        className="flee-card"
         to="/flee"
         onClick={() => {
           void fleeTap();
         }}
       >
-        Flee
+        <span className="flee-text">
+          <span className="flee-label">In temptation</span>
+          <span className="flee-title">Flee</span>
+          <span className="flee-sub">
+            Turn to Christ in the hour of temptation.
+          </span>
+        </span>
+        <span className="flee-arrow">
+          <Icon name="arrow" size={24} />
+        </span>
       </Link>
-      <Link className="card quiet" to="/reading">
-        <h2>Today's Reading</h2>
-        <p>Make room for the Word.</p>
-      </Link>
-      <Link className="card quiet" to="/examine">
-        <h2>Tonight's Examination</h2>
-        <p>Bring this day before the Lord.</p>
-      </Link>
-      <Link className="quiet" to="/fall">
-        I have fallen
+      <div className="grid-2">
+        <Link className="card time-card" to="/reading">
+          <span className="tile">
+            <Icon name="sun" size={20} />
+          </span>
+          <h2>Today's Reading</h2>
+          <p>Morning · {clock(morning)}</p>
+        </Link>
+        <Link className="card time-card" to="/examine">
+          <span className="tile">
+            <Icon name="moon" size={20} />
+          </span>
+          <h2>Tonight's Examination</h2>
+          <p>Evening · {clock(evening)}</p>
+        </Link>
+      </div>
+      <Link className="return-row" to="/fall">
+        <span className="tile">
+          <Icon name="turn" size={20} />
+        </span>
+        <span className="row-text">
+          I have fallen
+          <span className="row-detail">Return to Christ in repentance.</span>
+        </span>
+        <Icon name="chevron" size={18} className="chevron" />
       </Link>
       <ProtectionReminder />
     </Page>

@@ -1,55 +1,70 @@
-import { useEffect, useState } from "react";
+import type { ReactNode } from "react";
 import { Page } from "../components/Page";
-import { useBattlePacks } from "../content/selection";
-import { dailyReading } from "../content/daily";
+import { useDailyReading } from "../content/useDaily";
 import { Scripture } from "../components/Scripture";
 import { ContentReading } from "../components/ContentReading";
-export default function ReadingScreen() {
-  const packs = useBattlePacks();
-  const key = packs.map((p) => p.id).join(",");
-  const [data, setData] = useState<Awaited<ReturnType<typeof dailyReading>>>();
-  const [error, setError] = useState("");
-  useEffect(() => {
-    let active = true;
-    void dailyReading(packs)
-      .then((d) => {
-        if (active) setData(d);
-      })
-      .catch((e) => {
-        if (active)
-          setError(e instanceof Error ? e.message : "Could not load reading.");
-      });
-    return () => {
-      active = false;
-    };
-  }, [key]);
+import { Paragraphs } from "../components/Paragraphs";
+import { Icon, type IconName } from "../components/Icon";
+function Section({
+  icon,
+  title,
+  accent = false,
+  children,
+}: {
+  icon: IconName;
+  title: string;
+  accent?: boolean;
+  children: ReactNode;
+}) {
   return (
-    <Page title="Today's Reading">
+    <article className={`card reading-section fade${accent ? " accent" : ""}`}>
+      <h2 className="section-title">
+        <Icon name={icon} size={18} />
+        {title}
+      </h2>
+      {children}
+    </article>
+  );
+}
+export default function ReadingScreen() {
+  const { data, error } = useDailyReading();
+  return (
+    <Page
+      title="Today's Reading"
+      eyebrow={new Date().toLocaleDateString(undefined, {
+        weekday: "long",
+        month: "long",
+        day: "numeric",
+      })}
+      back={{ to: "/", label: "Home" }}
+    >
       {error && <p role="alert">{error}</p>}
       {data ? (
         <>
-          <article>
-            <h2>Scripture</h2>
+          {data.lordsDay && (
+            <Section icon="sun" title="The Lord's Day" accent>
+              <h3 className="qa-question">{data.lordsDay.title}</h3>
+              <Paragraphs text={data.lordsDay.text} />
+            </Section>
+          )}
+          <Section icon="book" title="Scripture">
             <Scripture reference={data.verse} />
-          </article>
-          <article className="card">
-            <h2>{data.question.question}</h2>
+          </Section>
+          <Section icon="message" title="Catechism">
+            <h3 className="qa-question">{data.question.question}</h3>
             <p>{data.question.answer}</p>
             <small>{data.question.source}</small>
-          </article>
-          <article>
-            <h2>Counsel</h2>
+          </Section>
+          <Section icon="pen" title="Counsel">
             <ContentReading reading={data.counsel} />
-          </article>
-          {data.lordsDay && (
-            <article className="card">
-              <h2>{data.lordsDay.title}</h2>
-              <p>{data.lordsDay.text}</p>
-            </article>
-          )}
+          </Section>
         </>
       ) : (
-        !error && <p>Opening today's reading…</p>
+        !error && (
+          <p className="label" role="status">
+            Opening today's reading…
+          </p>
+        )
       )}
     </Page>
   );

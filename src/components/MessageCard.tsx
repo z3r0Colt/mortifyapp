@@ -40,33 +40,47 @@ export function MessageCard({ message }: { message: Message }) {
       .map((r) => r.sender_id),
   ).size;
   return (
-    <article className={`card${activePrayer ? " prayer-card" : ""}`}>
-      <p className="label">
-        {outgoing ? "You sent" : "Received"} ·{" "}
-        {new Date(message.created_at).toLocaleString()}
+    <article className={`card${activePrayer ? " prayer-card accent" : ""}`}>
+      <div className="message-meta">
+        <span className="label">
+          {outgoing ? "You sent" : "Received"} ·{" "}
+          {new Date(message.created_at).toLocaleString(undefined, {
+            weekday: "short",
+            month: "short",
+            day: "numeric",
+            hour: "numeric",
+            minute: "2-digit",
+          })}
+        </span>
         {!outgoing && !message.read && (
           <span className="dot" aria-label="Unread" />
         )}
-      </p>
-      <p>{messageText(message)}</p>
-      {battle && <p>{battle}</p>}
-      {message.message_type === "pray_for_me" && !outgoing && (
-        <Action
-          run={async () => {
-            await sendMessage(other, "praying", undefined, message.id);
-            await result(
-              cloud().rpc("mark_message_read", { p_message: message.id }),
-            );
-            await useMessages.getState().load();
-          }}
-        >
-          I'm praying for you
-        </Action>
-      )}
+      </div>
+      <p className="message-body">{messageText(message)}</p>
+      {battle && <span className="tag">{battle}</span>}
       {message.message_type === "pray_for_me" && outgoing && (
-        <>
-          <p className="label">{prayingCount} praying</p>
-          {!message.answered_at && (
+        <p className="label" style={{ marginTop: 10 }}>
+          {prayingCount} praying
+        </p>
+      )}
+      <div className="message-actions">
+        {message.message_type === "pray_for_me" && !outgoing && (
+          <Action
+            className="primary"
+            run={async () => {
+              await sendMessage(other, "praying", undefined, message.id);
+              await result(
+                cloud().rpc("mark_message_read", { p_message: message.id }),
+              );
+              await useMessages.getState().load();
+            }}
+          >
+            I'm praying for you
+          </Action>
+        )}
+        {message.message_type === "pray_for_me" &&
+          outgoing &&
+          !message.answered_at && (
             <Action
               run={async () => {
                 await result(
@@ -78,55 +92,62 @@ export function MessageCard({ message }: { message: Message }) {
               Mark answered
             </Action>
           )}
-        </>
-      )}
-      {!outgoing && !message.read && (
-        <Action
-          run={async () => {
-            await result(
-              cloud().rpc("mark_message_read", { p_message: message.id }),
-            );
-            await useMessages.getState().load();
-          }}
-        >
-          Mark read
-        </Action>
-      )}
-      <button onClick={() => setReply(!reply)}>Reply</button>
-      {!outgoing && (
-        <Action
-          run={async () => {
-            if (
-              window.confirm(
-                "Report this message as abusive and remove this person from your circle?",
-              )
-            ) {
+        {!outgoing && !message.read && (
+          <Action
+            run={async () => {
               await result(
-                cloud().rpc("report_message", { p_message: message.id }),
+                cloud().rpc("mark_message_read", { p_message: message.id }),
               );
-              await Promise.all([
-                useBrethren.getState().load(),
-                useMessages.getState().load(),
-              ]);
-            }
-          }}
-        >
-          Report abusive message
-        </Action>
-      )}
-      {reply && <MessageComposer receiver={other} parent={message.id} />}
-      <div className="thread">
-        {replies.map((r) => (
-          <p key={r.id}>
-            <small>
-              {r.sender_id === user?.id ? "You" : "Reply"} ·{" "}
-              {new Date(r.created_at).toLocaleTimeString()}
-            </small>
-            <br />
-            {messageText(r)}
-          </p>
-        ))}
+              await useMessages.getState().load();
+            }}
+          >
+            Mark read
+          </Action>
+        )}
+        <button aria-expanded={reply} onClick={() => setReply(!reply)}>
+          Reply
+        </button>
+        {!outgoing && (
+          <Action
+            className="quiet"
+            run={async () => {
+              if (
+                window.confirm(
+                  "Report this message as abusive and remove this person from your circle?",
+                )
+              ) {
+                await result(
+                  cloud().rpc("report_message", { p_message: message.id }),
+                );
+                await Promise.all([
+                  useBrethren.getState().load(),
+                  useMessages.getState().load(),
+                ]);
+              }
+            }}
+          >
+            Report abusive message
+          </Action>
+        )}
       </div>
+      {reply && <MessageComposer receiver={other} parent={message.id} />}
+      {replies.length > 0 && (
+        <div className="thread">
+          {replies.map((r) => (
+            <p key={r.id}>
+              <small>
+                {r.sender_id === user?.id ? "You" : "Reply"} ·{" "}
+                {new Date(r.created_at).toLocaleTimeString(undefined, {
+                  hour: "numeric",
+                  minute: "2-digit",
+                })}
+              </small>
+              <br />
+              {messageText(r)}
+            </p>
+          ))}
+        </div>
+      )}
     </article>
   );
 }

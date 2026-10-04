@@ -2,6 +2,7 @@ import { NavLink } from "react-router-dom";
 import { useBrethren } from "../state/brethren";
 import { useMessages } from "../state/messages";
 import { useAuth } from "../state/auth";
+import { Icon } from "./Icon";
 export function TabBar() {
   const sister = useBrethren((s) => s.profile?.sex === "sister");
   const user = useAuth((s) => s.user);
@@ -10,14 +11,22 @@ export function TabBar() {
   return (
     <nav className="tabs" aria-label="Main navigation">
       <NavLink to="/" end>
+        <Icon name="home" />
         Home
       </NavLink>
-      <NavLink to="/examine">Examine</NavLink>
+      <NavLink to="/examine">
+        <Icon name="pen" />
+        Examine
+      </NavLink>
       <NavLink to="/brethren">
+        <Icon name="people" />
         {sister ? "Sisters" : "Brethren"}
         {unread && <span className="dot" aria-label="Unread messages" />}
       </NavLink>
-      <NavLink to="/settings">Settings</NavLink>
+      <NavLink to="/settings">
+        <Icon name="sliders" />
+        Settings
+      </NavLink>
     </nav>
   );
 }

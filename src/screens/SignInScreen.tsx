@@ -7,13 +7,16 @@ export default function SignInScreen() {
   const [sent, setSent] = useState(false);
   const [token, setToken] = useState("");
   return (
-    <Page title="Sign in for brethren">
+    <Page
+      title="Sign in for brethren"
+      lede={
+        supabase
+          ? "Sign in by email to link with believers you already know. Your private journal stays on this device."
+          : undefined
+      }
+    >
       {supabase ? (
-        <>
-          <p>
-            Sign in by email to link with believers you already know. Your
-            private journal stays on this device.
-          </p>
+        <div className="card">
           <label>
             Email
             <input
@@ -24,13 +27,16 @@ export default function SignInScreen() {
             />
           </label>
           <Action
+            className="primary"
             run={async () => {
               if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email))
                 throw new Error("Enter your email address.");
               await result(
                 cloud().auth.signInWithOtp({
                   email,
-                  options: { emailRedirectTo: `${location.origin}${import.meta.env.BASE_URL}brethren` },
+                  options: {
+                    emailRedirectTo: `${location.origin}${import.meta.env.BASE_URL}brethren`,
+                  },
                 }),
               );
               setSent(true);
@@ -39,8 +45,8 @@ export default function SignInScreen() {
             Send sign-in email
           </Action>
           {sent && (
-            <>
-              <p>
+            <div className="fade" style={{ marginTop: 22 }}>
+              <p className="notice">
                 Check your email for the sign-in link. If your email contains a
                 code, you may enter it here.
               </p>
@@ -62,11 +68,11 @@ export default function SignInScreen() {
               >
                 Verify code
               </Action>
-            </>
+            </div>
           )}
-        </>
+        </div>
       ) : (
-        <p>
+        <p className="notice">
           The brethren service is not connected yet. Readings, prayer,
           examination and your private journal remain available offline.
         </p>

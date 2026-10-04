@@ -4,6 +4,7 @@ import { Action } from "../components/Action";
 import type { Profile } from "../brethren/types";
 import { cloud, result } from "../brethren/client";
 import { useBrethren } from "../state/brethren";
+import { Initial } from "../components/BrotherCard";
 export default function AddBrethrenScreen() {
   const [code, setCode] = useState("");
   const [found, setFound] = useState<Pick<
@@ -13,14 +14,15 @@ export default function AddBrethrenScreen() {
   const [sent, setSent] = useState(false);
   const { profile, peers } = useBrethren();
   return (
-    <Page title="Add by private code">
-      <p>
-        Ask someone you know for a code. A link begins only after the other
-        person accepts.
-      </p>
+    <Page
+      title="Add by private code"
+      back={{ to: "/brethren", label: "Brethren" }}
+      lede="Ask someone you know for a code. A link begins only after the other person accepts."
+    >
       <label>
         Six character code
         <input
+          className="pin-input"
           maxLength={6}
           autoCapitalize="characters"
           autoComplete="off"
@@ -33,6 +35,7 @@ export default function AddBrethrenScreen() {
         />
       </label>
       <Action
+        className="primary"
         run={async () => {
           if (code.length !== 6)
             throw new Error("Enter the full six character code.");
@@ -53,15 +56,21 @@ export default function AddBrethrenScreen() {
         Find by code
       </Action>
       {found && (
-        <article className="card">
-          <h2>{found.display_name}</h2>
-          <p>{found.church_name}</p>
+        <article className="card fade" style={{ marginTop: 22 }}>
+          <div className="person" style={{ marginBottom: 16 }}>
+            <Initial name={found.display_name} />
+            <span className="row-text">
+              <strong>{found.display_name}</strong>
+              {found.church_name && <span>{found.church_name}</span>}
+            </span>
+          </div>
           {sent ? (
             <p role="status">
               Request sent. Your link will begin when it is accepted.
             </p>
           ) : (
             <Action
+              className="primary"
               run={async () => {
                 await result(cloud().rpc("request_link", { p_code: code }));
                 setSent(true);

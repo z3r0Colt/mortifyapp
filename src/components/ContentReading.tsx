@@ -12,8 +12,8 @@ export function ContentReading({
   ) : (
     <>
       <p className={prominent ? "verse" : undefined}>{reading.text}</p>
-      <small>
-        {reading.author} · {reading.source}
+      <small className="attribution">
+        <strong>{reading.author}</strong> · {reading.source}
       </small>
     </>
   );

@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { Page } from "../components/Page";
+import { Icon } from "../components/Icon";
 import { useContent } from "../content/useContent";
 import { loadBible } from "../bible/loader";
 import { resolveChapter } from "../bible/resolver";
@@ -26,20 +27,27 @@ export default function ChapterScreen() {
       problem =
         error instanceof Error ? error.message : "Could not open this chapter.";
     }
+  const target = location.hash.slice("#verse-".length);
   return (
     <Page
       calm
+      bare
+      eyebrow="Berean Standard Bible"
       title={result ? `${result.book} ${result.chapter}` : "Read the chapter"}
+      bar={
+        location.state?.backgroundLocation ? (
+          <button className="back" onClick={() => navigate(-1)}>
+            <Icon name="back" size={20} />
+            Return to the reading
+          </button>
+        ) : (
+          <Link className="back" to="/">
+            <Icon name="back" size={20} />
+            Return home
+          </Link>
+        )
+      }
     >
-      {location.state?.backgroundLocation ? (
-        <button className="quiet" onClick={() => navigate(-1)}>
-          Return to the reading
-        </button>
-      ) : (
-        <Link className="quiet" to="/">
-          Return home
-        </Link>
-      )}
       {problem ? (
         <p role="alert">{problem}</p>
       ) : result ? (
@@ -47,13 +55,14 @@ export default function ChapterScreen() {
           className="chapter-reader"
           aria-label={`${result.book} ${result.chapter} BSB`}
         >
-          <p className="reference">
-            {result.book} {result.chapter} <small className="label">BSB</small>
-          </p>
           {result.verses
             .filter((row) => row.text.trim())
             .map((row) => (
-              <p id={`verse-${row.verse}`} key={row.verse}>
+              <p
+                id={`verse-${row.verse}`}
+                key={row.verse}
+                className={String(row.verse) === target ? "target" : undefined}
+              >
                 <small
                   className="verse-number reference"
                   aria-label={`Verse ${row.verse}`}
@@ -70,7 +79,9 @@ export default function ChapterScreen() {
           )}
         </article>
       ) : (
-        <p role="status">Opening the chapter…</p>
+        <p className="label" role="status">
+          Opening the chapter…
+        </p>
       )}
     </Page>
   );

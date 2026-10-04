@@ -2,15 +2,21 @@ import { useContent } from "../content/useContent";
 import { loadBible } from "../bible/loader";
 import { resolveReference } from "../bible/resolver";
 import { Link, useLocation } from "react-router-dom";
+import { Icon } from "./Icon";
 export function Scripture({ reference }: { reference: string }) {
   const { data: bible, error } = useContent(loadBible);
   const location = useLocation();
   if (error) return <p role="alert">{error}</p>;
-  if (!bible) return <p role="status">Opening Scripture…</p>;
+  if (!bible)
+    return (
+      <p className="label" role="status">
+        Opening Scripture…
+      </p>
+    );
   try {
     const passage = resolveReference(bible, reference);
     return (
-      <div className="scripture">
+      <div className="scripture fade">
         <p className="verse">{passage.text}</p>
         <p className="reference">
           {reference} <small className="label">BSB</small>
@@ -25,6 +31,7 @@ export function Scripture({ reference }: { reference: string }) {
           to={`/bible/${encodeURIComponent(passage.book)}/${passage.start.chapter}#verse-${passage.start.verse}`}
           state={{ backgroundLocation: location }}
         >
+          <Icon name="book" size={16} />
           Read the chapter
         </Link>
       </div>

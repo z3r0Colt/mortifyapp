@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { Page } from "../components/Page";
 import { Action } from "../components/Action";
 import { Tags } from "../components/Tags";
+import { Icon } from "../components/Icon";
+import { ListGroup, ListLink } from "../components/List";
 import { useBattlePacks } from "../content/selection";
 import { db } from "../data/db";
 import { heartRoots, occasionTags } from "../data/patterns";
@@ -19,36 +21,52 @@ export default function ExamineScreen() {
   if (!pack)
     return (
       <Page title="Choose a battle">
-        <Link to="/onboarding/battles">Choose your battles</Link>
+        <Link className="button primary block" to="/onboarding/battles">
+          Choose your battles
+        </Link>
       </Page>
     );
   return (
-    <Page title="Tonight's Examination">
+    <Page
+      title="Tonight's Examination"
+      eyebrow="Evening"
+      lede="Bring this day before the Lord."
+    >
       {saved ? (
-        <>
+        <div className="card accent fade">
           <p>
             Your examination is saved on this device. Take these matters to the
             Lord in prayer.
           </p>
-          <Link to="/">Return home</Link>
-        </>
+          <Link className="button block" to="/">
+            Return home
+          </Link>
+        </div>
       ) : (
         <>
-          <label>
-            Battle
-            <select value={battle} onChange={(e) => setBattle(e.target.value)}>
-              {packs.map((p) => (
-                <option value={p.id} key={p.id}>
-                  {p.name}
-                </option>
+          {packs.length > 1 && (
+            <label>
+              Battle
+              <select
+                value={battle}
+                onChange={(e) => setBattle(e.target.value)}
+              >
+                {packs.map((p) => (
+                  <option value={p.id} key={p.id}>
+                    {p.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
+          <article className="card">
+            <h2 className="section-title">Questions for tonight</h2>
+            <ol className="numbered">
+              {pack.examinationQuestions.slice(0, 3).map((q, i) => (
+                <li key={i}>{q}</li>
               ))}
-            </select>
-          </label>
-          <ol>
-            {pack.examinationQuestions.slice(0, 3).map((q, i) => (
-              <li key={i}>{q}</li>
-            ))}
-          </ol>
+            </ol>
+          </article>
           <Tags
             title="Heart roots"
             options={heartRoots}
@@ -69,26 +87,36 @@ export default function ExamineScreen() {
               maxLength={20000}
             />
           </label>
-          <Action
-            className="primary"
-            run={async () => {
-              await db.journals.add({
-                time: Date.now(),
-                battle,
-                roots,
-                occasions,
-                text: await encryptText(journalKey(), text),
-              });
-              setSaved(true);
-            }}
-          >
-            Save examination
-          </Action>
+          <p className="hint">
+            <Icon name="lock" size={16} />
+            Encrypted and kept only on this device.
+          </p>
+          <div className="stack">
+            <Action
+              className="primary"
+              run={async () => {
+                await db.journals.add({
+                  time: Date.now(),
+                  battle,
+                  roots,
+                  occasions,
+                  text: await encryptText(journalKey(), text),
+                });
+                setSaved(true);
+              }}
+            >
+              Save examination
+            </Action>
+          </div>
         </>
       )}
-      <Link className="quiet" to="/patterns">
-        See the past week's patterns
-      </Link>
+      <ListGroup title="Looking back">
+        <ListLink
+          to="/patterns"
+          icon="chart"
+          label="See the past week's patterns"
+        />
+      </ListGroup>
     </Page>
   );
 }

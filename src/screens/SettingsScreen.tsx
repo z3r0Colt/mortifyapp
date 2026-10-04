@@ -1,70 +1,83 @@
-import { Link } from "react-router-dom";
 import { Page } from "../components/Page";
 import { usePreferences } from "../state/preferences";
 import { useBattlePacks } from "../content/selection";
 import { InstallCard } from "../components/InstallCard";
 import { Action } from "../components/Action";
+import { ListGroup, ListLink } from "../components/List";
 import { useAuth } from "../state/auth";
 import { signOut, deleteAccount } from "../brethren/account";
 import { isNative } from "../native/platform";
 export default function SettingsScreen() {
   const value = usePreferences((s) => s.value);
   const user = useAuth((s) => s.user);
-  const screenBased = useBattlePacks().some((p) => p.screenBased);
+  const packs = useBattlePacks();
+  const screenBased = packs.some((p) => p.screenBased);
   return (
-    <Page title="Settings">
-      <p>Your readings and examination are kept on this device.</p>
-      <p>
-        Morning: {value.morning} · Evening: {value.evening}
-      </p>
-      <div className="stack">
-        <Link className="button" to="/onboarding/battles">
-          Choose battles
-        </Link>
-        <Link className="button" to="/onboarding/times">
-          Reading and examination times
-        </Link>
-        <Link className="button" to="/privacy">
-          Privacy, PIN, and your data
-        </Link>
+    <Page
+      title="Settings"
+      lede="Your readings and examination are kept on this device."
+    >
+      <ListGroup title="Your battles and times">
+        <ListLink
+          to="/onboarding/battles"
+          icon="flag"
+          label="Choose battles"
+          detail={packs.map((p) => p.name).join(", ") || undefined}
+        />
+        <ListLink
+          to="/onboarding/times"
+          icon="clock"
+          label="Reading and examination times"
+          detail={`Morning ${value.morning} · Evening ${value.evening}`}
+        />
+      </ListGroup>
+      <ListGroup title="Privacy and protection">
+        <ListLink
+          to="/privacy"
+          icon="lock"
+          label="Privacy, PIN, and your data"
+        />
         {screenBased && (
-          <Link className="button" to="/protection">
-            Protection setup
-          </Link>
+          <ListLink to="/protection" icon="shield" label="Protection setup" />
         )}
-        <Link to="/debug">Content packs</Link>
         {isNative() && (
-          <Link className="button" to="/discreet">
-            Discreet icon
-          </Link>
+          <ListLink to="/discreet" icon="grid" label="Discreet icon" />
         )}
-        <Link className="button" to="/notifications">
-          Notifications and reminders
-        </Link>
-      </div>
+        <ListLink
+          to="/notifications"
+          icon="bell"
+          label="Notifications and reminders"
+        />
+      </ListGroup>
+      <ListGroup title="About">
+        <ListLink to="/debug" icon="box" label="Content packs" />
+      </ListGroup>
       <InstallCard />
       {user && (
-        <article className="card">
-          <h2>Brethren account</h2>
-          <Action run={signOut}>Sign out</Action>
-          <p>
-            Deleting your account removes your cloud profile, links, events,
-            messages, and push subscriptions. Your local private journal remains
-            on this device.
-          </p>
-          <Action
-            run={async () => {
-              if (
-                window.confirm(
-                  "Permanently delete your Mortify brethren account and all its cloud data?",
+        <>
+          <h2 className="section-title">Brethren account</h2>
+          <article className="card">
+            <p className="label">Signed in as {user.email}</p>
+            <Action run={signOut}>Sign out</Action>
+            <p className="label" style={{ marginTop: 18 }}>
+              Deleting your account removes your cloud profile, links, events,
+              messages, and push subscriptions. Your local private journal
+              remains on this device.
+            </p>
+            <Action
+              run={async () => {
+                if (
+                  window.confirm(
+                    "Permanently delete your Mortify brethren account and all its cloud data?",
+                  )
                 )
-              )
-                await deleteAccount();
-            }}
-          >
-            Delete my account
-          </Action>
-        </article>
+                  await deleteAccount();
+              }}
+            >
+              Delete my account
+            </Action>
+          </article>
+        </>
       )}
     </Page>
   );

@@ -20,38 +20,46 @@ export default function PatternsScreen() {
   const bars = (items: [string, number][]) =>
     items.length ? (
       items.map(([label, count]) => (
-        <div key={label}>
-          <p>
-            {label}{" "}
+        <div className="bar-row" key={label}>
+          <div className="bar-label">
+            <span>{label}</span>
             <small>
-              ({count} {count === 1 ? "examination" : "examinations"})
+              {count} {count === 1 ? "examination" : "examinations"}
             </small>
-          </p>
-          <div
-            className="bar"
-            style={{ width: `${(count / (patterns?.total || 1)) * 100}%` }}
-          />
+          </div>
+          <div className="bar-track">
+            <div
+              className="bar"
+              style={{ width: `${(count / (patterns?.total || 1)) * 100}%` }}
+            />
+          </div>
         </div>
       ))
     ) : (
-      <p>No patterns recorded this week.</p>
+      <p className="label">No patterns recorded this week.</p>
     );
   return (
-    <Page title="The past week's patterns">
-      <p>
-        Consider these occasions with prayer and the counsel of a trusted
-        believer.
-      </p>
+    <Page
+      title="The past week's patterns"
+      back={{ to: "/examine", label: "Examine" }}
+      lede="Consider these occasions with prayer and the counsel of a trusted believer."
+    >
       {error && <p role="alert">{error}</p>}
       {patterns ? (
         <>
-          <h2>Heart roots</h2>
-          {bars(patterns.roots)}
-          <h2>Occasions of sin</h2>
-          {bars(patterns.occasions)}
+          <article className="card">
+            <h2 className="section-title">Heart roots</h2>
+            {bars(patterns.roots)}
+          </article>
+          <article className="card">
+            <h2 className="section-title">Occasions of sin</h2>
+            {bars(patterns.occasions)}
+          </article>
         </>
       ) : (
-        <p>Reading examinations…</p>
+        <p className="label" role="status">
+          Reading examinations…
+        </p>
       )}
       {pack && (
         <>

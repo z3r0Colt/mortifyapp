@@ -8,6 +8,15 @@ import { PrayerStep } from "../components/PrayerStep";
 import { queueEvent } from "../brethren/outbox";
 import { Scripture } from "../components/Scripture";
 import { ContentReading } from "../components/ContentReading";
+import { Icon } from "../components/Icon";
+import { Steps } from "../components/Steps";
+const titles = [
+  "Attend to the Word",
+  "Receive counsel",
+  "Turn to prayer",
+  "Ask your brethren to pray",
+  "Now get up and go.",
+];
 export default function FleeScreen() {
   const packs = useBattlePacks();
   const navigate = useNavigate();
@@ -21,7 +30,10 @@ export default function FleeScreen() {
       pack,
       verse: randomItem(pack.verses),
       counsel: randomItem(pack.counsel),
-      prayer: randomItem(pack.prayers),
+      // The first prayer is for confession after a fall.
+      prayer: randomItem(
+        pack.prayers.length > 1 ? pack.prayers.slice(1) : pack.prayers,
+      ),
       action: randomItem(pack.fleeActions),
     };
   });
@@ -31,10 +43,21 @@ export default function FleeScreen() {
       void queueEvent("temptation", selection.pack.id, session).catch(() => {});
     }
   }, [selection, session]);
+  useEffect(() => {
+    if (step)
+      (document.scrollingElement ?? document.documentElement).scrollTop = 0;
+  }, [step]);
+  const close = (
+    <Link className="icon-button" to="/" aria-label="Return home">
+      <Icon name="close" size={20} />
+    </Link>
+  );
   if (!selection)
     return (
-      <Page title="Choose a battle">
-        <Link to="/onboarding/battles">Choose your battles</Link>
+      <Page bare title="Choose a battle" bar={close}>
+        <Link className="button primary block" to="/onboarding/battles">
+          Choose your battles
+        </Link>
       </Page>
     );
   const { pack, verse, counsel, prayer, action } = selection;
@@ -46,54 +69,61 @@ export default function FleeScreen() {
   };
   return (
     <Page
-      title={
-        [
-          "Attend to the Word",
-          "Receive counsel",
-          "Turn to prayer",
-          "Ask your brethren to pray",
-          "Now get up and go.",
-        ][step]
+      bare
+      eyebrow={pack.name}
+      title={titles[step]}
+      bar={
+        <>
+          {close}
+          <Steps step={step} count={titles.length} />
+        </>
       }
     >
-      <div className="flow" aria-live="polite">
+      <div className="flow fade" key={step} aria-live="polite">
         {step === 0 && (
-          <>
+          <div className="card">
             <Scripture reference={verse} />
-          </>
+          </div>
         )}
         {step === 1 && (
-          <>
+          <div className="card">
             <ContentReading reading={counsel} prominent />
-          </>
+          </div>
         )}
         {step === 2 && (
-          <>
+          <div className="card accent">
             <h2>{prayer.title}</h2>
             <p className="verse">{prayer.text}</p>
+          </div>
+        )}
+        {step === 3 && (
+          <div className="stack">
+            <PrayerStep battle={pack.id} />
+          </div>
+        )}
+        {step === 4 && (
+          <>
+            <div className="card accent">
+              <p className="verse">{action}</p>
+            </div>
+            <h2>Did you stand firm?</h2>
           </>
         )}
-        {step === 3 && <PrayerStep battle={pack.id} />}
+      </div>
+      <div className="dock">
         {step < 4 ? (
           <button className="primary" onClick={() => setStep(step + 1)}>
             Continue
           </button>
         ) : (
-          <>
-            <p>{action}</p>
-            <h2>Did you stand firm?</h2>
-            <div className="stack">
-              <Action className="primary" run={() => finish("stood")}>
-                Yes, by God's grace
-              </Action>
-              <Action run={() => finish("not-yet")}>Not yet</Action>
-            </div>
-          </>
+          <div className="stack">
+            <Action className="primary" run={() => finish("stood")}>
+              Yes, by God's grace
+            </Action>
+            <Action run={() => finish("not-yet")}>Not yet</Action>
+          </div>
         )}
       </div>
-      <Link className="quiet" to="/">
-        Return home
-      </Link>
     </Page>
   );
 }

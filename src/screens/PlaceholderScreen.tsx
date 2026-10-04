@@ -4,7 +4,9 @@ export default function PlaceholderScreen({ title }: { title: string }) {
   return (
     <Page title={title}>
       <p>This screen will be completed in its next phase.</p>
-      <Link to="/">Return home</Link>
+      <Link className="button block" to="/">
+        Return home
+      </Link>
     </Page>
   );
 }

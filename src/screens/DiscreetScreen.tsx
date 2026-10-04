@@ -12,7 +12,7 @@ export default function DiscreetScreen() {
       .then((row) => setEnabled(row?.value === "on"));
   }, []);
   return (
-    <Page title="Discreet icon">
+    <Page title="Discreet icon" back={{ to: "/settings", label: "Settings" }}>
       {isNative() ? (
         <>
           <p>
@@ -31,7 +31,9 @@ export default function DiscreetScreen() {
           </Action>
         </>
       ) : (
-        <p>A discreet launcher icon is available in the native apps.</p>
+        <p className="notice">
+          A discreet launcher icon is available in the native apps.
+        </p>
       )}
     </Page>
   );

@@ -15,6 +15,7 @@ export function Action({
   return (
     <>
       <button
+        type="button"
         className={className}
         disabled={busy}
         role={checked === undefined ? undefined : "switch"}

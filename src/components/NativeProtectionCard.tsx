@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Action } from "./Action";
+import { Icon } from "./Icon";
 import { isNative, nativePlatform } from "../native/platform";
 import {
   shieldStatus,
@@ -16,7 +17,19 @@ export function NativeProtectionCard() {
   if (!isNative()) return null;
   return (
     <article className="card">
-      <h2>Phone protection</h2>
+      <div className="person" style={{ marginBottom: 14 }}>
+        <span className="tile">
+          <Icon name="shield" size={20} />
+        </span>
+        <span className="row-text">
+          <strong>Phone protection</strong>
+          {status?.available && (
+            <span className={`status-pill${status.running ? " on" : ""}`}>
+              Protection is {status.running ? "on" : "off"}
+            </span>
+          )}
+        </span>
+      </div>
       {status?.available ? (
         <>
           <p>
@@ -24,7 +37,6 @@ export function NativeProtectionCard() {
               ? "Mortify uses a local VPN to filter DNS and keep SafeSearch on. Internet packets are forwarded on this phone. DNS questions go over an encrypted connection to CleanBrowsing’s family filter. Mortify does not keep your browsing history. Only protection on/off status is shared with accepted brethren if you enable that choice."
               : "Apple authorization lets Mortify apply the adult web content filter. You control permission in Settings."}
           </p>
-          <p>Protection is {status.running ? "on" : "off"}.</p>
           {!status.running && (
             <label className="row">
               <input
@@ -46,6 +58,7 @@ export function NativeProtectionCard() {
           ) : (
             consent && (
               <Action
+                className="primary"
                 run={async () => {
                   setStatus(await startShield());
                 }}
@@ -55,7 +68,7 @@ export function NativeProtectionCard() {
             )
           )}
           {nativePlatform() === "android" && (
-            <p>
+            <p className="label" style={{ marginTop: 16 }}>
               After testing this build, open Android Settings, find VPN, tap
               Mortify's settings, turn on Always-on VPN, then Block connections
               without VPN. If another VPN is in use, Android will ask you to

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Page } from "../components/Page";
 import { Action } from "../components/Action";
+import { Icon } from "../components/Icon";
+import { Initial } from "../components/BrotherCard";
 import { MessageCard } from "../components/MessageCard";
 import { MessageComposer } from "../components/MessageComposer";
 import { useMessages } from "../state/messages";
@@ -46,16 +48,17 @@ export default function MessagesScreen() {
         Date.parse(b.messages[0].created_at) -
         Date.parse(a.messages[0].created_at),
     );
+  const sister = profile?.sex === "sister";
   return (
-    <Page title="Messages">
+    <Page
+      title="Messages"
+      back={{ to: "/brethren", label: sister ? "Sisters" : "Brethren" }}
+      lede={`Keep messages short. Make room for prayer and real conversation with your ${sister ? "sisters" : "brethren"}.`}
+    >
       {error && <p role="alert">{error}</p>}
-      <p>
-        Keep messages short. Make room for prayer and real conversation with
-        your {profile?.sex === "sister" ? "sisters" : "brethren"}.
-      </p>
       {active.length > 0 && (
         <>
-          <h2>Prayer requests</h2>
+          <h2 className="section-title">Prayer requests</h2>
           {active.map((m) => (
             <div key={m.id}>
               <h3>
@@ -68,12 +71,11 @@ export default function MessagesScreen() {
           ))}
         </>
       )}
+      <h2 className="section-title">Send encouragement</h2>
       <label>
-        Send encouragement
+        <span className="visually-hidden">Send encouragement</span>
         <select value={compose} onChange={(e) => setCompose(e.target.value)}>
-          <option value="">
-            Choose a {profile?.sex === "sister" ? "sister" : "brother"}
-          </option>
+          <option value="">Choose a {sister ? "sister" : "brother"}</option>
           {peers.map((p) => (
             <option key={p.id} value={p.id}>
               {p.display_name}
@@ -82,16 +84,22 @@ export default function MessagesScreen() {
         </select>
       </label>
       {compose && <MessageComposer receiver={compose} />}
-      <Action run={load}>Refresh messages</Action>
-      {!rows.length && <p>No messages yet.</p>}
+      {!rows.length && <p className="label">No messages yet.</p>}
       {groups.map((group) => (
         <section key={group.peer.id}>
-          <h2>{group.peer.display_name}</h2>
+          <h2 className="person" style={{ marginTop: "2.4rem" }}>
+            <Initial name={group.peer.display_name} />
+            {group.peer.display_name}
+          </h2>
           {group.messages.map((m) => (
             <MessageCard key={m.id} message={m} />
           ))}
         </section>
       ))}
+      <Action className="quiet" run={load}>
+        <Icon name="refresh" size={16} />
+        Refresh messages
+      </Action>
     </Page>
   );
 }

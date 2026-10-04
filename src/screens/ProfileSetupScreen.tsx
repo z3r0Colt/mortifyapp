@@ -11,11 +11,10 @@ export default function ProfileSetupScreen() {
   const load = useBrethren((s) => s.load);
   const navigate = useNavigate();
   return (
-    <Page title="Your brethren profile">
-      <p>
-        Use the name your church knows you by. Seek a small circle of believers
-        in your own local church.
-      </p>
+    <Page
+      title="Your brethren profile"
+      lede="Use the name your church knows you by. Seek a small circle of believers in your own local church."
+    >
       <label>
         Display name
         <input

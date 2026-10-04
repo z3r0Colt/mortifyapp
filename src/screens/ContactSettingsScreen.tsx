@@ -7,11 +7,11 @@ export default function ContactSettingsScreen() {
   const { profile, load } = useBrethren();
   const [phone, setPhone] = useState(profile?.phone ?? "");
   return (
-    <Page title="Phone for your circle">
-      <p>
-        A phone number is optional. Only accepted brethren can see it and call
-        you from the flee sequence.
-      </p>
+    <Page
+      title="Phone for your circle"
+      back={{ to: "/brethren", label: "Brethren" }}
+      lede="A phone number is optional. Only accepted brethren can see it and call you from the flee sequence."
+    >
       <label>
         Phone number (optional)
         <input
@@ -22,6 +22,7 @@ export default function ContactSettingsScreen() {
         />
       </label>
       <Action
+        className="primary"
         run={async () => {
           await result(
             cloud()

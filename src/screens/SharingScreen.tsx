@@ -26,32 +26,45 @@ const choices: [keyof Omit<Sharing, "user_id">, string, string][] = [
   ],
 ];
 export default function SharingScreen() {
-  const { sharing, load } = useBrethren();
+  const { sharing, load, profile } = useBrethren();
   return (
-    <Page title="What I share">
-      <p>Your journal and confession text are never shared.</p>
-      {sharing &&
-        choices.map(([key, title, description]) => (
-          <article className="card" key={key}>
-            <h2>{title}</h2>
-            <p>{description}</p>
-            <p className="label">Currently {sharing[key] ? "on" : "off"}</p>
-            <Action
-              checked={sharing[key]}
-              run={async () => {
-                await result(
-                  cloud()
-                    .from("shared_settings")
-                    .update({ [key]: !sharing[key] })
-                    .eq("user_id", sharing.user_id),
-                );
-                await load();
-              }}
-            >
-              {sharing[key] ? "Turn off" : "Turn on"}
-            </Action>
-          </article>
-        ))}
+    <Page
+      title="What I share"
+      back={{
+        to: "/brethren",
+        label: profile?.sex === "sister" ? "Sisters" : "Brethren",
+      }}
+      lede="Your journal and confession text are never shared."
+    >
+      {sharing && (
+        <ul className="list">
+          {choices.map(([key, title, description]) => (
+            <li key={key}>
+              <div className="list-row" style={{ alignItems: "flex-start" }}>
+                <span className="row-text" id={`share-${key}`}>
+                  {title}
+                  <span className="row-detail">{description}</span>
+                </span>
+                <Action
+                  className="switch"
+                  checked={sharing[key]}
+                  run={async () => {
+                    await result(
+                      cloud()
+                        .from("shared_settings")
+                        .update({ [key]: !sharing[key] })
+                        .eq("user_id", sharing.user_id),
+                    );
+                    await load();
+                  }}
+                >
+                  {sharing[key] ? `Turn off ${title}` : `Turn on ${title}`}
+                </Action>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
     </Page>
   );
 }

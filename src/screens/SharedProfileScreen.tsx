@@ -38,6 +38,7 @@ export default function SharedProfileScreen({
     packs.find((p) => p.id === battle)?.name ?? battle;
   return (
     <Page
+      back={{ to: "/brethren", label: "Brethren" }}
       title={
         preview
           ? `What my ${data?.profile.sex === "sister" ? "sisters" : "brethren"} see`
@@ -47,10 +48,14 @@ export default function SharedProfileScreen({
       {error && <p role="alert">{error}</p>}
       {data ? (
         <>
-          <p>{data.profile.church_name}</p>
+          {data.profile.church_name && (
+            <p className="lede" style={{ marginTop: "-1rem" }}>
+              {data.profile.church_name}
+            </p>
+          )}
           {data.battles.length > 0 && (
             <>
-              <h2>Battles</h2>
+              <h2 className="section-title">Battles</h2>
               <div className="row">
                 {data.battles.map((b) => (
                   <span className="tag" key={b}>
@@ -60,10 +65,14 @@ export default function SharedProfileScreen({
               </div>
             </>
           )}
-          {data.blockerOff && <p>Protection is currently recorded as off.</p>}
-          <h2>The past 30 days</h2>
+          {data.blockerOff && (
+            <p className="notice" style={{ marginTop: 16 }}>
+              Protection is currently recorded as off.
+            </p>
+          )}
+          <h2 className="section-title">The past 30 days</h2>
           {data.events.length ? (
-            <ul className="timeline">
+            <ul className="timeline card">
               {data.events.map((event) => (
                 <li key={event.id}>
                   {eventLabel(event.event_type)},{" "}
@@ -79,12 +88,13 @@ export default function SharedProfileScreen({
               ))}
             </ul>
           ) : (
-            <p>No events are shared here.</p>
+            <p className="label">No events are shared here.</p>
           )}
           {!preview && id !== user?.id && (
             <>
-              <div className="stack">
+              <div className="stack" style={{ marginTop: 22 }}>
                 <Action
+                  className="primary"
                   run={async () => {
                     await sendMessage(data.profile.id, "praying");
                     setSent("Your prayer message was sent.");
@@ -100,7 +110,10 @@ export default function SharedProfileScreen({
                 >
                   Check in
                 </Action>
-                <button onClick={() => setCompose(!compose)}>
+                <button
+                  aria-expanded={compose}
+                  onClick={() => setCompose(!compose)}
+                >
                   Send encouragement
                 </button>
               </div>
