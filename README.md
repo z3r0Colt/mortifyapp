@@ -26,7 +26,7 @@ Install/offline behavior should be tested against the production preview, not th
 
 ## External setup and native builds
 
-- [PWA/Vercel](docs/PWA-DEPLOYMENT.md)
+- [PWA on GitHub Pages](docs/PWA-DEPLOYMENT.md)
 - [Supabase migrations, RLS, authentication, Realtime, push and cron](docs/SUPABASE-SETUP.md)
 - [Capacitor, Firebase, biometric keys and native reminders](docs/NATIVE-SETUP.md)
 - [Android VPN engine and device tests](docs/ANDROID-SHIELD.md)
@@ -35,10 +35,10 @@ Install/offline behavior should be tested against the production preview, not th
 - [Signed bundles and TestFlight](docs/STORE-RELEASE.md)
 - [Store listing drafts](docs/STORE-LISTINGS.md) and [privacy policy draft](docs/PRIVACY-POLICY-DRAFT.md)
 
-Copy `.env.example` to `.env.local` and fill only public client configuration. Service-role, webhook, VAPID private and Firebase service-account credentials belong in server secrets. Never put journal text in Supabase.
+Copy `.env.example` to `.env.local` and fill only public client configuration. For the GitHub Pages build, add the same three `VITE_` values as repository secrets. Service-role, webhook, VAPID private and Firebase service-account credentials belong in server secrets. Never put journal text in Supabase.
 
 ## Validation status
 
-The production PWA builds; 29 unit/component tests and isolated PostgreSQL policy checks pass. The BSB build check verifies that the full, unchanged JSON is in the service-worker precache. All Edge Functions type-check with Deno; npm audit reports zero vulnerabilities. No browser surface was available in the connected computer-use tool, so visual/install/offline checks are still pending. No service credentials were supplied: Vercel/Supabase/Firebase deployment and live delivery have not been performed.
+The production PWA builds; 29 unit/component tests and isolated PostgreSQL policy checks pass. The BSB build check verifies that the full, unchanged JSON is in the service-worker precache. All Edge Functions type-check with Deno; npm audit reports zero vulnerabilities. No browser surface was available in the connected computer-use tool, so visual/install/offline checks are still pending. The PWA is live on GitHub Pages at https://z3r0colt.github.io/mortifyapp/ with the brethren features off until Supabase keys are added. Supabase/Firebase deployment and live delivery have not been performed.
 
 Android sync and resource/manifest processing pass. Custom Kotlin sources compile directly against the SDK/dependencies, and DNS wire checks pass, but sandbox SDK access prevented the full Gradle build. The full VPN engine is included as pinned source and is built with `-PmortifyShield`; default native builds retain the guide when the binary is absent. iOS needs a Mac to complete Firebase SPM sync, compile, sign, and test. No signed store uploads or entitlement approvals have occurred. The privacy-policy operator/contact/retention fields still require owner information.

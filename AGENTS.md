@@ -45,7 +45,7 @@ Plain, warm, pastoral, about a 10th grade level. Say "temptation" and "occasions
 - vite-plugin-pwa for offline support and install
 - Supabase (supabase-js) for the brethren system only
 - Capacitor added later for native builds and native plugins
-- Deploy the PWA to Vercel
+- Deploy the PWA to GitHub Pages at https://z3r0colt.github.io/mortifyapp/ (public repo, built by `.github/workflows/pages.yml` on every push to `main`). The site lives under `/mortifyapp/`, so never hard-code root paths like `/content/`; build them from `import.meta.env.BASE_URL`
 
 Write all code so it runs in a browser first. Anything that needs native power goes behind a small wrapper in `src/native/` that checks `Capacitor.isNativePlatform()` and falls back quietly on the web.
 
