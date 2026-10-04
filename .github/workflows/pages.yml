@@ -27,7 +27,7 @@ jobs:
       - run: npm test
       - run: npm run build
         env:
-          # Served at the root of the custom domain mortify.gentlekind.org.
+          # Served at the root of the custom domain mortify.gentleking.org.
           BASE_PATH: /
           # Optional. Leave unset and the brethren features stay off.
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
