@@ -4,7 +4,7 @@ import tailwind from "@tailwindcss/vite";
 import { VitePWA } from "vite-plugin-pwa";
 
 export default defineConfig({
-  // GitHub Pages serves from /mortifyapp/; native and local builds stay at the root.
+  // The custom domain serves from the root. Set BASE_PATH only for a subfolder build.
   base: process.env.BASE_PATH ?? "/",
   plugins: [
     react(),
