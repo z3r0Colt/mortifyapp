@@ -26,6 +26,7 @@ export default function FleeScreen() {
   const packs = useBattlePacks();
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
+  const [sought, setSought] = useState(false);
   const [session] = useState(() => crypto.randomUUID());
   const started = useRef(false);
   const { data: featured } = useContent(loadFeaturedSermons);
@@ -140,7 +141,7 @@ export default function FleeScreen() {
         )}
         {step === 3 && (
           <div className="stack">
-            <PrayerStep battle={pack.id} />
+            <PrayerStep battle={pack.id} onChosen={() => setSought(true)} />
           </div>
         )}
         {step === 4 && (
@@ -162,9 +163,18 @@ export default function FleeScreen() {
       </div>
       <div className="dock">
         {step < 4 ? (
-          <button className="primary" onClick={() => setStep(step + 1)}>
-            Continue
-          </button>
+          <>
+            {step === 3 && !sought && (
+              <p className="label">Ask for prayer or call someone to go on.</p>
+            )}
+            <button
+              className="primary"
+              disabled={step === 3 && !sought}
+              onClick={() => setStep(step + 1)}
+            >
+              Continue
+            </button>
+          </>
         ) : (
           <div className="stack">
             <Action className="primary" run={() => finish("stood")}>
