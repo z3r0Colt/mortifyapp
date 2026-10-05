@@ -261,3 +261,18 @@ test("the PIN box is not a password field, so password managers leave it alone",
   expect(pin.autocomplete).toBe("off");
   expect(pin.getAttribute("data-1p-ignore")).not.toBeNull();
 });
+
+test("with several battles, Flee asks which temptation before the steps", async () => {
+  signedIn({ onboarded: true, trust: "yes", battles: ["lust", "pride"] });
+  await usePrivacy.getState().setup("123456");
+  window.history.replaceState({}, "", "/flee");
+  render(<App />);
+  fireEvent.change(await screen.findByLabelText("PIN"), {
+    target: { value: "123456" },
+  });
+  fireEvent.click(screen.getByRole("button", { name: "Open Mortify" }));
+  await screen.findByRole("heading", { name: "What are you fleeing?" });
+  fireEvent.click(screen.getByRole("button", { name: "Pride" }));
+  await screen.findByRole("heading", { name: "Attend to the Word" });
+  expect(screen.getByText("Pride")).toBeTruthy();
+});

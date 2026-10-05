@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Page } from "../components/Page";
 import { Action } from "../components/Action";
 import { randomItem, useBattlePacks } from "../content/selection";
+import type { Pack } from "../content/loader";
 import { saveEntry } from "../data/pending";
 import { PrayerStep } from "../components/PrayerStep";
 import { queueEvent } from "../brethren/outbox";
@@ -23,20 +24,21 @@ export default function FleeScreen() {
   const [step, setStep] = useState(0);
   const [session] = useState(() => crypto.randomUUID());
   const started = useRef(false);
-  const [selection] = useState(() => {
-    if (!packs.length) return null;
-    const pack = randomItem(packs);
-    return {
-      pack,
-      verse: randomItem(pack.verses),
-      counsel: randomItem(pack.counsel),
-      // The first prayer is for confession after a fall.
-      prayer: randomItem(
-        pack.prayers.length > 1 ? pack.prayers.slice(1) : pack.prayers,
-      ),
-      action: randomItem(pack.fleeActions),
-    };
+  const choose = (pack: Pack) => ({
+    pack,
+    verse: randomItem(pack.verses),
+    counsel: randomItem(pack.counsel),
+    // The first prayer is for confession after a fall.
+    prayer: randomItem(
+      pack.prayers.length > 1 ? pack.prayers.slice(1) : pack.prayers,
+    ),
+    action: randomItem(pack.fleeActions),
   });
+  // With one battle there is nothing to ask; with several, the user says
+  // which temptation this is before the steps begin.
+  const [selection, setSelection] = useState(() =>
+    packs.length === 1 ? choose(packs[0]) : null,
+  );
   useEffect(() => {
     if (selection && !started.current) {
       started.current = true;
@@ -52,6 +54,30 @@ export default function FleeScreen() {
       <Icon name="close" size={20} />
     </Link>
   );
+  if (!selection && packs.length > 1)
+    return (
+      <Page
+        bare
+        eyebrow="In temptation"
+        title="What are you fleeing?"
+        lede="Choose one, and turn to the Word."
+        bar={close}
+      >
+        <ul className="list fade">
+          {packs.map((pack) => (
+            <li key={pack.id}>
+              <button
+                className="list-row"
+                onClick={() => setSelection(choose(pack))}
+              >
+                <span className="row-text">{pack.name}</span>
+                <Icon name="chevron" size={18} className="chevron" />
+              </button>
+            </li>
+          ))}
+        </ul>
+      </Page>
+    );
   if (!selection)
     return (
       <Page bare title="Choose a battle" bar={close}>
