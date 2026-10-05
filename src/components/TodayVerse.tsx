@@ -22,12 +22,12 @@ export function TodayVerse() {
       {text ? (
         <div className="fade">
           <p className="verse-text">{text}</p>
-          <div className="card-foot">
-            <span className="reference">{data!.verse}</span>
-            <span className="label">
-              Today's reading <Icon name="chevron" size={14} />
-            </span>
-          </div>
+          <p className="reference">{data!.verse}</p>
+          {/* The whole card is the link; this only looks like a button so the
+              daily reading reads as something to open. */}
+          <span className="button block read-button">
+            Open today's reading <Icon name="arrow" size={18} />
+          </span>
         </div>
       ) : (
         <p className="verse-text label" role="status">

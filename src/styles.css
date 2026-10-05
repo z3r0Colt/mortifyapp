@@ -917,11 +917,16 @@ p[role="status"] {
   font-size: 1.18rem;
   line-height: 1.7;
 }
-.verse-card .card-foot {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+.verse-card .reference {
+  margin: 0 0 16px;
+}
+.verse-card .read-button {
+  border-color: var(--brass);
+  background: var(--brass-soft);
+  font-weight: 600;
+}
+a.verse-card:hover .read-button {
+  border-color: var(--brass-text);
 }
 .flee-card {
   position: relative;
