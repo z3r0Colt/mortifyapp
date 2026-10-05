@@ -54,6 +54,7 @@ import { checkShield } from "./native/protection";
 import ChapterScreen from "./screens/ChapterScreen";
 import RecoveryCodeScreen from "./screens/RecoveryCodeScreen";
 import RemindersScreen from "./screens/RemindersScreen";
+import WelcomeScreen from "./screens/WelcomeScreen";
 function Router() {
   const { value, loaded, error } = usePreferences();
   const app = useApp();
@@ -141,11 +142,14 @@ function Router() {
     );
   if (
     !user &&
-    !["/onboarding/gospel", "/onboarding/sign-in", "/debug"].includes(
-      location.pathname,
-    )
+    ![
+      "/onboarding/welcome",
+      "/onboarding/gospel",
+      "/onboarding/sign-in",
+      "/debug",
+    ].includes(location.pathname)
   )
-    return <Navigate to="/onboarding/gospel" replace />;
+    return <Navigate to="/onboarding/welcome" replace />;
   if (user && value.onboarded && !privacy.key) return <PinScreen />;
   if (privacy.recoveryCode) return <RecoveryCodeScreen />;
   if (
@@ -153,7 +157,7 @@ function Router() {
     !location.pathname.startsWith("/onboarding") &&
     location.pathname !== "/debug"
   )
-    return <Navigate to="/onboarding/gospel" replace />;
+    return <Navigate to="/onboarding/welcome" replace />;
   return (
     <>
       <div hidden={!!background}>
@@ -227,6 +231,7 @@ function Router() {
               </BrethrenGate>
             }
           />
+          <Route path="/onboarding/welcome" element={<WelcomeScreen />} />
           <Route path="/onboarding/gospel" element={<GospelScreen />} />
           <Route path="/onboarding/trust" element={<TrustScreen />} />
           <Route

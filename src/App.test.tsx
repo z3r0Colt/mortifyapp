@@ -113,9 +113,20 @@ const savedPrefs = () => account.prefs.get(me.id) as Preferences | undefined;
 test("signed-out visitors start at the welcome and cannot reach Home", async () => {
   window.history.replaceState({}, "", "/examine");
   render(<App />);
-  await screen.findByText("Welcome");
-  expect(window.location.pathname).toBe("/onboarding/gospel");
+  await waitFor(() =>
+    expect(window.location.pathname).toBe("/onboarding/welcome"),
+  );
+  fireEvent.click(await screen.findByRole("link", { name: "Begin" }));
+  await screen.findByRole("heading", { name: "Christ is our hope" });
   fireEvent.click(await screen.findByRole("link", { name: "Continue" }));
+  await screen.findByRole("heading", { name: "Your account" });
+});
+
+test("a returning visitor can go from the welcome straight to sign-in", async () => {
+  render(<App />);
+  fireEvent.click(
+    await screen.findByRole("link", { name: "I already have an account" }),
+  );
   await screen.findByRole("heading", { name: "Your account" });
 });
 

@@ -1361,6 +1361,110 @@ input.recovery-input {
   user-select: all;
 }
 
+.sermons {
+  margin: 0;
+  box-shadow: none;
+}
+.sermon-group {
+  margin-bottom: 10px;
+}
+.sermon-group summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  padding: 6px 2px;
+  font-family: var(--display);
+  font-size: 1.2rem;
+  cursor: pointer;
+  list-style: none;
+}
+.sermon-group summary .label {
+  margin-left: auto;
+}
+.sermon-group summary::-webkit-details-marker {
+  display: none;
+}
+.sermon-group summary::after {
+  content: "";
+  width: 9px;
+  height: 9px;
+  margin: 0 4px 4px 0;
+  border-right: 1.6px solid var(--faint);
+  border-bottom: 1.6px solid var(--faint);
+  transform: rotate(45deg);
+  transition: transform 0.2s;
+}
+.sermon-group[open] summary::after {
+  transform: rotate(225deg);
+}
+.later {
+  margin: 18px 0;
+}
+.sermons .list-row {
+  align-items: flex-start;
+}
+.sermons .chevron {
+  margin-top: 4px;
+}
+
+.urgent-help p {
+  margin-bottom: 14px;
+}
+
+/* ---------- Welcome ---------- */
+.welcome-page .page-bar {
+  justify-content: center;
+  min-height: 0;
+  margin: 28px 0 22px;
+}
+.welcome-logo {
+  width: 112px;
+  height: 112px;
+  border-radius: 26px;
+  box-shadow: var(--shadow-md);
+}
+.welcome-page .page-head {
+  text-align: center;
+}
+.welcome-page h1 {
+  font-size: clamp(3rem, 13vw, 3.6rem);
+}
+.welcome-verse {
+  margin: 0 0 22px;
+  text-align: left;
+}
+.welcome-verse .verse-text {
+  -webkit-line-clamp: unset;
+}
+.welcome-features {
+  margin: 0 0 22px;
+  padding: 0;
+  list-style: none;
+}
+.welcome-features li {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 12px 0;
+  line-height: 1.4;
+}
+.welcome-features li + li {
+  border-top: 1px solid var(--line);
+}
+.welcome-features strong {
+  display: block;
+  font-family: var(--display);
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+.welcome-note {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.95rem;
+  text-wrap: balance;
+}
+
 /* ---------- Installed app ---------- */
 .app-notice {
   position: fixed;

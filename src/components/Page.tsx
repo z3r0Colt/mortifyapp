@@ -30,6 +30,7 @@ export function Page({
   back,
   bar,
   bare = false,
+  className,
 }: {
   title: string;
   children: ReactNode;
@@ -44,10 +45,11 @@ export function Page({
   bar?: ReactNode;
   /** Pages without the tab bar need less room at the bottom. */
   bare?: boolean;
+  className?: string;
 }) {
   return (
     <main
-      className={`page${calm ? " no-animation" : ""}${bare ? " bare" : ""}`}
+      className={`page${calm ? " no-animation" : ""}${bare ? " bare" : ""}${className ? ` ${className}` : ""}`}
     >
       <div className="page-bar">
         {bar ??

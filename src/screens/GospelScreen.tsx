@@ -12,7 +12,7 @@ export default function GospelScreen() {
   return (
     <Page
       bare
-      eyebrow="Welcome"
+      eyebrow="First, the good news"
       title={data?.title ?? "Christ is our hope"}
       bar={<OnboardingBar step={0} />}
     >
