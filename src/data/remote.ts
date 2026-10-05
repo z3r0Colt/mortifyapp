@@ -63,12 +63,18 @@ export async function savePreferences(userId: string, value: Preferences) {
       }),
   );
 }
-export type Vault = { salt: string; verifier: CipherText };
+/** The journal key, wrapped by the PIN and by the recovery code. */
+export type Vault = {
+  salt: string;
+  pin_key: CipherText;
+  recovery_salt: string;
+  recovery_key: CipherText;
+};
 export async function fetchVault(userId: string): Promise<Vault | null> {
   return (await result(
     cloud()
       .from("user_vault")
-      .select("salt,verifier")
+      .select("salt,pin_key,recovery_salt,recovery_key")
       .eq("user_id", userId)
       .maybeSingle(),
   )) as Vault | null;
@@ -78,6 +84,11 @@ export async function saveVault(userId: string, vault: Vault) {
     cloud()
       .from("user_vault")
       .insert({ user_id: userId, ...vault }),
+  );
+}
+export async function updateVault(userId: string, changes: Partial<Vault>) {
+  await result(
+    cloud().from("user_vault").update(changes).eq("user_id", userId),
   );
 }
 /** Removes journal entries, confessions and the PIN check after a forgotten PIN. */

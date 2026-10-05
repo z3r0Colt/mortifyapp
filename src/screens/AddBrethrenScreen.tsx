@@ -22,7 +22,7 @@ export default function AddBrethrenScreen() {
       <label>
         Six character code
         <input
-          className="pin-input"
+          className="code-input"
           maxLength={6}
           autoCapitalize="characters"
           autoComplete="off"

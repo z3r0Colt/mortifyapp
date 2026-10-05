@@ -19,14 +19,14 @@ if (!isNative()) {
     onOfflineReady: () =>
       window.dispatchEvent(new Event("mortify-offline-ready")),
     onNeedRefresh: () => usePwa.setState({ updateReady: true }),
-    // Installed apps can stay open for days; look for a new version hourly
-    // and whenever the app comes back to the front.
+    // Installed apps can stay open for days; look for a new version every
+    // fifteen minutes and whenever the app comes back to the front.
     onRegisteredSW: (_url, registration) => {
       if (!registration) return;
       const check = () => {
         if (navigator.onLine) void registration.update().catch(() => {});
       };
-      setInterval(check, 60 * 60 * 1000);
+      setInterval(check, 15 * 60 * 1000);
       document.addEventListener("visibilitychange", () => {
         if (document.visibilityState === "visible") check();
       });

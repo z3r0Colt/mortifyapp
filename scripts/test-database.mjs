@@ -280,7 +280,13 @@ await db.query(
   `insert into journals(id,battle,body) values(gen_random_uuid(),'lust','{"v":1,"iv":"a","data":"b"}')`,
 );
 await db.query(
-  `insert into user_vault(salt,verifier) values('salt','{"v":1,"iv":"a","data":"b"}')`,
+  `insert into user_vault(salt,pin_key,recovery_salt,recovery_key) values('salt','{"v":1,"iv":"a","data":"b"}','salt2','{"v":1,"iv":"c","data":"d"}')`,
+);
+await db.query(`update user_vault set salt='salt3'`);
+await assert.rejects(
+  db.query(`update user_vault set user_id=$1`, [ids[6]]),
+  /permission denied/,
+  "a PIN check cannot be moved to another account",
 );
 assert.equal(
   (await db.query("select public.rotate_reading('k',3,'2026-10-04') i")).rows[0]

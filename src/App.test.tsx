@@ -17,7 +17,7 @@ import { usePreferences } from "./state/preferences";
 import { useApp } from "./state/app";
 import { usePrivacy } from "./state/privacy";
 import { useAuth } from "./state/auth";
-import { decryptText, type CipherText } from "./privacy/crypto";
+import { decryptText, encryptText, type CipherText } from "./privacy/crypto";
 import type { User } from "@supabase/supabase-js";
 
 // A stand-in for the account in Supabase, kept in memory.
@@ -37,7 +37,10 @@ vi.mock("./data/remote", () => ({
   },
   fetchVault: async (id: string) => account.vault.get(id) ?? null,
   saveVault: async (id: string, vault: unknown) => {
-    account.vault.set(id, vault);
+    account.vault.set(id, structuredClone(vault));
+  },
+  updateVault: async (id: string, changes: object) => {
+    account.vault.set(id, { ...(account.vault.get(id) as object), ...changes });
   },
   clearPrivateEntries: async (id: string) => {
     account.vault.delete(id);
@@ -214,4 +217,47 @@ test("reading a chapter during a fall preserves the unfinished private confessio
       account.rows.falls[0].confession as CipherText,
     ),
   ).toBe("UNFINISHED PRIVATE CONFESSION");
+});
+
+test("a forgotten PIN is replaced with the recovery code and the journal is kept", async () => {
+  signedIn({ onboarded: true, trust: "yes", battles: ["lust"] });
+  await usePrivacy.getState().setup("123456");
+  const code = usePrivacy.getState().recoveryCode!;
+  expect(JSON.stringify([...account.vault.values()])).not.toContain(code);
+  account.rows.journals.push({
+    body: await encryptText(usePrivacy.getState().key!, "KEEP ME"),
+  });
+  render(<App />);
+  fireEvent.click(
+    await screen.findByRole("button", { name: "I have forgotten my PIN" }),
+  );
+  fireEvent.change(screen.getByLabelText("Recovery code"), {
+    target: { value: code.toLowerCase().replace(/-/g, " ") },
+  });
+  fireEvent.change(screen.getByLabelText("New PIN"), {
+    target: { value: "654321" },
+  });
+  fireEvent.change(screen.getByLabelText("Confirm new PIN"), {
+    target: { value: "654321" },
+  });
+  fireEvent.click(screen.getByRole("button", { name: "Set new PIN" }));
+  await screen.findByRole("heading", { name: "Watch and pray" });
+  expect(
+    await decryptText(
+      usePrivacy.getState().key!,
+      account.rows.journals[0].body as CipherText,
+    ),
+  ).toBe("KEEP ME");
+  await expect(usePrivacy.getState().unlock("123456")).rejects.toThrow();
+  await usePrivacy.getState().unlock("654321");
+});
+
+test("the PIN box is not a password field, so password managers leave it alone", async () => {
+  signedIn({ onboarded: true, trust: "yes", battles: ["lust"] });
+  await usePrivacy.getState().setup("123456");
+  render(<App />);
+  const pin = (await screen.findByLabelText("PIN")) as HTMLInputElement;
+  expect(pin.type).toBe("text");
+  expect(pin.autocomplete).toBe("off");
+  expect(pin.getAttribute("data-1p-ignore")).not.toBeNull();
 });

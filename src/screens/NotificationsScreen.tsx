@@ -5,15 +5,12 @@ import { ListGroup, SwitchRow } from "../components/List";
 import { useAuth } from "../state/auth";
 import { usePreferences } from "../state/preferences";
 import { cloud, result } from "../brethren/client";
-import {
-  devicePushEnabled,
-  disableWebPush,
-  enableWebPush,
-} from "../brethren/push";
+import { devicePushEnabled, disableWebPush } from "../brethren/push";
+import { enableMessages, enableReminders } from "../data/notifications";
 import { useBrethren } from "../state/brethren";
 import { isNative } from "../native/platform";
-import { disableNativePush, enableNativePush } from "../native/push";
-import { scheduleReminders, cancelReminders } from "../native/reminders";
+import { disableNativePush } from "../native/push";
+import { cancelReminders } from "../native/reminders";
 import { db } from "../data/db";
 import { clock } from "../data/clock";
 import { devicePlatform, isInstalled } from "../platform";
@@ -47,8 +44,7 @@ export default function NotificationsScreen() {
   }, [user?.id, native]);
   const turnOnPush = async () => {
     if (!user) return;
-    if (native) await enableNativePush(user.id);
-    else await enableWebPush(user.id);
+    await enableMessages(user);
     setMessages(true);
   };
   const iphoneBrowser = !native && devicePlatform() === "ios" && !isInstalled();
@@ -85,24 +81,12 @@ export default function NotificationsScreen() {
           checked={native || user ? reminders : false}
           disabled={!native && !user}
           onChange={async (on) => {
-            if (native) {
-              if (on) {
-                if (!(await scheduleReminders(prefs, true)))
-                  throw new Error("Notification permission was not granted.");
-              } else await cancelReminders();
-            } else if (on) {
+            if (on) {
+              await enableReminders(user!, prefs);
               // On the web, reminders arrive through this device's notifications.
-              await turnOnPush();
-              await result(
-                cloud().from("reminder_settings").upsert({
-                  user_id: user!.id,
-                  morning: prefs.morning,
-                  evening: prefs.evening,
-                  timezone: prefs.timezone,
-                  enabled: true,
-                }),
-              );
-            } else
+              if (!native) setMessages(true);
+            } else if (native) await cancelReminders();
+            else
               await result(
                 cloud()
                   .from("reminder_settings")

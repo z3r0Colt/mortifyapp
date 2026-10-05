@@ -52,6 +52,8 @@ import { db } from "./data/db";
 import DiscreetScreen from "./screens/DiscreetScreen";
 import { checkShield } from "./native/protection";
 import ChapterScreen from "./screens/ChapterScreen";
+import RecoveryCodeScreen from "./screens/RecoveryCodeScreen";
+import RemindersScreen from "./screens/RemindersScreen";
 function Router() {
   const { value, loaded, error } = usePreferences();
   const app = useApp();
@@ -145,6 +147,7 @@ function Router() {
   )
     return <Navigate to="/onboarding/gospel" replace />;
   if (user && value.onboarded && !privacy.key) return <PinScreen />;
+  if (privacy.recoveryCode) return <RecoveryCodeScreen />;
   if (
     !value.onboarded &&
     !location.pathname.startsWith("/onboarding") &&
@@ -161,6 +164,7 @@ function Router() {
           <Route path="/protection" element={<ProtectionScreen />} />
           <Route path="/sign-in" element={<Navigate to="/" replace />} />
           <Route path="/onboarding/sign-in" element={<SignInScreen />} />
+          <Route path="/onboarding/reminders" element={<RemindersScreen />} />
           <Route path="/notifications" element={<NotificationsScreen />} />
           <Route
             path="/brethren"
@@ -269,7 +273,13 @@ export default function App() {
   useEffect(() => {
     if (!authReady) return;
     usePreferences.setState({ loaded: false, error: null });
-    usePrivacy.setState({ loaded: false, key: null, error: "" });
+    usePrivacy.setState({
+      loaded: false,
+      key: null,
+      error: "",
+      recoveryCode: null,
+      recoveryReason: null,
+    });
     void loadPreferences();
     void loadPrivacy();
   }, [authReady, user?.id, loadPreferences, loadPrivacy]);

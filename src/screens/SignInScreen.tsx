@@ -60,7 +60,7 @@ export default function SignInScreen() {
           <label style={{ marginTop: 0 }}>
             Code from the email
             <input
-              className="pin-input"
+              className="code-input"
               inputMode="numeric"
               autoComplete="one-time-code"
               maxLength={10}

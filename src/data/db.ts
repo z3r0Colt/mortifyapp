@@ -45,12 +45,12 @@ export type Pending = PendingEntry & {
   userId: string;
   time: number;
 };
-/** The PIN check copied from the account, plus how this device unlocks. */
+/** The PIN-wrapped journal key copied from the account, plus how this device unlocks. */
 export type Security = {
   id: "main";
   userId: string;
   salt: string;
-  verifier: CipherText;
+  pinKey: CipherText;
   lockEnabled: boolean;
   deviceKey?: CryptoKey;
   biometricEnabled?: boolean;

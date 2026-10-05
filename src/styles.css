@@ -565,6 +565,12 @@ input[type="checkbox"]:checked {
   color: var(--faint);
 }
 .pin-input {
+  /* Shows dots without making it a password field. */
+  -webkit-text-security: disc;
+  text-security: disc;
+}
+.pin-input,
+.code-input {
   text-align: center;
   font-family: var(--sans) !important;
   font-size: 1.6rem !important;
@@ -1345,6 +1351,22 @@ div.list-row:hover {
   flex: none;
   margin-top: 4px;
   color: var(--brass);
+}
+
+input.recovery-input {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace !important;
+  font-size: 1.05rem !important;
+  letter-spacing: 0.04em;
+  padding-left: 12px !important;
+}
+.recovery-code {
+  margin: 8px 0 18px;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  overflow-wrap: anywhere;
+  user-select: all;
 }
 
 /* ---------- Installed app ---------- */
