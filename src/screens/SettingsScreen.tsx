@@ -8,10 +8,12 @@ import { useAuth } from "../state/auth";
 import { signOut, deleteAccount } from "../brethren/account";
 import { isNative } from "../native/platform";
 import { clock } from "../data/clock";
+import { useDisplay } from "../state/display";
 export default function SettingsScreen() {
   const value = usePreferences((s) => s.value);
   const user = useAuth((s) => s.user);
   const packs = useBattlePacks();
+  const display = useDisplay();
   const screenBased = packs.some((p) => p.screenBased);
   return (
     <Page
@@ -32,6 +34,54 @@ export default function SettingsScreen() {
           detail={`Morning ${clock(value.morning)} · Evening ${clock(value.evening)}`}
         />
       </ListGroup>
+      <h2 className="section-title">Display</h2>
+      <article className="card">
+        <p className="label" id="theme-label">
+          Theme
+        </p>
+        <div className="segmented" role="group" aria-labelledby="theme-label">
+          {(
+            [
+              ["system", "Match phone"],
+              ["light", "Light"],
+              ["dark", "Dark"],
+            ] as const
+          ).map(([value, label]) => (
+            <button
+              key={value}
+              aria-pressed={display.theme === value}
+              onClick={() => display.set({ theme: value })}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+        <p className="label" id="text-label">
+          Text size
+        </p>
+        <div
+          className="segmented"
+          role="group"
+          aria-labelledby="text-label"
+          style={{ marginBottom: 0 }}
+        >
+          {(
+            [
+              ["standard", "Standard"],
+              ["large", "Large"],
+              ["larger", "Larger"],
+            ] as const
+          ).map(([value, label]) => (
+            <button
+              key={value}
+              aria-pressed={display.text === value}
+              onClick={() => display.set({ text: value })}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      </article>
       <ListGroup title="Privacy and protection">
         <ListLink
           to="/privacy"
@@ -48,6 +98,14 @@ export default function SettingsScreen() {
           to="/notifications"
           icon="bell"
           label="Notifications and reminders"
+        />
+      </ListGroup>
+      <ListGroup title="Help">
+        <ListLink
+          to="/about"
+          icon="info"
+          label="About and help"
+          detail="Contact, your data, and credits"
         />
       </ListGroup>
       <InstallCard />

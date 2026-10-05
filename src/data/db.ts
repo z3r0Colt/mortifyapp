@@ -52,6 +52,8 @@ export type Security = {
   salt: string;
   pinKey: CipherText;
   lockEnabled: boolean;
+  /** Minutes away before the PIN is asked again; 0 locks at once. Default 1. */
+  lockAfter?: number;
   deviceKey?: CryptoKey;
   biometricEnabled?: boolean;
 };

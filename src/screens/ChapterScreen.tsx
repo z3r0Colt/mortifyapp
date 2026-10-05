@@ -28,6 +28,22 @@ export default function ChapterScreen() {
         error instanceof Error ? error.message : "Could not open this chapter.";
     }
   const target = location.hash.slice("#verse-".length);
+  // The chapters either side, crossing into the next or previous book.
+  const books = bible ? Object.keys(bible) : [];
+  const place = (b: string, c: number) =>
+    bible && bible[b]?.[c] ? { book: b, chapter: c } : null;
+  const last = (b: string) => Math.max(...Object.keys(bible![b]).map(Number));
+  const index = result ? books.indexOf(result.book) : -1;
+  const previous = result
+    ? (place(result.book, result.chapter - 1) ??
+      (index > 0 ? place(books[index - 1], last(books[index - 1])) : null))
+    : null;
+  const next = result
+    ? (place(result.book, result.chapter + 1) ??
+      (index >= 0 && index < books.length - 1
+        ? place(books[index + 1], 1)
+        : null))
+    : null;
   return (
     <Page
       calm
@@ -41,9 +57,9 @@ export default function ChapterScreen() {
             Return to the reading
           </button>
         ) : (
-          <Link className="back" to="/">
+          <Link className="back" to="/bible">
             <Icon name="back" size={20} />
-            Return home
+            All books
           </Link>
         )
       }
@@ -77,6 +93,25 @@ export default function ChapterScreen() {
               Some verse numbers are omitted in the BSB main text.
             </p>
           )}
+          <nav className="chapter-nav" aria-label="Chapters">
+            {[previous, next].map((place, i) =>
+              place ? (
+                <Link
+                  key={i}
+                  className="button"
+                  replace
+                  state={location.state}
+                  to={`/bible/${encodeURIComponent(place.book)}/${place.chapter}`}
+                >
+                  {i === 0 && <Icon name="back" size={18} />}
+                  {place.book} {place.chapter}
+                  {i === 1 && <Icon name="chevron" size={18} />}
+                </Link>
+              ) : (
+                <span key={i} />
+              ),
+            )}
+          </nav>
         </article>
       ) : (
         <p className="label" role="status">

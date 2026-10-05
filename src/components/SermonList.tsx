@@ -14,6 +14,7 @@ export function SermonList({ sermons }: { sermons: Sermon[] }) {
           >
             <span className="row-text">
               {sermon.title}
+              <span className="visually-hidden"> (opens outside Mortify)</span>
               <span className="row-detail">
                 {sermon.preacher} ·{" "}
                 {new Date(`${sermon.date}T12:00`).toLocaleDateString(

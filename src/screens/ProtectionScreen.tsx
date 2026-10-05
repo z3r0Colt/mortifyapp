@@ -94,6 +94,10 @@ export default function ProtectionScreen() {
                 rel="noreferrer"
               >
                 CleanBrowsing setup guide
+                <span className="visually-hidden">
+                  {" "}
+                  (opens outside Mortify)
+                </span>
               </a>
             </article>
           ) : (
@@ -121,6 +125,10 @@ export default function ProtectionScreen() {
                 rel="noreferrer"
               >
                 Apple's Screen Time guide
+                <span className="visually-hidden">
+                  {" "}
+                  (opens outside Mortify)
+                </span>
               </a>
             </article>
           )}

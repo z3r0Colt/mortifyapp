@@ -55,6 +55,9 @@ import ChapterScreen from "./screens/ChapterScreen";
 import RecoveryCodeScreen from "./screens/RecoveryCodeScreen";
 import RemindersScreen from "./screens/RemindersScreen";
 import WelcomeScreen from "./screens/WelcomeScreen";
+import JournalScreen from "./screens/JournalScreen";
+import AboutScreen from "./screens/AboutScreen";
+import BibleScreen from "./screens/BibleScreen";
 function Router() {
   const { value, loaded, error } = usePreferences();
   const app = useApp();
@@ -112,13 +115,24 @@ function Router() {
     useMessages.setState({ rows: [], error: "" });
     if (user) return watchMessages(user.id);
   }, [user?.id]);
+  // Lock when the app has been away longer than the chosen delay, so a quick
+  // call to a brother from Flee does not send you back to the PIN screen.
   useEffect(() => {
-    const hide = () => {
-      if (document.visibilityState === "hidden") privacy.lock();
+    let hiddenAt = 0;
+    const change = () => {
+      const { security, lock } = usePrivacy.getState();
+      const after = (security?.lockAfter ?? 1) * 60000;
+      if (document.visibilityState === "hidden") {
+        if (after === 0) lock();
+        else hiddenAt = Date.now();
+      } else {
+        if (hiddenAt && Date.now() - hiddenAt >= after) lock();
+        hiddenAt = 0;
+      }
     };
-    document.addEventListener("visibilitychange", hide);
-    return () => document.removeEventListener("visibilitychange", hide);
-  }, [privacy.lock]);
+    document.addEventListener("visibilitychange", change);
+    return () => document.removeEventListener("visibilitychange", change);
+  }, []);
   if (error || app.error)
     return (
       <Page title="Unable to open Mortify">
@@ -246,6 +260,9 @@ function Router() {
           <Route path="/reading" element={<ReadingScreen />} />
           <Route path="/examine" element={<ExamineScreen />} />
           <Route path="/patterns" element={<PatternsScreen />} />
+          <Route path="/journal" element={<JournalScreen />} />
+          <Route path="/about" element={<AboutScreen />} />
+          <Route path="/bible" element={<BibleScreen />} />
           <Route path="/fall" element={<FallScreen />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

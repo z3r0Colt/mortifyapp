@@ -129,6 +129,10 @@ export async function allEntries(userId: string) {
   ]);
   return { fleeLogs, journals, falls };
 }
+/** Permanently removes one journal entry or confession from the account. */
+export async function deleteEntry(table: "journals" | "falls", id: string) {
+  await result(cloud().from(table).delete().eq("id", id));
+}
 export async function rotateReading(key: string, count: number, day: string) {
   return (await result(
     cloud().rpc("rotate_reading", { p_key: key, p_count: count, p_day: day }),

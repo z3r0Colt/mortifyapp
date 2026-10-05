@@ -23,7 +23,8 @@ Feels like an old pastor's study. Quiet, sober, warm. Nothing flashy.
 - Accent oxblood #7A2E2A, used sparingly
 - Scripture references in brass #9C7A3C
 - Headings in EB Garamond, body in Literata, small labels in Inter, all bundled with @fontsource so they work offline
-- Colors defined as CSS variables, switching with the system light or dark setting
+- Colors defined as CSS variables, following the system light or dark setting unless the user picks Light or Dark in Settings. Text size (Standard, Large, Larger) scales from the root font size. These two display choices are kept in localStorage so they apply before the first paint
+- All text meets WCAG AA contrast (4.5:1). Use `--brass-text` for brass-coloured type; `--brass` is for lines and decoration
 - Large readable text, wide margins, generous line spacing
 - Mobile first, sized for a phone held in one hand
 - Respect safe areas with `env(safe-area-inset-*)` so nothing hides under the notch

@@ -120,6 +120,12 @@ export default function ExamineScreen() {
       )}
       <ListGroup title="Looking back">
         <ListLink
+          to="/journal"
+          icon="book"
+          label="My journal"
+          detail="Past examinations and confessions"
+        />
+        <ListLink
           to="/patterns"
           icon="chart"
           label="See the past week's patterns"

@@ -5,6 +5,7 @@ import { useBattlePacks } from "../content/selection";
 import { useContent } from "../content/useContent";
 import { loadFeaturedSermons } from "../content/loader";
 import { SermonList } from "../components/SermonList";
+import { ListGroup, ListLink } from "../components/List";
 import { Scripture } from "../components/Scripture";
 import { ContentReading } from "../components/ContentReading";
 import { Paragraphs } from "../components/Paragraphs";
@@ -99,6 +100,14 @@ export default function ReadingScreen() {
           </p>
         )
       )}
+      <ListGroup>
+        <ListLink
+          to="/bible"
+          icon="book"
+          label="Read the Bible"
+          detail="Any book and chapter"
+        />
+      </ListGroup>
     </Page>
   );
 }

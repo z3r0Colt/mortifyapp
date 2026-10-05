@@ -4,6 +4,8 @@ export default {
     "import.meta.env.VITE_SUPABASE_URL": '""',
     "import.meta.env.VITE_SUPABASE_ANON_KEY": '""',
     "import.meta.env.VITE_VAPID_PUBLIC_KEY": '""',
+    __APP_VERSION__: '"test"',
+    __BUILD_DATE__: '"test"',
   },
   test: { include: ["src/**/*.test.{ts,tsx}"] },
 };

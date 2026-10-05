@@ -34,6 +34,7 @@ type State = {
   lock: () => void;
   setLock: (enabled: boolean, pin?: string) => Promise<void>;
   setBiometrics: (enabled: boolean, pin: string) => Promise<void>;
+  setLockAfter: (minutes: number) => Promise<void>;
   unlockBiometric: () => Promise<void>;
   changePin: (current: string, next: string) => Promise<void>;
   recover: (code: string, pin: string) => Promise<void>;
@@ -112,6 +113,7 @@ export const usePrivacy = create<State>((set, get) => {
                 salt: vault.salt,
                 pinKey: vault.pin_key,
                 lockEnabled: security?.lockEnabled ?? true,
+                lockAfter: security?.lockAfter,
                 biometricEnabled: security?.biometricEnabled,
               };
               await db.security.put(security);
@@ -204,6 +206,13 @@ export const usePrivacy = create<State>((set, get) => {
       };
       await db.security.put(updated);
       set({ security: updated, key: await importDataKey(raw) });
+    },
+    setLockAfter: async (minutes) => {
+      const security = get().security;
+      if (!security) return;
+      const updated = { ...security, lockAfter: minutes };
+      await db.security.put(updated);
+      set({ security: updated });
     },
     unlockBiometric: async () => {
       const security = get().security;

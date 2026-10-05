@@ -287,3 +287,54 @@ test("with several battles, Flee asks which temptation before the steps", async 
   await screen.findByRole("heading", { name: "Attend to the Word" });
   expect(screen.getByText("Pride")).toBeTruthy();
 });
+
+test("a short trip away does not lock, but a long one does", async () => {
+  signedIn({ onboarded: true, trust: "yes", battles: ["lust"] });
+  await usePrivacy.getState().setup("123456");
+  render(<App />);
+  fireEvent.change(await screen.findByLabelText("PIN"), {
+    target: { value: "123456" },
+  });
+  fireEvent.click(screen.getByRole("button", { name: "Open Mortify" }));
+  await screen.findByRole("heading", { name: "Watch and pray" });
+  let visibility: DocumentVisibilityState = "visible";
+  Object.defineProperty(document, "visibilityState", {
+    configurable: true,
+    get: () => visibility,
+  });
+  const away = (ms: number) => {
+    const start = Date.now();
+    visibility = "hidden";
+    act(() => void document.dispatchEvent(new Event("visibilitychange")));
+    vi.spyOn(Date, "now").mockReturnValue(start + ms);
+    visibility = "visible";
+    act(() => void document.dispatchEvent(new Event("visibilitychange")));
+    vi.mocked(Date.now).mockRestore();
+  };
+  away(20_000);
+  expect(usePrivacy.getState().key).not.toBeNull();
+  away(2 * 60_000);
+  expect(usePrivacy.getState().key).toBeNull();
+});
+
+test("My journal shows past entries decrypted on this phone", async () => {
+  signedIn({ onboarded: true, trust: "yes", battles: ["lust"] });
+  await usePrivacy.getState().setup("123456");
+  const key = usePrivacy.getState().key!;
+  account.rows.journals.push({
+    id: "j1",
+    created_at: new Date().toISOString(),
+    battle: "lust",
+    roots: ["weariness"],
+    occasions: ["night"],
+    body: await encryptText(key, "AN EARLIER EXAMINATION"),
+  });
+  window.history.replaceState({}, "", "/journal");
+  render(<App />);
+  fireEvent.change(await screen.findByLabelText("PIN"), {
+    target: { value: "123456" },
+  });
+  fireEvent.click(screen.getByRole("button", { name: "Open Mortify" }));
+  expect(await screen.findByText("AN EARLIER EXAMINATION")).toBeTruthy();
+  expect(screen.getByText("weariness")).toBeTruthy();
+});

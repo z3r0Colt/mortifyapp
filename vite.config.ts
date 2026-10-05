@@ -2,10 +2,16 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwind from "@tailwindcss/vite";
 import { VitePWA } from "vite-plugin-pwa";
+import pkg from "./package.json" with { type: "json" };
 
 export default defineConfig({
   // The custom domain serves from the root. Set BASE_PATH only for a subfolder build.
   base: process.env.BASE_PATH ?? "/",
+  // Shown in Settings > About so support questions can name the build.
+  define: {
+    __APP_VERSION__: JSON.stringify(pkg.version),
+    __BUILD_DATE__: JSON.stringify(new Date().toISOString().slice(0, 10)),
+  },
   plugins: [
     react(),
     tailwind(),

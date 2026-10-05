@@ -11,13 +11,15 @@
   --accent-text: #7a2e2a;
   --accent-soft: rgb(122 46 42 / 0.08);
   --brass: #9c7a3c;
+  /* Brass for text: the decorative brass is too light for small type. */
+  --brass-text: #7e6333;
   --brass-soft: rgb(156 122 60 / 0.13);
   --surface: #fcf9f3;
   --surface-sunk: #efe8db;
   --line: #e4dccd;
   --line-strong: #d2c6b1;
   --muted: #675e53;
-  --faint: #8c8273;
+  --faint: #6f665a;
   --shadow-sm: 0 1px 2px rgb(60 40 20 / 0.05), 0 1px 1px rgb(60 40 20 / 0.03);
   --shadow-md:
     0 1px 2px rgb(60 40 20 / 0.05), 0 10px 28px -12px rgb(60 40 20 / 0.18);
@@ -29,24 +31,55 @@
   --serif: Literata, Georgia, serif;
   --display: "EB Garamond", Georgia, serif;
 }
+/* Dark colours follow the phone unless a theme is chosen in Settings. */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --bg: #16130f;
     --text: #ede6d8;
     --accent-ink: #f3ebdd;
     --accent-text: #d39a91;
     --accent-soft: rgb(196 110 100 / 0.12);
     --brass: #c9a86a;
+    --brass-text: #c9a86a;
     --brass-soft: rgb(201 168 106 / 0.14);
     --surface: #1f1b16;
     --surface-sunk: #1a1712;
     --line: #2e2820;
     --line-strong: #43392d;
     --muted: #bdb19d;
-    --faint: #8d8170;
+    --faint: #a29787;
     --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.3);
     --shadow-md: 0 1px 2px rgb(0 0 0 / 0.3), 0 12px 30px -12px rgb(0 0 0 / 0.6);
   }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #16130f;
+  --text: #ede6d8;
+  --accent-ink: #f3ebdd;
+  --accent-text: #d39a91;
+  --accent-soft: rgb(196 110 100 / 0.12);
+  --brass: #c9a86a;
+  --brass-text: #c9a86a;
+  --brass-soft: rgb(201 168 106 / 0.14);
+  --surface: #1f1b16;
+  --surface-sunk: #1a1712;
+  --line: #2e2820;
+  --line-strong: #43392d;
+  --muted: #bdb19d;
+  --faint: #a29787;
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.3);
+  --shadow-md: 0 1px 2px rgb(0 0 0 / 0.3), 0 12px 30px -12px rgb(0 0 0 / 0.6);
+}
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+/* Text size from Settings; rem sizes scale from here. */
+:root[data-text="large"] {
+  font-size: 112.5%;
+}
+:root[data-text="larger"] {
+  font-size: 125%;
 }
 @theme inline {
   --color-parchment: var(--bg);
@@ -68,7 +101,7 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: var(--serif);
-  font-size: 18px;
+  font-size: 1.125rem;
   line-height: 1.75;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -225,7 +258,7 @@ small {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.16em;
-  color: var(--brass);
+  color: var(--brass-text);
 }
 .lede {
   margin: 0.9rem 0 0;
@@ -511,7 +544,7 @@ input:not([type="checkbox"]):focus,
 textarea:focus,
 select:focus {
   outline: none;
-  border-color: var(--brass);
+  border-color: var(--brass-text);
   box-shadow: 0 0 0 4px var(--brass-soft);
 }
 select {
@@ -542,7 +575,7 @@ input[type="checkbox"] {
     border-color 0.15s;
 }
 input[type="checkbox"]:checked {
-  border-color: var(--brass);
+  border-color: var(--brass-text);
   background: var(--brass)
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fffdf8' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E")
     center / 16px no-repeat;
@@ -612,7 +645,7 @@ fieldset.chips legend {
   pointer-events: none;
 }
 .chip:has(input:checked) {
-  border-color: var(--brass);
+  border-color: var(--brass-text);
   background: var(--brass-soft);
 }
 .chip:has(input:focus-visible) {
@@ -622,7 +655,7 @@ fieldset.chips legend {
 .chip-check {
   display: none;
   margin-right: 6px;
-  color: var(--brass);
+  color: var(--brass-text);
 }
 .chip:has(input:checked) .chip-check {
   display: inline-flex;
@@ -659,7 +692,7 @@ label.choice {
     background-color 0.15s;
 }
 label.choice:has(input:checked) {
-  border-color: var(--brass);
+  border-color: var(--brass-text);
   background:
     linear-gradient(var(--brass-soft), var(--brass-soft)), var(--surface);
 }
@@ -766,7 +799,7 @@ p[role="status"] {
   height: 38px;
   border-radius: 11px;
   background: var(--brass-soft);
-  color: var(--brass);
+  color: var(--brass-text);
 }
 .tile.accent {
   background: var(--accent-soft);
@@ -780,7 +813,7 @@ p[role="status"] {
   height: 46px;
   border-radius: 50%;
   background: var(--brass-soft);
-  color: var(--brass);
+  color: var(--brass-text);
   font-family: var(--display);
   font-size: 1.3rem;
   line-height: 1;
@@ -826,7 +859,7 @@ p[role="status"] {
   color: var(--text);
 }
 .tabs a.active svg {
-  color: var(--brass);
+  color: var(--brass-text);
 }
 .tabs .dot {
   position: absolute;
@@ -872,7 +905,7 @@ p[role="status"] {
   font-family: var(--display);
   font-size: 7rem;
   line-height: 1;
-  color: var(--brass);
+  color: var(--brass-text);
   opacity: 0.18;
 }
 .verse-card .verse-text {
@@ -989,7 +1022,7 @@ p[role="status"] {
   line-height: 1.75;
 }
 .reference {
-  color: var(--brass);
+  color: var(--brass-text);
   font-family: var(--sans);
   font-size: 0.88rem;
   font-weight: 600;
@@ -1090,7 +1123,7 @@ p[role="status"] {
   height: 28px;
   border-radius: 50%;
   background: var(--brass-soft);
-  color: var(--brass);
+  color: var(--brass-text);
   font-family: var(--sans);
   font-size: 0.8rem;
   font-weight: 600;
@@ -1342,7 +1375,7 @@ div.list-row:hover {
 .checks svg {
   flex: none;
   margin-top: 4px;
-  color: var(--brass);
+  color: var(--brass-text);
 }
 
 input.recovery-input {
@@ -1410,6 +1443,57 @@ input.recovery-input {
 
 .urgent-help p {
   margin-bottom: 14px;
+}
+
+.journal-entry h2 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+.journal-entry h2 .tag {
+  font-size: 0.75rem;
+}
+.journal-text {
+  white-space: pre-wrap;
+}
+.journal-entry h3.section-title {
+  margin: 1.2rem 0 0.4rem;
+}
+
+.book-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px;
+}
+.book-grid button {
+  min-height: 48px;
+  padding: 8px 12px;
+  font-family: var(--serif);
+  font-weight: 400;
+}
+.chapter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(56px, 1fr));
+  gap: 8px;
+}
+.chapter-grid .button {
+  min-height: 52px;
+  padding: 0;
+}
+.chapter-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 2rem;
+}
+.chapter-nav .button {
+  min-height: 48px;
+  padding: 8px 12px;
+  font-size: 0.88rem;
+}
+.chapter-nav .button:last-child {
+  justify-self: stretch;
 }
 
 /* ---------- Welcome ---------- */

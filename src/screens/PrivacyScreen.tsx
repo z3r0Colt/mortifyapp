@@ -26,6 +26,7 @@ export default function PrivacyScreen() {
     setBiometrics,
     changePin,
     replaceRecoveryCode,
+    setLockAfter,
   } = usePrivacy();
   const [pending, setPending] = useState<Pending | null>(null);
   const [pin, setPin] = useState("");
@@ -127,6 +128,36 @@ export default function PrivacyScreen() {
             </button>
           </div>
         </form>
+      )}
+      {security?.lockEnabled && (
+        <article className="card">
+          <p className="label" id="lock-after-label">
+            Ask for my PIN after Mortify has been away for
+          </p>
+          <div
+            className="segmented"
+            role="group"
+            aria-labelledby="lock-after-label"
+            style={{ marginBottom: 0 }}
+          >
+            {(
+              [
+                [0, "No time"],
+                [1, "1 min"],
+                [5, "5 min"],
+                [15, "15 min"],
+              ] as const
+            ).map(([minutes, label]) => (
+              <button
+                key={minutes}
+                aria-pressed={(security.lockAfter ?? 1) === minutes}
+                onClick={() => void setLockAfter(minutes)}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        </article>
       )}
       {done && <p role="status">{done}</p>}
       <ListGroup title="PIN and recovery">
