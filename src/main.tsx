@@ -13,7 +13,7 @@ import { applyDisplay, readDisplay } from "./state/display";
 applyDisplay(readDisplay());
 import { registerSW } from "virtual:pwa-register";
 import { isNative } from "./native/platform";
-import { busy, usePwa, watchInstall } from "./state/pwa";
+import { applyWaitingUpdate, busy, usePwa, watchInstall } from "./state/pwa";
 import { isInstalled } from "./platform";
 if (!isNative()) {
   watchInstall();
@@ -21,11 +21,11 @@ if (!isNative()) {
   // found just after that switches over at once, even on the PIN screen,
   // because nothing has been typed yet.
   let opened = Date.now();
-  const update = registerSW({
+  registerSW({
     onOfflineReady: () =>
       window.dispatchEvent(new Event("mortify-offline-ready")),
     onNeedRefresh: () => {
-      if (Date.now() - opened < 20000 && !busy()) void update(true);
+      if (Date.now() - opened < 20000 && !busy()) void applyWaitingUpdate();
       else usePwa.setState({ updateReady: true });
     },
     // Installed apps can stay open for days; look for a new version every
@@ -42,30 +42,8 @@ if (!isNative()) {
           check();
         }
       });
-      usePwa.setState({
-        checkForUpdate: async () => {
-          if (!navigator.onLine) return "offline";
-          await registration.update();
-          // A download may still be finishing; give it a few seconds.
-          const installing = registration.installing;
-          if (installing)
-            await new Promise<void>((done) => {
-              const timer = setTimeout(done, 8000);
-              installing.addEventListener("statechange", () => {
-                if (installing.state !== "installing") {
-                  clearTimeout(timer);
-                  done();
-                }
-              });
-            });
-          if (!registration.waiting) return "current";
-          void update(true);
-          return "updating";
-        },
-      });
     },
   });
-  usePwa.setState({ applyUpdate: () => void update(true) });
   // Ask the browser not to clear the offline copy under storage pressure.
   if (isInstalled()) void navigator.storage?.persist?.().catch(() => false);
 }

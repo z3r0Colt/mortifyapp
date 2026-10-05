@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Page } from "../components/Page";
 import { Icon } from "../components/Icon";
 import { Action } from "../components/Action";
-import { usePwa, type UpdateCheck } from "../state/pwa";
+import { reinstallLatest, usePwa, type UpdateCheck } from "../state/pwa";
 const outside = (
   <span className="visually-hidden"> (opens outside Mortify)</span>
 );
@@ -135,6 +135,20 @@ export default function AboutScreen() {
             }
           </p>
         )}
+        <p className="label" style={{ marginTop: 18 }}>
+          If an update will not install, reinstall the newest version. You stay
+          signed in, and your journal and settings are kept.
+        </p>
+        <Action
+          className="quiet"
+          run={async () => {
+            if (!navigator.onLine)
+              throw new Error("Connect to the internet to reinstall.");
+            await reinstallLatest();
+          }}
+        >
+          Reinstall the newest version
+        </Action>
       </article>
     </Page>
   );
