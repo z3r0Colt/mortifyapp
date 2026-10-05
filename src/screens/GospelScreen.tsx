@@ -30,7 +30,7 @@ export default function GospelScreen() {
         <div className="dock">
           <Link
             className="button primary"
-            to={user ? "/onboarding/trust" : "/onboarding/sign-in"}
+            to={user ? "/onboarding/brother-or-sister" : "/onboarding/sign-in"}
           >
             Continue
             <Icon name="arrow" size={18} />

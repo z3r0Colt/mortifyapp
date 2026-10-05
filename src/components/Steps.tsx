@@ -21,7 +21,7 @@ export function OnboardingBar({ step }: { step: number }) {
   return (
     <>
       <Brand />
-      <Steps step={step} count={5} />
+      <Steps step={step} count={6} />
     </>
   );
 }

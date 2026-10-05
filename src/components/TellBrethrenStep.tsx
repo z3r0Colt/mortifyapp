@@ -5,17 +5,16 @@ import { useBrethren } from "../state/brethren";
 import { useAuth } from "../state/auth";
 import { queueEvent, circleNote } from "../brethren/outbox";
 import { Scripture } from "./Scripture";
+import { useCircleWords } from "../brethren/words";
 export function TellBrethrenStep({ battle }: { battle: string }) {
-  const { sharing, profile } = useBrethren();
+  const { circle, one } = useCircleWords();
+  const { sharing } = useBrethren();
   const user = useAuth((s) => s.user);
   const [note, setNote] = useState("");
   const [sent, setSent] = useState(false);
   return (
     <>
-      <p>
-        Confession to a trusted{" "}
-        {profile?.sex === "sister" ? "sister" : "brother"} is good for the soul.
-      </p>
+      <p>Confession to a trusted {one} is good for the soul.</p>
       <div className="card">
         <Scripture reference="James 5:16" />
       </div>
@@ -54,7 +53,7 @@ export function TellBrethrenStep({ battle }: { battle: string }) {
                   setSent(true);
                 }}
               >
-                Tell my {profile?.sex === "sister" ? "sisters" : "brethren"}
+                Tell my {circle}
               </Action>
             </div>
           )}

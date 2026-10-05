@@ -12,6 +12,11 @@ import {
 import { isNative } from "../native/platform";
 import { readNativeKey, storeNativeKey, clearNativeKey } from "../native/vault";
 import {
+  enrollPasskey,
+  unlockWithPasskey,
+  type Passkey,
+} from "../privacy/passkey";
+import {
   clearPrivateEntries,
   fetchVault,
   saveVault,
@@ -41,12 +46,24 @@ type State = {
   changePin: (current: string, next: string) => Promise<void>;
   recover: (code: string, pin: string) => Promise<void>;
   replaceRecoveryCode: (pin: string) => Promise<void>;
+  /** Confirms the user still has the recovery code; throws if it is wrong. */
+  checkRecoveryCode: (code: string) => Promise<void>;
+  snoozeCodeCheck: () => Promise<void>;
   acknowledgeRecoveryCode: () => void;
   forget: () => Promise<void>;
 };
 function online(action: string) {
   if (!navigator.onLine)
     throw new Error(`Connect to the internet to ${action}.`);
+}
+const day = 86400000;
+/** Once a year, ask whether the recovery code is still at hand. */
+export function codeCheckDue(security: Security | null, now = Date.now()) {
+  return (
+    !!security?.codeCheckedAt &&
+    now - security.codeCheckedAt > 365 * day &&
+    (security.codeCheckSnoozedUntil ?? 0) < now
+  );
 }
 function signedIn() {
   const user = useAuth.getState().user;
@@ -63,6 +80,14 @@ export const usePrivacy = create<State>((set, get) => {
     } catch {
       throw new Error("That PIN did not open your journal. Please try again.");
     }
+  };
+  /** Saves changes to this phone's security record. */
+  const patch = async (changes: Partial<Security>) => {
+    const security = get().security;
+    if (!security) return;
+    const updated = { ...security, ...changes };
+    await db.security.put(updated);
+    set({ security: updated });
   };
   /** Locks the key under a new PIN on this phone only. The PIN-locked copy
    *  never goes to the account: a short PIN could be guessed there offline. */
@@ -121,6 +146,10 @@ export const usePrivacy = create<State>((set, get) => {
           } catch {
             /* Offline or unreachable: use the copy on this device. */
           }
+        if (security && !security.codeCheckedAt) {
+          security = { ...security, codeCheckedAt: Date.now() };
+          await db.security.put(security);
+        }
         set({
           security,
           hasVault,
@@ -165,6 +194,7 @@ export const usePrivacy = create<State>((set, get) => {
         pinKey: await wrapDataKey(pin, salt, raw),
         keyId,
         lockEnabled: true,
+        codeCheckedAt: Date.now(),
       };
       await db.security.put(security);
       set({
@@ -196,6 +226,7 @@ export const usePrivacy = create<State>((set, get) => {
         lockEnabled: enabled,
         deviceKey: enabled || isNative() ? undefined : key,
         biometricEnabled: false,
+        passkey: undefined,
       };
       await db.security.put(updated);
       set({ security: updated });
@@ -204,11 +235,15 @@ export const usePrivacy = create<State>((set, get) => {
       const security = get().security;
       if (!security) throw new Error("Set a PIN first.");
       const raw = await rawKey(pin);
-      if (enabled) await storeNativeKey(raw, true);
-      else await clearNativeKey();
+      let passkey: Passkey | undefined;
+      if (isNative()) {
+        if (enabled) await storeNativeKey(raw, true);
+        else await clearNativeKey();
+      } else if (enabled) passkey = await enrollPasskey(raw);
       const updated = {
         ...security,
         biometricEnabled: enabled,
+        passkey,
         lockEnabled: true,
         deviceKey: undefined,
       };
@@ -226,7 +261,13 @@ export const usePrivacy = create<State>((set, get) => {
       const security = get().security;
       if (!security?.biometricEnabled)
         throw new Error("Biometric unlock is not enabled.");
-      const key = await readNativeKey().catch(() => null);
+      const key = isNative()
+        ? await readNativeKey().catch(() => null)
+        : security.passkey
+          ? await unlockWithPasskey(security.passkey)
+              .then(importDataKey)
+              .catch(() => null)
+          : null;
       if (!key) throw new Error("Use your PIN to open the journal.");
       set({ key });
     },
@@ -262,6 +303,10 @@ export const usePrivacy = create<State>((set, get) => {
         throw new Error("That recovery code does not match. Please check it.");
       }
       await savePin(user.id, raw, pin, vault.key_id);
+      await patch({
+        codeCheckedAt: Date.now(),
+        codeCheckSnoozedUntil: undefined,
+      });
     },
     replaceRecoveryCode: async (pin) => {
       const user = signedIn();
@@ -273,8 +318,32 @@ export const usePrivacy = create<State>((set, get) => {
         recovery_salt: recoverySalt,
         recovery_key: await wrapDataKey(code, recoverySalt, raw),
       });
+      await patch({
+        codeCheckedAt: Date.now(),
+        codeCheckSnoozedUntil: undefined,
+      });
       set({ recoveryCode: code, recoveryReason: "new" });
     },
+    checkRecoveryCode: async (input) => {
+      const code = normalizeRecoveryCode(input);
+      if (!code)
+        throw new Error("Enter all 20 letters and numbers of your code.");
+      const user = signedIn();
+      online("check your recovery code");
+      const vault = await fetchVault(user.id);
+      if (!vault) throw new Error("There is no journal in your account.");
+      try {
+        await unwrapDataKey(code, vault.recovery_salt, vault.recovery_key);
+      } catch {
+        throw new Error("That code does not match. Please check it.");
+      }
+      await patch({
+        codeCheckedAt: Date.now(),
+        codeCheckSnoozedUntil: undefined,
+      });
+    },
+    snoozeCodeCheck: () =>
+      patch({ codeCheckSnoozedUntil: Date.now() + 30 * day }),
     acknowledgeRecoveryCode: () =>
       set({ recoveryCode: null, recoveryReason: null }),
     forget: async () => {

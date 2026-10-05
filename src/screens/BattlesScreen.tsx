@@ -16,7 +16,7 @@ export default function BattlesScreen() {
       bare
       title="Choose your battles"
       lede="Choose the areas where you need help with prayer and examination."
-      bar={value.onboarded ? undefined : <OnboardingBar step={3} />}
+      bar={value.onboarded ? undefined : <OnboardingBar step={4} />}
       back={
         value.onboarded ? { to: "/settings", label: "Settings" } : undefined
       }

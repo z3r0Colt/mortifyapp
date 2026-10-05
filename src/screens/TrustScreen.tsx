@@ -11,7 +11,7 @@ export default function TrustScreen() {
       bare
       title="Are you trusting in Christ alone?"
       lede="Speak with your pastor if you have questions or doubts."
-      bar={<OnboardingBar step={2} />}
+      bar={<OnboardingBar step={3} />}
     >
       <div className="stack">
         {(

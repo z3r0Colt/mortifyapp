@@ -11,6 +11,7 @@ import type {
 type PreferencesRow = {
   onboarded: boolean;
   trust: Preferences["trust"];
+  sex: Preferences["sex"];
   battles: string[];
   morning: string;
   evening: string;
@@ -33,6 +34,7 @@ export async function fetchPreferences(
     id: "main",
     onboarded: row.onboarded,
     trust: row.trust,
+    sex: row.sex,
     battles: row.battles,
     morning: row.morning,
     evening: row.evening,
@@ -51,6 +53,7 @@ export async function savePreferences(userId: string, value: Preferences) {
         user_id: userId,
         onboarded: value.onboarded,
         trust: value.trust,
+        sex: value.sex ?? null,
         battles: value.battles,
         morning: value.morning,
         evening: value.evening,

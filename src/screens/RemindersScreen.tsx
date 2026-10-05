@@ -9,8 +9,10 @@ import { enableMessages, enableReminders } from "../data/notifications";
 import { clock } from "../data/clock";
 import { devicePlatform, isInstalled } from "../platform";
 import { isNative } from "../native/platform";
+import { useCircleWords } from "../brethren/words";
 // The last onboarding step: a gentle daily nudge back to the Word and prayer.
 export default function RemindersScreen() {
+  const { circle } = useCircleWords();
   const user = useAuth((s) => s.user);
   const prefs = usePreferences((s) => s.value);
   const navigate = useNavigate();
@@ -21,7 +23,7 @@ export default function RemindersScreen() {
     <Page
       bare
       title="Reminders"
-      lede="A quiet reminder each morning to read and each evening to examine the day, and a note when your brethren ask for prayer."
+      lede={`A quiet reminder each morning to read and each evening to examine the day, and a note when your ${circle} ask for prayer.`}
       bar={<Mark large />}
     >
       <ul className="list">

@@ -10,7 +10,7 @@ const features: [IconName, string, string][] = [
   [
     "exit",
     "Flee in the hour of temptation",
-    "One tap turns you to the Word, to prayer, and to your brethren.",
+    "One tap turns you to the Word, to prayer, and to your brothers or sisters in Christ.",
   ],
   [
     "book",
@@ -19,8 +19,8 @@ const features: [IconName, string, string][] = [
   ],
   [
     "people",
-    "A few brethren from your church",
-    "A small closed circle who pray for you and ask how you are doing.",
+    "A few brothers or sisters from your church",
+    "Brothers with brothers, sisters with sisters: a small closed circle who pray for you and ask how you are doing.",
   ],
   [
     "lock",

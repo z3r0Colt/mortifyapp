@@ -15,6 +15,7 @@ import { UrgentHelp } from "../components/UrgentHelp";
 import { SermonList } from "../components/SermonList";
 import { useContent } from "../content/useContent";
 import { loadFeaturedSermons } from "../content/loader";
+import { useCircleWords } from "../brethren/words";
 const titles = [
   "Attend to the Word",
   "Receive counsel",
@@ -23,6 +24,7 @@ const titles = [
   "Now get up and go.",
 ];
 export default function FleeScreen() {
+  const { circle } = useCircleWords();
   const packs = useBattlePacks();
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
@@ -111,7 +113,7 @@ export default function FleeScreen() {
     <Page
       bare
       eyebrow={pack.name}
-      title={titles[step]}
+      title={step === 3 ? `Ask your ${circle} to pray` : titles[step]}
       bar={
         <>
           {close}

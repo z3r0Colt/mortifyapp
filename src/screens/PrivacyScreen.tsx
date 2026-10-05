@@ -1,13 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Page } from "../components/Page";
 import { Action } from "../components/Action";
 import { Icon } from "../components/Icon";
-import { ListGroup, SwitchRow } from "../components/List";
+import { ListGroup, ListLink, SwitchRow } from "../components/List";
 import { usePrivacy } from "../state/privacy";
 import { PinInput } from "../components/PinInput";
 import { exportData, deleteDeviceData } from "../privacy/data";
 import { isNative } from "../native/platform";
 import { biometricAvailable } from "../native/vault";
+import { passkeyAvailable } from "../privacy/passkey";
+import { useCircleWords } from "../brethren/words";
 // Changes that must confirm the current PIN first.
 type Pending =
   "lock-off" | "biometric-on" | "biometric-off" | "change-pin" | "new-code";
@@ -19,6 +21,7 @@ const confirmLabel: Record<Pending, string> = {
   "new-code": "Make a new recovery code",
 };
 export default function PrivacyScreen() {
+  const { circle } = useCircleWords();
   const {
     security,
     setLock,
@@ -34,6 +37,12 @@ export default function PrivacyScreen() {
   const [repeat, setRepeat] = useState("");
   const [done, setDone] = useState("");
   const native = isNative();
+  // On the web, fingerprint or face unlock works through a passkey where the
+  // browser supports it; elsewhere the switch stays hidden.
+  const [webBiometric, setWebBiometric] = useState(false);
+  useEffect(() => {
+    if (!native) void passkeyAvailable().then(setWebBiometric);
+  }, [native]);
   const close = () => {
     setPending(null);
     setPin("");
@@ -50,7 +59,9 @@ export default function PrivacyScreen() {
     else if (pending === "change-pin") {
       if (next !== repeat) throw new Error("The new PINs do not match.");
       await changePin(pin, next);
-      setDone("Your PIN is changed on every phone you use.");
+      setDone(
+        "Your PIN is changed on this phone. Any other phone keeps its own PIN.",
+      );
     } else if (pending === "new-code") await replaceRecoveryCode(pin);
     else await setBiometrics(pending === "biometric-on", pin);
     close();
@@ -59,7 +70,7 @@ export default function PrivacyScreen() {
     <Page
       title="Privacy"
       back={{ to: "/settings", label: "Settings" }}
-      lede="Your journal and confessions are encrypted with your PIN before they leave this phone. Only you can read them, not your brethren and not anyone who runs Mortify."
+      lede={`Your journal and confessions are encrypted with your PIN before they leave this phone. Only you can read them, not your ${circle} and not anyone who runs Mortify.`}
     >
       <ListGroup>
         <SwitchRow
@@ -74,13 +85,20 @@ export default function PrivacyScreen() {
             await setLock(on);
           }}
         />
-        {native && (
+        {(native || webBiometric || security?.biometricEnabled) && (
           <SwitchRow
             label="Fingerprint or Face ID"
-            detail="Open Mortify without typing your PIN."
+            detail={
+              native
+                ? "Open Mortify without typing your PIN."
+                : "Open Mortify without typing your PIN. Your phone keeps a passkey for Mortify that works only on this phone."
+            }
             checked={!!security?.biometricEnabled}
             onChange={async (on) => {
-              if (on && !(await biometricAvailable()))
+              if (
+                on &&
+                !(await (native ? biometricAvailable() : passkeyAvailable()))
+              )
                 throw new Error(
                   "Set up fingerprint or Face ID in your phone settings first.",
                 );
@@ -161,6 +179,12 @@ export default function PrivacyScreen() {
       )}
       {done && <p role="status">{done}</p>}
       <ListGroup title="PIN and recovery">
+        <ListLink
+          to="/recovery-check"
+          icon="check"
+          label="Check my recovery code"
+          detail="Make sure the code you kept still opens your journal."
+        />
         <li>
           <button className="list-row" onClick={() => open("change-pin")}>
             <span className="tile">

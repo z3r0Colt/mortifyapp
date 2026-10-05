@@ -19,7 +19,9 @@ import {
   IphoneInstallSteps,
 } from "../components/NotificationHelp";
 import { useNotify } from "../state/notify";
+import { useCircleWords } from "../brethren/words";
 export default function NotificationsScreen() {
+  const { circle, Circle } = useCircleWords();
   const { profile, load } = useBrethren();
   const user = useAuth((s) => s.user);
   const prefs = usePreferences((s) => s.value);
@@ -59,7 +61,7 @@ export default function NotificationsScreen() {
     <Page
       title="Notifications"
       back={{ to: "/settings", label: "Settings" }}
-      lede="Notifications tell you when your brethren ask for prayer, and give a quiet reminder each morning and evening."
+      lede={`Notifications tell you when your ${circle} ask for prayer, and give a quiet reminder each morning and evening.`}
     >
       {notify === "install" && (
         <article className="card accent">
@@ -87,7 +89,7 @@ export default function NotificationsScreen() {
       )}
       <ListGroup>
         <SwitchRow
-          label="Messages from my brethren"
+          label={`Messages from my ${circle}`}
           detail="Prayer requests and notes from your circle."
           checked={user ? messages : false}
           disabled={!user}
@@ -149,11 +151,11 @@ export default function NotificationsScreen() {
         <article className="card">
           <p>
             {native
-              ? "Sign in to Brethren to hear from your circle."
-              : "Sign in to Brethren to hear from your circle and to get reminders."}
+              ? `Sign in to ${Circle} to hear from your circle.`
+              : `Sign in to ${Circle} to hear from your circle and to get reminders.`}
           </p>
           <Link className="button block" to="/brethren">
-            Open Brethren
+            Open {Circle}
           </Link>
         </article>
       )}

@@ -27,6 +27,8 @@ import FallScreen from "./screens/FallScreen";
 import ReadingScreen from "./screens/ReadingScreen";
 import PinScreen from "./screens/PinScreen";
 import PrivacyScreen from "./screens/PrivacyScreen";
+import RecoveryCheckScreen from "./screens/RecoveryCheckScreen";
+import BrotherOrSisterScreen from "./screens/BrotherOrSisterScreen";
 import { usePrivacy } from "./state/privacy";
 import ProtectionScreen from "./screens/ProtectionScreen";
 import { watchAuth } from "./state/auth";
@@ -111,6 +113,17 @@ function Router() {
   useEffect(() => {
     if (brethrenLoaded) void publishBattles().catch(() => {});
   }, [brethrenLoaded, battles]);
+  // A brethren profile already says brother or sister; keep the account's
+  // answer the same so the question is never asked of someone with a circle.
+  const profileSex = useBrethren((s) => s.profile?.sex);
+  const savedSex = usePreferences((s) => s.value.sex);
+  useEffect(() => {
+    if (profileSex && profileSex !== savedSex && navigator.onLine)
+      void usePreferences
+        .getState()
+        .save({ sex: profileSex })
+        .catch(() => {});
+  }, [profileSex, savedSex]);
   useEffect(() => {
     useMessages.setState({ rows: [], error: "" });
     if (user) return watchMessages(user.id);
@@ -166,6 +179,20 @@ function Router() {
     return <Navigate to="/onboarding/welcome" replace />;
   if (user && value.onboarded && !privacy.key) return <PinScreen />;
   if (privacy.recoveryCode) return <RecoveryCodeScreen />;
+  // Accounts made before the question was asked answer it once. Never in the
+  // hour of temptation, and never offline, where the answer cannot be saved.
+  if (
+    user &&
+    value.onboarded &&
+    !value.sex &&
+    !profileSex &&
+    brethrenLoaded &&
+    navigator.onLine &&
+    !["/flee", "/fall", "/onboarding/brother-or-sister"].includes(
+      location.pathname,
+    )
+  )
+    return <Navigate to="/onboarding/brother-or-sister" replace />;
   if (
     !value.onboarded &&
     !location.pathname.startsWith("/onboarding") &&
@@ -178,6 +205,7 @@ function Router() {
         <Routes location={background ?? location}>
           <Route path="/bible/:book/:chapter" element={<ChapterScreen />} />
           <Route path="/privacy" element={<PrivacyScreen />} />
+          <Route path="/recovery-check" element={<RecoveryCheckScreen />} />
           <Route path="/discreet" element={<DiscreetScreen />} />
           <Route path="/protection" element={<ProtectionScreen />} />
           <Route path="/sign-in" element={<Navigate to="/" replace />} />
@@ -247,6 +275,10 @@ function Router() {
           />
           <Route path="/onboarding/welcome" element={<WelcomeScreen />} />
           <Route path="/onboarding/gospel" element={<GospelScreen />} />
+          <Route
+            path="/onboarding/brother-or-sister"
+            element={<BrotherOrSisterScreen />}
+          />
           <Route path="/onboarding/trust" element={<TrustScreen />} />
           <Route
             path="/onboarding/gospel-path"

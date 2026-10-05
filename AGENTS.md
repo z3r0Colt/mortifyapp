@@ -52,7 +52,7 @@ Write all code so it runs in a browser first. Anything that needs native power g
 
 ## Brethren System
 
-Mortify has a small closed circle of brethren (up to 8, same sex only) who pray for and watch over one another. It is not a social network. No public feed, no stranger search, no likes, no images or links in messages. Each user controls exactly what his brethren see. Journal text is never shared.
+Mortify has a small closed circle of brethren (up to 8, same sex only) who pray for and watch over one another. It serves sisters as fully as brothers: onboarding asks "brother or sister", and a sister's circle is called "Sisters" (use `useCircleWords()` from `src/brethren/words.ts` for any wording that names the circle). It is not a social network. No public feed, no stranger search, no likes, no images or links in messages. Each user controls exactly what his brethren see. Journal text is never shared.
 
 ## Privacy
 

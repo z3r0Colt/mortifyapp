@@ -11,6 +11,7 @@ import { ContentReading } from "../components/ContentReading";
 import { Icon } from "../components/Icon";
 import { Steps } from "../components/Steps";
 import { UrgentHelp } from "../components/UrgentHelp";
+import { useCircleWords } from "../brethren/words";
 const titles = [
   "Return to Christ",
   "Confession",
@@ -19,6 +20,7 @@ const titles = [
   "Rest in Christ",
 ];
 export default function FallScreen() {
+  const { circle } = useCircleWords();
   const packs = useBattlePacks();
   const [battle, setBattle] = useState(packs[0]?.id ?? "");
   const pack = packs.find((p) => p.id === battle);
@@ -49,7 +51,11 @@ export default function FallScreen() {
     <Page
       calm
       bare
-      title={titles[step]}
+      title={
+        step === 2 && circle === "sisters"
+          ? "Seek the care of your sisters"
+          : titles[step]
+      }
       bar={
         <>
           {step === 0 ? close : <span />}

@@ -9,7 +9,9 @@ import { signOut, deleteAccount } from "../brethren/account";
 import { isNative } from "../native/platform";
 import { clock } from "../data/clock";
 import { useDisplay } from "../state/display";
+import { useCircleWords } from "../brethren/words";
 export default function SettingsScreen() {
+  const { circle } = useCircleWords();
   const value = usePreferences((s) => s.value);
   const user = useAuth((s) => s.user);
   const packs = useBattlePacks();
@@ -117,7 +119,8 @@ export default function SettingsScreen() {
             <Action run={signOut}>Sign out</Action>
             <p className="label" style={{ marginTop: 18 }}>
               Deleting your account permanently removes everything in it: your
-              preferences, journal, confessions, brethren links and messages.
+              preferences, journal, confessions, links with your {circle} and
+              messages.
             </p>
             <Action
               run={async () => {

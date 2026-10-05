@@ -5,6 +5,7 @@ import { Action } from "../components/Action";
 import { reinstallLatest, usePwa, type UpdateCheck } from "../state/pwa";
 import { nativePlatform, isNative } from "../native/platform";
 import { devicePlatform, isInstalled } from "../platform";
+import { useCircleWords } from "../brethren/words";
 const outside = (
   <span className="visually-hidden"> (opens outside Mortify)</span>
 );
@@ -33,6 +34,7 @@ function problemReport() {
 }
 // Contact, a plain account of the user's data, and where the content comes from.
 export default function AboutScreen() {
+  const { circle } = useCircleWords();
   const checkForUpdate = usePwa((s) => s.checkForUpdate);
   const [update, setUpdate] = useState<UpdateCheck | "checking" | null>(null);
   return (
@@ -78,7 +80,7 @@ export default function AboutScreen() {
           </li>
           <li>
             <Icon name="people" size={18} />
-            Your brethren see only what you choose under My profile and sharing,
+            Your {circle} see only what you choose under My profile and sharing,
             and the messages you send them.
           </li>
           <li>

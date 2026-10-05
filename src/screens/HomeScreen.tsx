@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Page } from "../components/Page";
 import { Icon } from "../components/Icon";
 import { ProtectionReminder } from "../components/ProtectionReminder";
+import { RecoveryCheckCard } from "../components/RecoveryCheckCard";
 import { InstallCard } from "../components/InstallCard";
 import { NotifyCard, useNotifyState } from "../components/NotifyCard";
 import { TodayVerse } from "../components/TodayVerse";
@@ -71,6 +72,7 @@ export default function HomeScreen() {
         <Icon name="chevron" size={18} className="chevron" />
       </Link>
       <ProtectionReminder />
+      <RecoveryCheckCard />
       {notify === "ready" && <InstallCard dismissible />}
     </Page>
   );

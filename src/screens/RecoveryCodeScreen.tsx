@@ -3,6 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { Mark, Page } from "../components/Page";
 import { Icon } from "../components/Icon";
 import { usePrivacy } from "../state/privacy";
+import { useAuth } from "../state/auth";
+import {
+  canSaveToPasswordManager,
+  saveToPasswordManager,
+} from "../privacy/passwordManager";
 // Shown once after a PIN is set or a new code is made. The code is never stored.
 export default function RecoveryCodeScreen() {
   const { recoveryCode, recoveryReason, acknowledgeRecoveryCode } =
@@ -10,6 +15,8 @@ export default function RecoveryCodeScreen() {
   const navigate = useNavigate();
   const [saved, setSaved] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [offered, setOffered] = useState(false);
+  const email = useAuth((s) => s.user?.email);
   if (!recoveryCode) return null;
   return (
     <Page
@@ -36,6 +43,27 @@ export default function RecoveryCodeScreen() {
           <Icon name="share" size={18} />
           {copied ? "Copied" : "Copy code"}
         </button>
+        {email && canSaveToPasswordManager() && (
+          <button
+            onClick={async () => {
+              try {
+                await saveToPasswordManager(email, recoveryCode);
+                setOffered(true);
+              } catch {
+                setOffered(false);
+              }
+            }}
+          >
+            <Icon name="lock" size={18} />
+            Save in my password manager
+          </button>
+        )}
+        {offered && (
+          <p role="status" className="label">
+            If your phone asked to save it, the code is now in your password
+            manager. Write it down as well.
+          </p>
+        )}
       </article>
       <p className="hint">
         <Icon name="lock" size={16} />

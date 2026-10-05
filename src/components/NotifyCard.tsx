@@ -7,6 +7,7 @@ import { usePreferences } from "../state/preferences";
 import { Action } from "./Action";
 import { Icon } from "./Icon";
 import { BlockedSteps, IphoneInstallSteps } from "./NotificationHelp";
+import { useCircleWords } from "../brethren/words";
 const quiet = 14 * 86400000;
 /** Watches whether this phone can receive notifications, rechecking on return. */
 export function useNotifyState() {
@@ -24,6 +25,7 @@ export function useNotifyState() {
 // Shown on Home while this phone cannot hear from Mortify. "Not now" rests
 // it for two weeks rather than forever, since reminders matter.
 export function NotifyCard() {
+  const { circle } = useCircleWords();
   const state = useNotifyState();
   const refresh = useNotify((s) => s.refresh);
   const user = useAuth((s) => s.user);
@@ -48,7 +50,7 @@ export function NotifyCard() {
           <strong>
             {state === "blocked"
               ? "Notifications are blocked"
-              : "Hear when your brethren ask for prayer"}
+              : `Hear when your ${circle} ask for prayer`}
           </strong>
         </span>
       </div>
@@ -64,7 +66,7 @@ export function NotifyCard() {
       {state === "off" && (
         <>
           <p>
-            Turn on notifications to hear when your brethren ask for prayer, and
+            Turn on notifications to hear when your {circle} ask for prayer, and
             for a quiet reminder each morning and evening.
           </p>
           <div className="stack">

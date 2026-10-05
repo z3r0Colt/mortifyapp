@@ -4,6 +4,7 @@ import { Action } from "../components/Action";
 import { Icon } from "../components/Icon";
 import { PinInput } from "../components/PinInput";
 import { usePrivacy } from "../state/privacy";
+import { useCircleWords } from "../brethren/words";
 type Mode = "pin" | "recover" | "reset";
 // Enter submits through the form's primary button so its errors still show.
 const submit = (e: FormEvent<HTMLFormElement>) => {
@@ -13,6 +14,7 @@ const submit = (e: FormEvent<HTMLFormElement>) => {
   )?.click();
 };
 export default function PinScreen() {
+  const { circle } = useCircleWords();
   const {
     security,
     hasVault,
@@ -109,7 +111,7 @@ export default function PinScreen() {
         <p className="notice">
           Without your PIN or recovery code, your journal and confessions cannot
           be opened by anyone. You may clear them from your account and choose a
-          new PIN. Your battles, times and brethren remain.
+          new PIN. Your battles, times and {circle} remain.
         </p>
         <p>
           If your journal still opens on another phone, you can make a new

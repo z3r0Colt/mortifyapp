@@ -1,5 +1,6 @@
 import Dexie, { type EntityTable } from "dexie";
 import type { CipherText } from "../privacy/crypto";
+import type { Passkey } from "../privacy/passkey";
 import type { OutboxItem } from "../brethren/outbox";
 // The user's data lives in Supabase. This device keeps only a cache for
 // opening offline, entries waiting to upload, and settings for this device.
@@ -7,6 +8,8 @@ export type Preferences = {
   id: "main";
   onboarded: boolean;
   trust: "yes" | "no" | "unsure" | null;
+  /** Asked at onboarding; older accounts may not have it yet. */
+  sex?: "brother" | "sister" | null;
   battles: string[];
   morning: string;
   evening: string;
@@ -58,6 +61,11 @@ export type Security = {
   lockAfter?: number;
   deviceKey?: CryptoKey;
   biometricEnabled?: boolean;
+  /** On the web, the journal key locked by a passkey's fingerprint or face check. */
+  passkey?: Passkey;
+  /** When the recovery code was last confirmed, and any "remind me later". */
+  codeCheckedAt?: number;
+  codeCheckSnoozedUntil?: number;
 };
 export type ReadingHistory = { key: string; last: number; index: number };
 export const db = new Dexie("mortify") as Dexie & {

@@ -4,6 +4,7 @@ import { Icon } from "./Icon";
 import { useAuth } from "../state/auth";
 import { useBrethren } from "../state/brethren";
 import { requestPrayer } from "../brethren/outbox";
+import { useIsSister } from "../brethren/words";
 // onChosen fires once the user has asked for prayer or called someone, so
 // the Flee screen can let him go on only after he has sought help.
 export function PrayerStep({
@@ -13,11 +14,11 @@ export function PrayerStep({
   battle: string;
   onChosen: () => void;
 }) {
-  const { profile, peers } = useBrethren();
+  const { peers } = useBrethren();
   const user = useAuth((s) => s.user);
   const [status, setStatus] = useState("");
   const [calls, setCalls] = useState(false);
-  const sister = profile?.sex === "sister";
+  const sister = useIsSister();
   const calledMyself = (
     <button onClick={onChosen}>I have called someone</button>
   );

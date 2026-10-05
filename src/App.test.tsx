@@ -15,7 +15,7 @@ import App from "./App";
 import { db, defaultPreferences, type Preferences } from "./data/db";
 import { usePreferences } from "./state/preferences";
 import { useApp } from "./state/app";
-import { usePrivacy } from "./state/privacy";
+import { codeCheckDue, usePrivacy } from "./state/privacy";
 import { useAuth } from "./state/auth";
 import { decryptText, encryptText, type CipherText } from "./privacy/crypto";
 import type { User } from "@supabase/supabase-js";
@@ -64,7 +64,11 @@ vi.mock("./data/remote", () => ({
 
 const me = { id: "user-1", email: "test@example.com" } as User;
 const signedIn = (prefs: Partial<Preferences> = {}) => {
-  account.prefs.set(me.id, { ...defaultPreferences, ...prefs });
+  account.prefs.set(me.id, {
+    ...defaultPreferences,
+    sex: "brother",
+    ...prefs,
+  });
   useAuth.setState({ user: me, ready: true });
 };
 
@@ -397,4 +401,110 @@ test("My journal shows past entries decrypted on this phone", async () => {
   fireEvent.click(screen.getByRole("button", { name: "Open Mortify" }));
   expect(await screen.findByText("AN EARLIER EXAMINATION")).toBeTruthy();
   expect(screen.getByText("weariness")).toBeTruthy();
+});
+
+test("the recovery code check comes once a year and can wait a month", () => {
+  const now = Date.UTC(2027, 9, 5);
+  const security = {
+    id: "main" as const,
+    userId: me.id,
+    salt: "s",
+    pinKey: { v: 1 as const, iv: "", data: "" },
+    lockEnabled: true,
+    codeCheckedAt: now - 364 * 86400000,
+  };
+  expect(codeCheckDue(security, now)).toBe(false);
+  expect(
+    codeCheckDue({ ...security, codeCheckedAt: now - 366 * 86400000 }, now),
+  ).toBe(true);
+  expect(
+    codeCheckDue(
+      {
+        ...security,
+        codeCheckedAt: now - 366 * 86400000,
+        codeCheckSnoozedUntil: now + 86400000,
+      },
+      now,
+    ),
+  ).toBe(false);
+});
+
+test("a year on, Home asks for the recovery code and checks it against the account", async () => {
+  signedIn({ onboarded: true, trust: "yes", battles: ["lust"] });
+  await usePrivacy.getState().setup("123456");
+  const code = usePrivacy.getState().recoveryCode!;
+  usePrivacy.getState().acknowledgeRecoveryCode();
+  const security = (await db.security.get("main"))!;
+  await db.security.put({
+    ...security,
+    codeCheckedAt: Date.now() - 400 * 86400000,
+  });
+  usePrivacy.setState({ loaded: false, security: null, key: null });
+  render(<App />);
+  fireEvent.change(await screen.findByLabelText("PIN"), {
+    target: { value: "123456" },
+  });
+  fireEvent.click(screen.getByRole("button", { name: "Open Mortify" }));
+  fireEvent.click(
+    await screen.findByRole("link", { name: /Check your recovery code/ }),
+  );
+  fireEvent.change(await screen.findByLabelText("Recovery code"), {
+    target: { value: "AAAA-AAAA-AAAA-AAAA-AAAA" },
+  });
+  fireEvent.click(screen.getByRole("button", { name: "Check my code" }));
+  await screen.findByText(/does not match/);
+  fireEvent.change(screen.getByLabelText("Recovery code"), {
+    target: { value: code },
+  });
+  fireEvent.click(screen.getByRole("button", { name: "Check my code" }));
+  await screen.findByRole("heading", { name: "Your code is right" });
+  expect(codeCheckDue(usePrivacy.getState().security)).toBe(false);
+  expect((await db.security.get("main"))!.codeCheckedAt).toBeGreaterThan(
+    Date.now() - 60000,
+  );
+});
+
+test("a new believer says brother or sister before the trust question", async () => {
+  signedIn({ sex: null });
+  window.history.replaceState({}, "", "/onboarding/gospel");
+  render(<App />);
+  fireEvent.click(await screen.findByRole("link", { name: "Continue" }));
+  await screen.findByRole("heading", {
+    name: "Are you a brother or a sister?",
+  });
+  fireEvent.click(screen.getByRole("button", { name: "A sister" }));
+  await screen.findByRole("heading", {
+    name: "Are you trusting in Christ alone?",
+  });
+  expect(savedPrefs()?.sex).toBe("sister");
+});
+
+test("an older account is asked once, then goes home", async () => {
+  signedIn({ onboarded: true, trust: "yes", battles: ["lust"], sex: null });
+  await usePrivacy.getState().setup("123456");
+  usePrivacy.getState().acknowledgeRecoveryCode();
+  usePrivacy.setState({ loaded: false, security: null, key: null });
+  render(<App />);
+  fireEvent.change(await screen.findByLabelText("PIN"), {
+    target: { value: "123456" },
+  });
+  fireEvent.click(screen.getByRole("button", { name: "Open Mortify" }));
+  fireEvent.click(await screen.findByRole("button", { name: "A brother" }));
+  await screen.findByRole("heading", { name: "Watch and pray" });
+  expect(savedPrefs()?.sex).toBe("brother");
+});
+
+test("a sister's circle is called Sisters", async () => {
+  signedIn({ onboarded: true, trust: "yes", battles: ["lust"], sex: "sister" });
+  await usePrivacy.getState().setup("123456");
+  usePrivacy.getState().acknowledgeRecoveryCode();
+  usePrivacy.setState({ loaded: false, security: null, key: null });
+  render(<App />);
+  fireEvent.change(await screen.findByLabelText("PIN"), {
+    target: { value: "123456" },
+  });
+  fireEvent.click(screen.getByRole("button", { name: "Open Mortify" }));
+  await screen.findByRole("heading", { name: "Watch and pray" });
+  expect(screen.getByRole("link", { name: /Sisters/ })).toBeTruthy();
+  expect(screen.queryByRole("link", { name: /Brethren/ })).toBeNull();
 });

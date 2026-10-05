@@ -16,7 +16,12 @@ export default function SignInScreen() {
   const [sent, setSent] = useState(false);
   const [token, setToken] = useState("");
   if (user)
-    return <Navigate to={onboarded ? "/" : "/onboarding/trust"} replace />;
+    return (
+      <Navigate
+        to={onboarded ? "/" : "/onboarding/brother-or-sister"}
+        replace
+      />
+    );
   const send = async () => {
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.trim()))
       throw new Error("Enter your email address.");

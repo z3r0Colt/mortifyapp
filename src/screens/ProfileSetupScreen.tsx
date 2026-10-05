@@ -5,6 +5,7 @@ import { Action } from "../components/Action";
 import { cloud, result } from "../brethren/client";
 import { useBrethren } from "../state/brethren";
 import { Icon } from "../components/Icon";
+import { usePreferences } from "../state/preferences";
 const points = [
   "A small closed circle of up to eight believers, ideally from your own church.",
   "Brothers link with brothers and sisters with sisters, only by a private code.",
@@ -13,13 +14,17 @@ const points = [
 ];
 export default function ProfileSetupScreen() {
   const [name, setName] = useState("");
-  const [sex, setSex] = useState<"brother" | "sister">("brother");
+  // Asked at onboarding; only older accounts choose here.
+  const known = usePreferences((s) => s.value.sex);
+  const [sex, setSex] = useState<"brother" | "sister">(known ?? "brother");
   const [church, setChurch] = useState("");
   const load = useBrethren((s) => s.load);
   const navigate = useNavigate();
   return (
     <Page
-      title="Your brethren profile"
+      title={
+        sex === "sister" ? "Your profile for sisters" : "Your brethren profile"
+      }
       lede="Watch over one another in prayer with a few believers you already know."
     >
       <article className="card">
@@ -42,16 +47,18 @@ export default function ProfileSetupScreen() {
           onChange={(e) => setName(e.target.value)}
         />
       </label>
-      <label>
-        Brother or sister
-        <select
-          value={sex}
-          onChange={(e) => setSex(e.target.value as "brother" | "sister")}
-        >
-          <option value="brother">Brother</option>
-          <option value="sister">Sister</option>
-        </select>
-      </label>
+      {!known && (
+        <label>
+          Brother or sister
+          <select
+            value={sex}
+            onChange={(e) => setSex(e.target.value as "brother" | "sister")}
+          >
+            <option value="brother">Brother</option>
+            <option value="sister">Sister</option>
+          </select>
+        </label>
+      )}
       <label>
         Church name (optional)
         <input
