@@ -1,18 +1,6 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { usePwa } from "../state/pwa";
-// Mid-flow screens where a reload would interrupt someone in temptation or confession.
-const flows = ["/flee", "/fall"];
-/** True when switching versions now could lose something or interrupt. */
-function busy(path: string) {
-  if (flows.includes(path)) return true;
-  return [...document.querySelectorAll("textarea, input")].some(
-    (field) =>
-      !["checkbox", "time", "hidden"].includes(
-        (field as HTMLInputElement).type,
-      ) && (field as HTMLInputElement).value.trim() !== "",
-  );
-}
+import { busy, usePwa } from "../state/pwa";
 // Applies a new version as soon as it is safe. Otherwise waits until the app
 // is put away, and shows a quiet note in case it is still open. Also notes
 // when the phone is offline.

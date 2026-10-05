@@ -1,10 +1,15 @@
+import { useState } from "react";
 import { Page } from "../components/Page";
 import { Icon } from "../components/Icon";
+import { Action } from "../components/Action";
+import { usePwa, type UpdateCheck } from "../state/pwa";
 const outside = (
   <span className="visually-hidden"> (opens outside Mortify)</span>
 );
 // Contact, a plain account of the user's data, and where the content comes from.
 export default function AboutScreen() {
+  const checkForUpdate = usePwa((s) => s.checkForUpdate);
+  const [update, setUpdate] = useState<UpdateCheck | "checking" | null>(null);
   return (
     <Page
       title="About Mortify"
@@ -101,9 +106,36 @@ export default function AboutScreen() {
           </li>
         </ul>
       </article>
-      <p className="label" style={{ textAlign: "center", marginTop: 24 }}>
-        Version {__APP_VERSION__} · {__BUILD_DATE__}
-      </p>
+      <h2 className="section-title">Updates</h2>
+      <article className="card">
+        <p className="label" style={{ marginTop: 0 }}>
+          Version {__APP_VERSION__} · {__BUILD_DATE__}
+        </p>
+        <div className="stack">
+          <Action
+            run={async () => {
+              setUpdate("checking");
+              setUpdate(await checkForUpdate());
+            }}
+          >
+            <Icon name="refresh" size={18} />
+            Check for updates
+          </Action>
+        </div>
+        {update && update !== "checking" && (
+          <p role="status" style={{ marginTop: 12 }}>
+            {
+              {
+                current: "You have the newest version.",
+                updating: "Updating now…",
+                offline: "Connect to the internet to check for updates.",
+                unsupported:
+                  "Updates arrive with the app itself here, not through Mortify.",
+              }[update]
+            }
+          </p>
+        )}
+      </article>
     </Page>
   );
 }
