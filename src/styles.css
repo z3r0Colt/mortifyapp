@@ -164,25 +164,17 @@ select {
   color: var(--muted);
 }
 .mark {
-  display: inline-grid;
-  place-items: center;
+  display: block;
+  flex: none;
   width: 30px;
   height: 30px;
-  border-radius: 9px;
-  background: var(--accent);
-  color: var(--accent-ink);
-  font-family: var(--display);
-  font-size: 1.2rem;
-  letter-spacing: 0;
-  line-height: 1;
-  padding-top: 2px;
+  border-radius: 8px;
+  object-fit: cover;
 }
 .mark.large {
   width: 64px;
   height: 64px;
-  border-radius: 18px;
-  font-size: 2.6rem;
-  padding-top: 5px;
+  border-radius: 16px;
   box-shadow: var(--shadow-md);
 }
 .back,

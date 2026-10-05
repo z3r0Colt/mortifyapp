@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { Page } from "../components/Page";
+import { Mark, Page } from "../components/Page";
 import { Action } from "../components/Action";
 import { Icon } from "../components/Icon";
+import { IphoneInstallSteps } from "../components/NotificationHelp";
 import { useAuth } from "../state/auth";
 import { usePreferences } from "../state/preferences";
 import { enableMessages, enableReminders } from "../data/notifications";
@@ -21,11 +22,7 @@ export default function RemindersScreen() {
       bare
       title="Reminders"
       lede="A quiet reminder each morning to read and each evening to examine the day, and a note when your brethren ask for prayer."
-      bar={
-        <span className="mark large" aria-hidden="true">
-          M
-        </span>
-      }
+      bar={<Mark large />}
     >
       <ul className="list">
         <li>
@@ -54,15 +51,7 @@ export default function RemindersScreen() {
       {needsInstall ? (
         <article className="card">
           <p>On iPhone, reminders work once Mortify is on your home screen:</p>
-          <ol className="numbered">
-            <li>In Safari, tap the Share button.</li>
-            <li>Choose Add to Home Screen.</li>
-            <li>Turn on Open as Web App if shown, then tap Add.</li>
-            <li>
-              Open Mortify from your home screen and turn on reminders in
-              Settings.
-            </li>
-          </ol>
+          <IphoneInstallSteps />
         </article>
       ) : (
         <div className="stack">

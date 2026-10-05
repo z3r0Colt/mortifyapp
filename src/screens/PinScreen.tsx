@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import { Page } from "../components/Page";
+import { Mark, Page } from "../components/Page";
 import { Action } from "../components/Action";
 import { Icon } from "../components/Icon";
 import { PinInput } from "../components/PinInput";
@@ -25,11 +25,7 @@ export default function PinScreen() {
     setRepeat("");
     setCode("");
   };
-  const mark = (
-    <span className="mark large" aria-hidden="true">
-      M
-    </span>
-  );
+  const mark = <Mark large />;
   if (mode === "recover")
     return (
       <Page

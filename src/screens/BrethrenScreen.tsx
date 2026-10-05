@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
+import { useNotifyState } from "../components/NotifyCard";
 import { Page } from "../components/Page";
 import { Action } from "../components/Action";
 import { Icon } from "../components/Icon";
@@ -14,6 +16,7 @@ export default function BrethrenScreen() {
       s.rows.filter((m) => !m.read && m.receiver_id === profile?.id).length,
   );
   const [copied, setCopied] = useState(false);
+  const notify = useNotifyState();
   if (!profile) return null;
   const circle = profile.sex === "sister" ? "sisters" : "brethren";
   return (
@@ -40,6 +43,21 @@ export default function BrethrenScreen() {
         </Action>
         {copied && <p role="status">Code copied. You may send it by text.</p>}
       </article>
+      {notify && notify !== "ready" && (
+        <Link className="card person fade" to="/notifications">
+          <span className="tile">
+            <Icon name="bell" size={20} />
+          </span>
+          <span className="row-text">
+            <strong>You will not hear prayer requests</strong>
+            <span>
+              Notifications are not on for this phone, so you will not know when
+              your {circle} ask you to pray. Set them up.
+            </span>
+          </span>
+          <Icon name="chevron" size={18} className="chevron" />
+        </Link>
+      )}
       {requests.length > 0 && (
         <>
           <h2 className="section-title">Requests</h2>

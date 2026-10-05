@@ -22,7 +22,8 @@ self.addEventListener("push", (event) => {
     self.registration.showNotification(data.title, {
       body: data.body,
       icon: "icon-192.png",
-      badge: "icon-192.png",
+      // Android draws this as a single-colour silhouette in the status bar.
+      badge: "badge-96.png",
       data: { url: data.url },
       tag: data.tag,
     }),

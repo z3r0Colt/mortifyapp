@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Page } from "../components/Page";
+import { Mark, Page } from "../components/Page";
 import { Icon } from "../components/Icon";
 import { usePrivacy } from "../state/privacy";
 // Shown once after a PIN is set or a new code is made. The code is never stored.
@@ -16,11 +16,7 @@ export default function RecoveryCodeScreen() {
       bare
       title="Your recovery code"
       lede="If you ever forget your PIN, this code is the only way to open your journal. Mortify cannot recover it for you."
-      bar={
-        <span className="mark large" aria-hidden="true">
-          M
-        </span>
-      }
+      bar={<Mark large />}
     >
       <article className="card accent code-card">
         <p className="eyebrow">Write this down</p>

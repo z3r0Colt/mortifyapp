@@ -4,6 +4,7 @@ import { db } from "../data/db";
 import { usePwa } from "../state/pwa";
 import { Action } from "./Action";
 import { Icon } from "./Icon";
+import { IphoneInstallSteps } from "./NotificationHelp";
 import { isNative } from "../native/platform";
 export function InstallCard({
   dismissible = false,
@@ -37,11 +38,7 @@ export function InstallCard({
         {ios && " On iPhone it is also needed for notifications."}
       </p>
       {ios ? (
-        <ol className="numbered">
-          <li>In Safari, tap the Share button.</li>
-          <li>Choose Add to Home Screen.</li>
-          <li>Turn on Open as Web App if shown, then tap Add.</li>
-        </ol>
+        <IphoneInstallSteps />
       ) : prompt ? (
         <Action
           className="primary"

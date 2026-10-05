@@ -21,7 +21,7 @@ export async function enableWebPush(userId: string) {
     throw new Error("Push notifications have not been configured.");
   if ((await Notification.requestPermission()) !== "granted")
     throw new Error(
-      "Notifications are not enabled. You can keep using Mortify.",
+      "Notifications were not allowed. Follow the steps shown to allow them in your settings.",
     );
   const registration = await navigator.serviceWorker.ready;
   const subscription =

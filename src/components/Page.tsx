@@ -1,12 +1,22 @@
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { Icon } from "./Icon";
+/** The Mortify logo: a cross on the mountain within a circle. */
+export function Mark({ large = false }: { large?: boolean }) {
+  return (
+    <img
+      className={`mark${large ? " large" : ""}`}
+      src={`${import.meta.env.BASE_URL}logo-128.png`}
+      alt=""
+      width={large ? 64 : 30}
+      height={large ? 64 : 30}
+    />
+  );
+}
 export function Brand() {
   return (
     <span className="brand">
-      <span className="mark" aria-hidden="true">
-        M
-      </span>
+      <Mark />
       Mortify
     </span>
   );

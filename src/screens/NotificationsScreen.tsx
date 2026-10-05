@@ -13,7 +13,12 @@ import { disableNativePush } from "../native/push";
 import { cancelReminders } from "../native/reminders";
 import { db } from "../data/db";
 import { clock } from "../data/clock";
-import { devicePlatform, isInstalled } from "../platform";
+import { useNotifyState } from "../components/NotifyCard";
+import {
+  BlockedSteps,
+  IphoneInstallSteps,
+} from "../components/NotificationHelp";
+import { useNotify } from "../state/notify";
 export default function NotificationsScreen() {
   const { profile, load } = useBrethren();
   const user = useAuth((s) => s.user);
@@ -46,18 +51,38 @@ export default function NotificationsScreen() {
     if (!user) return;
     await enableMessages(user);
     setMessages(true);
+    await refreshNotify();
   };
-  const iphoneBrowser = !native && devicePlatform() === "ios" && !isInstalled();
+  const notify = useNotifyState();
+  const refreshNotify = useNotify((s) => s.refresh);
   return (
     <Page
       title="Notifications"
       back={{ to: "/settings", label: "Settings" }}
-      lede="Notifications are optional. Your readings and private entries work without them."
+      lede="Notifications tell you when your brethren ask for prayer, and give a quiet reminder each morning and evening."
     >
-      {iphoneBrowser && (
+      {notify === "install" && (
+        <article className="card accent">
+          <p>
+            On iPhone, Mortify can only send notifications once it is on your
+            home screen:
+          </p>
+          <IphoneInstallSteps />
+        </article>
+      )}
+      {notify === "blocked" && (
+        <article className="card accent">
+          <p>
+            Notifications are blocked for Mortify on this phone, so the switches
+            below cannot turn them on. To allow them:
+          </p>
+          <BlockedSteps />
+        </article>
+      )}
+      {notify === "unsupported" && (
         <p className="notice">
-          On iPhone, add Mortify to your home screen first. Then open it from
-          there to turn on notifications.
+          This browser cannot show notifications. On Android, open Mortify in
+          Chrome. On iPhone, open it in Safari and add it to your home screen.
         </p>
       )}
       <ListGroup>
@@ -72,6 +97,7 @@ export default function NotificationsScreen() {
               if (native) await disableNativePush();
               await disableWebPush(user!.id);
               setMessages(false);
+              await refreshNotify();
             }
           }}
         />
@@ -94,6 +120,7 @@ export default function NotificationsScreen() {
                   .eq("user_id", user!.id),
               );
             setReminders(on);
+            await refreshNotify();
           }}
         />
         <SwitchRow

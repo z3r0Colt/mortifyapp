@@ -3,12 +3,14 @@ import { Page } from "../components/Page";
 import { Icon } from "../components/Icon";
 import { ProtectionReminder } from "../components/ProtectionReminder";
 import { InstallCard } from "../components/InstallCard";
+import { NotifyCard, useNotifyState } from "../components/NotifyCard";
 import { TodayVerse } from "../components/TodayVerse";
 import { fleeTap } from "../native/haptics";
 import { usePreferences } from "../state/preferences";
 import { clock } from "../data/clock";
 export default function HomeScreen() {
   const { morning, evening } = usePreferences((s) => s.value);
+  const notify = useNotifyState();
   const now = new Date();
   const day = now.toLocaleDateString(undefined, {
     month: "long",
@@ -55,6 +57,7 @@ export default function HomeScreen() {
           <p>Evening · {clock(evening)}</p>
         </Link>
       </div>
+      <NotifyCard />
       <Link className="return-row" to="/fall">
         <span className="tile">
           <Icon name="turn" size={20} />
@@ -66,7 +69,7 @@ export default function HomeScreen() {
         <Icon name="chevron" size={18} className="chevron" />
       </Link>
       <ProtectionReminder />
-      <InstallCard dismissible />
+      {notify === "ready" && <InstallCard dismissible />}
     </Page>
   );
 }

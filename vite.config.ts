@@ -14,7 +14,12 @@ export default defineConfig({
       srcDir: "src",
       filename: "sw.js",
       registerType: "prompt",
-      includeAssets: ["content/*.json", "icon.svg", "icon-*.png"],
+      includeAssets: [
+        "content/*.json",
+        "icon-*.png",
+        "badge-96.png",
+        "logo-128.png",
+      ],
       manifest: {
         id: "./",
         name: "Mortify",
