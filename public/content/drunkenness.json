@@ -1,24 +1,24 @@
 {
   "id": "drunkenness",
-  "name": "Drunkenness and Gluttony",
+  "name": "Drunkenness and Drugs",
   "screenBased": false,
   "verses": [
     "Ephesians 5:18",
-    "Romans 13:13-14",
     "1 Corinthians 6:12",
-    "1 Corinthians 10:31",
-    "Luke 21:34",
-    "Proverbs 23:20-21",
-    "Philippians 3:19-20",
-    "John 6:35",
-    "Isaiah 55:1-2",
-    "Galatians 5:22-23"
+    "1 Corinthians 6:19-20",
+    "Romans 13:13-14",
+    "Proverbs 23:29-35",
+    "John 8:34-36",
+    "Psalm 107:13-14",
+    "1 Corinthians 10:13",
+    "Titus 2:11-12",
+    "1 Peter 5:8-9"
   ],
   "counsel": [
     {
-      "text": "A gracious person holds the golden bridle of temperance; he takes his meat as a medicine to heal the decays of nature, that he may be the fitter, by the strength he receives, for the service of God; he makes his food, not fuel for lust, but help to duty.",
+      "text": "It is easier to obey the commands of God than sin. The commands of sin are burdensome -- let a man be under the power of any lust, how he tires himself! what hazards he runs, even to endangering his health and soul, that he may satisfy his lusts!",
       "author": "Thomas Watson",
-      "source": "A Body of Divinity, man's chief end"
+      "source": "The Ten Commandments, obedience"
     },
     {
       "text": "Consider what ways, what companies, what opportunities, what studies, what businesses, what conditions, have at any time given, or do usually give, advantages to thy distempers, and set thyself heedfully against them all. Men will do this with respect unto their bodily infirmities and distempers. The seasons, the diet, the air that have proved offensive shall be avoided. Are the things of the soul of less importance?",
@@ -26,19 +26,9 @@
       "source": "Of the Mortification of Sin in Believers, ch. 11"
     },
     {
-      "text": "God allows recruits of nature, and what may fit us the better for his service; but beware of surfeit. Excess in the creature clouds the mind, chokes good affections, and provokes lust.",
-      "author": "Thomas Watson",
-      "source": "The Ten Commandments, the seventh commandment"
-    },
-    {
       "text": "Set faith at work on Christ for the killing of thy sin. His blood is the great sovereign remedy for sin-sick souls. Live in this, and thou wilt die a conqueror; yea, thou wilt, through the good providence of God, live to see thy lust dead at thy feet.",
       "author": "John Owen",
       "source": "Of the Mortification of Sin in Believers, ch. 14"
-    },
-    {
-      "text": "It is easier to obey the commands of God than sin. The commands of sin are burdensome -- let a man be under the power of any lust, how he tires himself! what hazards he runs, even to endangering his health and soul, that he may satisfy his lusts!",
-      "author": "Thomas Watson",
-      "source": "The Ten Commandments, obedience"
     },
     {
       "text": "He died to destroy the works of the devil. Whatever came upon our natures by his first temptation, whatever receives strength in our persons by his daily suggestions, Christ died to destroy it all.",
@@ -49,32 +39,32 @@
   "prayers": [
     {
       "title": "A prayer of confession",
-      "text": "Holy and sovereign Father, you gave wine to gladden the heart, and you call your children to use your gifts with thanksgiving and self-control. I come through Jesus Christ. I confess that I have abused your gift. I have drunk to escape, to numb, or to fit in, and I have been mastered by what should have served me. I have dulled the mind you gave me, neglected my duties, hurt those who depend on me, and opened the door to other sins. I have sought from drink the comfort, courage, and rest that only you can give. Forgive me, Lord. Christ drank the cup of your wrath to the dregs, so that I might lift up the cup of salvation. For his sake pardon me. Holy Spirit, put this sin to death, and fill me with yourself instead of with wine. Make me sober-minded and watchful, and give me the honesty to seek help from my pastor and my brethren. I thank you that you set captives free. In Jesus' name. Amen."
+      "text": "Holy and merciful Father, you made my body for yourself, and you call me to present it to you as a living sacrifice. I come only through Jesus Christ. I confess that I have given myself to drink and drugs. I have been mastered by what you never meant to rule me. I have run to the bottle, the pills, or the high for the comfort, courage, and rest that only you can give. I have lied to hide it, spent what was not mine to waste, hurt those who love me, and dulled the mind you gave me to know you. I have made a god of my own relief. This is sin, and it has become a chain I cannot break in my own strength. Have mercy on me, Lord. Christ drank the cup of your wrath to the dregs, so that I might lift up the cup of salvation. He came to proclaim liberty to the captives, and if the Son sets me free, I will be free indeed. For his sake forgive me. Holy Spirit, break this bondage and fill me with yourself. Give me humility to seek help from my pastor, my brethren, and those who can care for my body. I thank you that such were some of your people, and they were washed. In Jesus' name. Amen."
     },
     {
-      "title": "When I want a drink to escape",
-      "text": "Lord, I want something to take the edge off, and I know where I want to turn. Turn me to you instead. You are the fountain of living waters; do not let me dig broken cisterns that hold no water. Whatever I am trying to escape, help me bring it to you honestly right now. Give me strength to walk away from the drink and toward a brother, toward prayer, or toward rest. Lord Jesus, you bore the cross with a clear mind for my sake. Make me sober and awake. Amen."
+      "title": "When the craving comes",
+      "text": "Lord, the craving is strong, and I know exactly where I want to turn. Turn me to you instead. You are the fountain of living waters; do not let me go back to broken cisterns that hold no water. You have promised that no temptation has overtaken me that is not common to man, and that you will provide the way of escape. Show it to me now, and give me strength to take it. Let a brother answer when I call. Lord Jesus, you were tempted in the wilderness and did not give way; stand with me in this hour. Amen."
     },
     {
-      "title": "For a sober mind",
-      "text": "Father, teach me to be sober-minded and watchful, for my adversary the devil prowls around like a roaring lion. Show me the occasions that lead me to drink too much, and give me wisdom to avoid them. Help me find my joy in you, my courage in your promises, and my rest in your care. Make me faithful to my family, my work, and my church. Where I need to give up drink altogether, give me grace to do it gladly. Let my life show that Christ is enough. Through Jesus Christ. Amen."
+      "title": "For freedom",
+      "text": "Father, I am weak, but your power is made perfect in weakness. Free me from this bondage. Teach me to hate the sin and not only its consequences. Show me the people, places, money, and moods that lead me back, and give me courage to cut them off. Make me honest with my pastor and my brethren, and humble enough to accept help for my body as well as my soul. When I fall, keep me from despair, and raise me up again in Christ. Let me be filled with the Spirit and not with wine. Through Jesus Christ. Amen."
     }
   ],
   "examinationQuestions": [
-    "When you reached for more today, what were you really hungry or thirsty for: comfort, escape, relief from worry, or company?",
-    "Have you been treating food or drink as a refuge, a place to run to that belongs to God alone?",
-    "What places, people, hours, or moods have most often led you into excess, and have you set yourself against them?",
-    "Are you receiving food and drink with thanks, and using them so that you are more fit to serve God, not less?",
-    "Is there anyone you have hidden this from who should know, such as your pastor or a brother or sister in your church?",
-    "If you find you cannot stop, or your body seems to depend on drink, have you told your pastor and seen a doctor?"
+    "When you used today, or wanted to, what were you running from or reaching for: relief, sleep, courage, numbness, or company?",
+    "Has drink or a drug become a refuge you run to instead of God?",
+    "Are you hiding how much or how often you use, or where it comes from? Who should know the truth?",
+    "What people, places, hours, moods, or money make it easier to use, and what will you cut off?",
+    "Is your life now arranged around getting, using, or recovering, and what has that cost your family, your work, and your church?",
+    "Have you told your pastor and seen a doctor? If your body depends on it, stopping safely may need medical help."
   ],
   "fleeActions": [
-    "Put the drink or the food away, close the cupboard, and leave the room.",
-    "Leave the place or the company that is drawing you toward excess. Give a plain reason and go home.",
-    "Drink a glass of water, then step outside and walk for ten minutes, praying as you go.",
-    "Call or text a brother or sister in your church and tell them plainly that you are tempted right now.",
-    "Open your Bible to John 6 and read it slowly, out loud if you can.",
-    "If you have tried to stop and cannot, call your pastor today, and make an appointment with a doctor if your body may depend on drink."
+    "Get rid of what you have on hand, and do not keep a supply for later. If your body depends on it, call a doctor today about stopping safely.",
+    "Leave the place or the people now. Do not stay to prove you can resist.",
+    "Call or text a brother or sister in your church right now and say it plainly: I want to use.",
+    "Delete the number or the app you use to get it, or ask someone you trust to hold your money and keys tonight.",
+    "Drink water, eat something, then step outside and walk, praying as you go. A craving rises and falls; this one will pass.",
+    "Call your pastor today. If you have tried to stop and cannot, ask him to help you find treatment as well."
   ],
   "afterFallReadings": [
     {
@@ -94,6 +84,11 @@
       "ref": "1 John 1:9"
     }
   ],
+  "help": {
+    "text": "If someone may have overdosed, call 911 now; naloxone (Narcan) can reverse an opioid overdose. If your body depends on alcohol, pills, or other drugs, do not stop all at once without a doctor, because withdrawal can be dangerous. For free, confidential help at any hour, call the SAMHSA National Helpline.",
+    "call": "18006624357",
+    "label": "Call 1-800-662-4357"
+  },
   "sermons": [
     {
       "title": "Watchful as a Christian Soldier",
