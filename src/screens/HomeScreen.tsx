@@ -22,7 +22,8 @@ export default function HomeScreen() {
       : `${now.toLocaleDateString(undefined, { weekday: "long" })} · ${day}`;
   return (
     <Page title="Watch and pray" eyebrow={eyebrow}>
-      <TodayVerse />
+      {/* Flee comes first so it is on screen without scrolling, whatever the
+          length of today's verse. */}
       <Link
         className="flee-card"
         to="/flee"
@@ -41,6 +42,7 @@ export default function HomeScreen() {
           <Icon name="arrow" size={24} />
         </span>
       </Link>
+      <TodayVerse />
       <div className="grid-2">
         <Link className="card time-card" to="/reading">
           <span className="tile">
