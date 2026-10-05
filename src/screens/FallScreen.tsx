@@ -10,6 +10,7 @@ import { TellBrethrenStep } from "../components/TellBrethrenStep";
 import { ContentReading } from "../components/ContentReading";
 import { Icon } from "../components/Icon";
 import { Steps } from "../components/Steps";
+import { UrgentHelp } from "../components/UrgentHelp";
 const titles = [
   "Return to Christ",
   "Confession",
@@ -59,6 +60,7 @@ export default function FallScreen() {
       <div className="flow fade" key={step}>
         {step === 0 && (
           <>
+            <UrgentHelp pack={pack} />
             {packs.length > 1 && (
               <label>
                 Battle

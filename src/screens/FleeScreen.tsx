@@ -11,6 +11,10 @@ import { Scripture } from "../components/Scripture";
 import { ContentReading } from "../components/ContentReading";
 import { Icon } from "../components/Icon";
 import { Steps } from "../components/Steps";
+import { UrgentHelp } from "../components/UrgentHelp";
+import { SermonList } from "../components/SermonList";
+import { useContent } from "../content/useContent";
+import { loadFeaturedSermons } from "../content/loader";
 const titles = [
   "Attend to the Word",
   "Receive counsel",
@@ -24,6 +28,7 @@ export default function FleeScreen() {
   const [step, setStep] = useState(0);
   const [session] = useState(() => crypto.randomUUID());
   const started = useRef(false);
+  const { data: featured } = useContent(loadFeaturedSermons);
   const choose = (pack: Pack) => ({
     pack,
     verse: randomItem(pack.verses),
@@ -115,9 +120,12 @@ export default function FleeScreen() {
     >
       <div className="flow fade" key={step} aria-live="polite">
         {step === 0 && (
-          <div className="card">
-            <Scripture reference={verse} />
-          </div>
+          <>
+            <UrgentHelp pack={pack} />
+            <div className="card">
+              <Scripture reference={verse} />
+            </div>
+          </>
         )}
         {step === 1 && (
           <div className="card">
@@ -140,6 +148,14 @@ export default function FleeScreen() {
             <div className="card accent">
               <p className="verse">{action}</p>
             </div>
+            {featured && featured.flee.length > 0 && (
+              <div className="later">
+                <p className="label">
+                  When the hour has passed, hear the Word preached:
+                </p>
+                <SermonList sermons={featured.flee} />
+              </div>
+            )}
             <h2>Did you stand firm?</h2>
           </>
         )}

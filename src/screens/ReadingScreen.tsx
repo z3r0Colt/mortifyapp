@@ -1,6 +1,10 @@
 import type { ReactNode } from "react";
 import { Page } from "../components/Page";
 import { useDailyReading } from "../content/useDaily";
+import { useBattlePacks } from "../content/selection";
+import { useContent } from "../content/useContent";
+import { loadFeaturedSermons } from "../content/loader";
+import { SermonList } from "../components/SermonList";
 import { Scripture } from "../components/Scripture";
 import { ContentReading } from "../components/ContentReading";
 import { Paragraphs } from "../components/Paragraphs";
@@ -28,6 +32,9 @@ function Section({
 }
 export default function ReadingScreen() {
   const { data, error } = useDailyReading();
+  // Preaching on each chosen battle, for a quiet time to listen.
+  const preached = useBattlePacks().filter((pack) => pack.sermons.length);
+  const { data: featured } = useContent(loadFeaturedSermons);
   return (
     <Page
       title="Today's Reading"
@@ -58,6 +65,32 @@ export default function ReadingScreen() {
           <Section icon="pen" title="Counsel">
             <ContentReading reading={data.counsel} />
           </Section>
+          {(preached.length > 0 || featured?.general.length) && (
+            <Section icon="headphones" title="Hear the Word preached">
+              {preached.map((pack, i) => (
+                <details className="sermon-group" open={i === 0} key={pack.id}>
+                  <summary>
+                    {pack.name}
+                    <span className="label">{pack.sermons.length}</span>
+                  </summary>
+                  <SermonList sermons={pack.sermons} />
+                </details>
+              ))}
+              {featured && featured.general.length > 0 && (
+                <details className="sermon-group" open={preached.length === 0}>
+                  <summary>
+                    Spiritual warfare and comfort
+                    <span className="label">{featured.general.length}</span>
+                  </summary>
+                  <SermonList sermons={featured.general} />
+                </details>
+              )}
+              <p className="label" style={{ marginTop: 12 }}>
+                Preached by Shawn Anderson at Sycamore Reformed Presbyterian
+                Church, Kokomo. Opens on SermonAudio.
+              </p>
+            </Section>
+          )}
         </>
       ) : (
         !error && (
