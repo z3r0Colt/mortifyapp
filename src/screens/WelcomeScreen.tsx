@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Page } from "../components/Page";
 import { Icon, type IconName } from "../components/Icon";
 import { useContent } from "../content/useContent";
@@ -30,6 +31,9 @@ const features: [IconName, string, string][] = [
 // The first thing anyone sees: what Mortify is and where it points.
 export default function WelcomeScreen() {
   const user = useAuth((s) => s.user);
+  const navigate = useNavigate();
+  // Mortify is for adults: its circles pair grown believers in private.
+  const [adult, setAdult] = useState(false);
   const { data: bible } = useContent(loadBible);
   let verse = "";
   try {
@@ -85,14 +89,30 @@ export default function WelcomeScreen() {
         </p>
       </div>
       <div className="dock">
-        <Link className="button primary" to="/onboarding/gospel">
+        <label className="row">
+          <input
+            type="checkbox"
+            checked={adult}
+            onChange={(e) => setAdult(e.target.checked)}
+          />
+          I am 18 years of age or older.
+        </label>
+        <button
+          className="primary"
+          disabled={!adult}
+          onClick={() => navigate("/onboarding/gospel")}
+        >
           Begin
           <Icon name="arrow" size={18} />
-        </Link>
+        </button>
         {!user && (
-          <Link className="quiet" to="/onboarding/sign-in">
+          <button
+            className="quiet"
+            disabled={!adult}
+            onClick={() => navigate("/onboarding/sign-in")}
+          >
             I already have an account
-          </Link>
+          </button>
         )}
       </div>
     </Page>

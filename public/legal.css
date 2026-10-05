@@ -1,0 +1,65 @@
+/* The public privacy and deletion pages: plain pages that open without the app. */
+:root {
+  --bg: #f5f0e6;
+  --text: #1f1b16;
+  --muted: #675e53;
+  --line: #e4dccd;
+  --accent-text: #7a2e2a;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #16130f;
+    --text: #ede6d8;
+    --muted: #bdb19d;
+    --line: #2e2820;
+    --accent-text: #d39a91;
+    color-scheme: dark;
+  }
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font:
+    1.06rem/1.7 Literata,
+    Georgia,
+    "Times New Roman",
+    serif;
+}
+main {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: calc(32px + env(safe-area-inset-top)) 16px
+    calc(48px + env(safe-area-inset-bottom));
+}
+h1,
+h2 {
+  font-family: "EB Garamond", Georgia, serif;
+  font-weight: 500;
+  line-height: 1.2;
+}
+h1 {
+  font-size: 2.3rem;
+  margin: 0 0 0.3rem;
+}
+h2 {
+  font-size: 1.45rem;
+  margin: 2.2rem 0 0.6rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--line);
+}
+a {
+  color: var(--accent-text);
+}
+.meta {
+  color: var(--muted);
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 0.85rem;
+}
+li + li {
+  margin-top: 0.4rem;
+}

@@ -208,6 +208,22 @@ assert.equal(
   0,
   "disabled battle choices hidden",
 );
+// Message limits: 30 an hour to one person, and a retry is not a new message.
+const lastClient = "00000000-0000-4000-8000-000000000030";
+for (let i = 1; i <= 30; i++)
+  await db.query(
+    "select send_message($1,'encouragement','Praying for you',null,null,$2)",
+    [ids[4], `00000000-0000-4000-8000-${String(i).padStart(12, "0")}`],
+  );
+await db.query(
+  "select send_message($1,'encouragement','Praying for you',null,null,$2)",
+  [ids[4], lastClient],
+);
+await assert.rejects(
+  db.query("select send_message($1,'encouragement','One more')", [ids[4]]),
+  /many messages this hour/,
+  "hourly message limit to one person",
+);
 const reported = (
   await db.query(
     "select send_message($1,'encouragement','Please call me') id",
@@ -280,9 +296,23 @@ await db.query(
   `insert into journals(id,battle,body) values(gen_random_uuid(),'lust','{"v":1,"iv":"a","data":"b"}')`,
 );
 await db.query(
-  `insert into user_vault(salt,pin_key,recovery_salt,recovery_key) values('salt','{"v":1,"iv":"a","data":"b"}','salt2','{"v":1,"iv":"c","data":"d"}')`,
+  `insert into user_vault(key_id,recovery_salt,recovery_key) values(gen_random_uuid(),'salt2','{"v":1,"iv":"c","data":"d"}')`,
 );
-await db.query(`update user_vault set salt='salt3'`);
+await db.query(`update user_vault set recovery_salt='salt3'`);
+await assert.rejects(
+  db.query(`update user_vault set key_id=gen_random_uuid()`),
+  /permission denied/,
+  "the key id is fixed once saved",
+);
+assert.deepEqual(
+  (
+    await db.query(
+      "select column_name from information_schema.columns where table_name='user_vault' and column_name in ('salt','pin_key')",
+    )
+  ).rows,
+  [],
+  "the account holds no PIN-locked key",
+);
 await assert.rejects(
   db.query(`update user_vault set user_id=$1`, [ids[6]]),
   /permission denied/,
@@ -336,5 +366,5 @@ await assert.rejects(db.query("select * from profiles"), /permission denied/);
 await assert.rejects(db.query("select * from journals"), /permission denied/);
 await db.close();
 console.log(
-  "Database checks passed: profiles, links, same sex, both-side acceptance, sharing revocation, capacity, mutation permissions, private data isolation, reading rotation, and anonymous access.",
+  "Database checks passed: profiles, links, same sex, both-side acceptance, sharing revocation, capacity, mutation permissions, message limits, private data isolation, reading rotation, and anonymous access.",
 );

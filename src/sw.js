@@ -3,7 +3,12 @@ import { registerRoute, NavigationRoute } from "workbox-routing";
 import { createHandlerBoundToURL } from "workbox-precaching";
 precacheAndRoute(self.__WB_MANIFEST);
 cleanupOutdatedCaches();
-registerRoute(new NavigationRoute(createHandlerBoundToURL("index.html")));
+// The privacy policy and deletion page are plain pages, not app screens.
+registerRoute(
+  new NavigationRoute(createHandlerBoundToURL("index.html"), {
+    denylist: [/\/(privacy-policy|delete-account)(\/|$)/],
+  }),
+);
 self.addEventListener("message", (event) => {
   if (event.data?.type === "SKIP_WAITING") self.skipWaiting();
 });

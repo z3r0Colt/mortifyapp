@@ -56,7 +56,7 @@ Mortify has a small closed circle of brethren (up to 8, same sex only) who pray 
 
 ## Privacy
 
-Everyone signs in with an email code during onboarding. Journal, confession and reflection text is encrypted on the device with Web Crypto (AES-GCM) using a key derived from the user's PIN, and only the ciphertext goes to Supabase. The PIN and the key never leave the device; the account holds only a salt and an encrypted check value so the same PIN works on a new phone. No one else, including whoever runs Mortify, can read the text, and a forgotten PIN cannot be recovered. Brethren see only the events and messages the user chooses to share. No analytics, ads, or tracking scripts.
+Everyone signs in with an email code during onboarding. Journal, confession and reflection text is encrypted on the device with Web Crypto (AES-GCM) using a random key, and only the ciphertext goes to Supabase. Each phone keeps that key locked by its own PIN, and the PIN-locked copy never leaves the phone, because a short PIN could be guessed offline. The account holds the key only locked by a 20-character recovery code the user writes down; a new phone, or a forgotten PIN, opens the journal with that code and then sets a PIN. No one else, including whoever runs Mortify, can read the text, and if both the PIN and the recovery code are lost it cannot be recovered. Brethren see only the events and messages the user chooses to share. No analytics, ads, or tracking scripts.
 
 ## How to Work
 
@@ -64,3 +64,4 @@ Everyone signs in with an email code during onboarding. Journal, confession and 
 - Keep files small and focused. One screen per file in `src/screens/`.
 - After each task, list the files you changed and tell me how to test it.
 - If something is unclear, ask me before guessing.
+- Never write a migration or script that deletes or clears users' data (`delete from`, `truncate`, dropping a column or table that holds it). Migrate the data instead, and ask me first if there is no way around it.

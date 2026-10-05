@@ -45,12 +45,14 @@ export type Pending = PendingEntry & {
   userId: string;
   time: number;
 };
-/** The PIN-wrapped journal key copied from the account, plus how this device unlocks. */
+/** The journal key locked by this phone's PIN, plus how this device unlocks. */
 export type Security = {
   id: "main";
   userId: string;
   salt: string;
   pinKey: CipherText;
+  /** The account's key_id for this key; phones set up before it was added lack it. */
+  keyId?: string;
   lockEnabled: boolean;
   /** Minutes away before the PIN is asked again; 0 locks at once. Default 1. */
   lockAfter?: number;

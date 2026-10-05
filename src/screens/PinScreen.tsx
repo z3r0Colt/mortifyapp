@@ -13,8 +13,15 @@ const submit = (e: FormEvent<HTMLFormElement>) => {
   )?.click();
 };
 export default function PinScreen() {
-  const { security, setup, unlock, recover, forget, unlockBiometric } =
-    usePrivacy();
+  const {
+    security,
+    hasVault,
+    setup,
+    unlock,
+    recover,
+    forget,
+    unlockBiometric,
+  } = usePrivacy();
   const [mode, setMode] = useState<Mode>("pin");
   const [pin, setPin] = useState("");
   const [repeat, setRepeat] = useState("");
@@ -26,12 +33,19 @@ export default function PinScreen() {
     setCode("");
   };
   const mark = <Mark large />;
-  if (mode === "recover")
+  // A PIN belongs to one phone. On a new phone the journal is opened once with
+  // the recovery code, and then this phone gets a PIN of its own.
+  const newPhone = !security && hasVault;
+  if (mode === "recover" || (newPhone && mode === "pin"))
     return (
       <Page
         bare
-        title="Forgotten PIN"
-        lede="Enter the recovery code you wrote down when you set your PIN, then choose a new PIN. Your journal stays as it is."
+        title={newPhone ? "Open your journal on this phone" : "Forgotten PIN"}
+        lede={
+          newPhone
+            ? "Enter the recovery code you wrote down when you first set your PIN, then choose a PIN for this phone. Your journal stays as it is."
+            : "Enter the recovery code you wrote down when you set your PIN, then choose a new PIN. Your journal stays as it is."
+        }
         bar={mark}
       >
         <form onSubmit={submit}>
@@ -53,9 +67,13 @@ export default function PinScreen() {
               onChange={(e) => setCode(e.target.value.toUpperCase())}
             />
           </label>
-          <PinInput label="New PIN" value={pin} onChange={setPin} />
           <PinInput
-            label="Confirm new PIN"
+            label={newPhone ? "PIN for this phone" : "New PIN"}
+            value={pin}
+            onChange={setPin}
+          />
+          <PinInput
+            label={newPhone ? "Confirm PIN" : "Confirm new PIN"}
             value={repeat}
             onChange={setRepeat}
           />
@@ -67,15 +85,17 @@ export default function PinScreen() {
                 await recover(code, pin);
               }}
             >
-              Set new PIN
+              {newPhone ? "Open my journal" : "Set new PIN"}
             </Action>
-            <button
-              type="button"
-              className="quiet"
-              onClick={() => reset("pin")}
-            >
-              Go back
-            </button>
+            {!newPhone && (
+              <button
+                type="button"
+                className="quiet"
+                onClick={() => reset("pin")}
+              >
+                Go back
+              </button>
+            )}
           </div>
         </form>
         <button className="quiet" onClick={() => reset("reset")}>
@@ -90,6 +110,11 @@ export default function PinScreen() {
           Without your PIN or recovery code, your journal and confessions cannot
           be opened by anyone. You may clear them from your account and choose a
           new PIN. Your battles, times and brethren remain.
+        </p>
+        <p>
+          If your journal still opens on another phone, you can make a new
+          recovery code there instead, under Settings › Privacy, PIN, and your
+          data.
         </p>
         <div className="stack">
           <Action

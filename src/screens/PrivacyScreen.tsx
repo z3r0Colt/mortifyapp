@@ -168,7 +168,9 @@ export default function PrivacyScreen() {
             </span>
             <span className="row-text">
               Change PIN
-              <span className="row-detail">Your journal stays as it is.</span>
+              <span className="row-detail">
+                For this phone. Your journal stays as it is.
+              </span>
             </span>
             <Icon name="chevron" size={18} className="chevron" />
           </button>

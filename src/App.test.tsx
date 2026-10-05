@@ -100,7 +100,13 @@ beforeEach(async () => {
     error: "",
   });
   useApp.setState({ packs: [], ready: false, error: null });
-  usePrivacy.setState({ loaded: false, security: null, key: null, error: "" });
+  usePrivacy.setState({
+    loaded: false,
+    security: null,
+    hasVault: false,
+    key: null,
+    error: "",
+  });
   window.history.replaceState({}, "", "/");
 });
 afterEach(() => {
@@ -116,7 +122,10 @@ test("signed-out visitors start at the welcome and cannot reach Home", async () 
   await waitFor(() =>
     expect(window.location.pathname).toBe("/onboarding/welcome"),
   );
-  fireEvent.click(await screen.findByRole("link", { name: "Begin" }));
+  const begin = await screen.findByRole("button", { name: "Begin" });
+  expect((begin as HTMLButtonElement).disabled).toBe(true);
+  fireEvent.click(screen.getByRole("checkbox", { name: /18 years of age/ }));
+  fireEvent.click(begin);
   await screen.findByRole("heading", { name: "Christ is our hope" });
   fireEvent.click(await screen.findByRole("link", { name: "Continue" }));
   await screen.findByRole("heading", { name: "Your account" });
@@ -125,7 +134,10 @@ test("signed-out visitors start at the welcome and cannot reach Home", async () 
 test("a returning visitor can go from the welcome straight to sign-in", async () => {
   render(<App />);
   fireEvent.click(
-    await screen.findByRole("link", { name: "I already have an account" }),
+    await screen.findByRole("checkbox", { name: /18 years of age/ }),
+  );
+  fireEvent.click(
+    screen.getByRole("button", { name: "I already have an account" }),
   );
   await screen.findByRole("heading", { name: "Your account" });
 });
@@ -178,18 +190,66 @@ test("private examination is encrypted before it reaches the account", async () 
   expect(usePrivacy.getState().key).toBeNull();
 });
 
-test("a new phone opens the journal with the same PIN", async () => {
+test("the account never holds the key locked by the PIN", async () => {
   signedIn({ onboarded: true, trust: "yes", battles: ["lust"] });
   await usePrivacy.getState().setup("123456");
-  // Nothing on this phone yet: only the account knows the PIN check.
+  expect(Object.keys(account.vault.get(me.id) as object).sort()).toEqual([
+    "key_id",
+    "recovery_key",
+    "recovery_salt",
+  ]);
+  await usePrivacy.getState().changePin("123456", "24681357");
+  expect(Object.keys(account.vault.get(me.id) as object)).not.toContain(
+    "pin_key",
+  );
+});
+
+test("a new phone opens the journal with the recovery code and sets its own PIN", async () => {
+  signedIn({ onboarded: true, trust: "yes", battles: ["lust"] });
+  await usePrivacy.getState().setup("123456");
+  const code = usePrivacy.getState().recoveryCode!;
+  account.rows.journals.push({
+    body: await encryptText(usePrivacy.getState().key!, "KEEP ME"),
+  });
+  // Nothing on this phone yet: the account has only the recovery-locked key.
   await db.security.clear();
   usePrivacy.setState({ loaded: false, security: null, key: null });
   render(<App />);
-  fireEvent.change(await screen.findByLabelText("PIN"), {
-    target: { value: "123456" },
+  await screen.findByRole("heading", {
+    name: "Open your journal on this phone",
   });
-  fireEvent.click(screen.getByRole("button", { name: "Open Mortify" }));
+  fireEvent.change(screen.getByLabelText("Recovery code"), {
+    target: { value: code },
+  });
+  fireEvent.change(screen.getByLabelText("PIN for this phone"), {
+    target: { value: "13572468" },
+  });
+  fireEvent.change(screen.getByLabelText("Confirm PIN"), {
+    target: { value: "13572468" },
+  });
+  fireEvent.click(screen.getByRole("button", { name: "Open my journal" }));
   await screen.findByRole("heading", { name: "Watch and pray" });
+  expect(
+    await decryptText(
+      usePrivacy.getState().key!,
+      account.rows.journals[0].body as CipherText,
+    ),
+  ).toBe("KEEP ME");
+});
+
+test("a phone's copy is set aside when the journal was begun again elsewhere", async () => {
+  signedIn({ onboarded: true, trust: "yes", battles: ["lust"] });
+  await usePrivacy.getState().setup("123456");
+  // Another phone cleared the journal and began a new one with a new key.
+  account.vault.set(me.id, {
+    ...(account.vault.get(me.id) as object),
+    key_id: crypto.randomUUID(),
+  });
+  usePrivacy.setState({ loaded: false, security: null, key: null });
+  await usePrivacy.getState().load();
+  expect(usePrivacy.getState().security).toBeNull();
+  expect(usePrivacy.getState().hasVault).toBe(true);
+  expect(await db.security.get("main")).toBeUndefined();
 });
 
 test("reading a chapter during a fall preserves the unfinished private confession and flow", async () => {

@@ -63,10 +63,9 @@ export async function savePreferences(userId: string, value: Preferences) {
       }),
   );
 }
-/** The journal key, wrapped by the PIN and by the recovery code. */
+/** The journal key as the account keeps it: locked by the recovery code only. */
 export type Vault = {
-  salt: string;
-  pin_key: CipherText;
+  key_id: string;
   recovery_salt: string;
   recovery_key: CipherText;
 };
@@ -74,7 +73,7 @@ export async function fetchVault(userId: string): Promise<Vault | null> {
   return (await result(
     cloud()
       .from("user_vault")
-      .select("salt,pin_key,recovery_salt,recovery_key")
+      .select("key_id,recovery_salt,recovery_key")
       .eq("user_id", userId)
       .maybeSingle(),
   )) as Vault | null;
@@ -91,7 +90,7 @@ export async function updateVault(userId: string, changes: Partial<Vault>) {
     cloud().from("user_vault").update(changes).eq("user_id", userId),
   );
 }
-/** Removes journal entries, confessions and the PIN check after a forgotten PIN. */
+/** Removes journal entries, confessions and the locked key after a forgotten PIN. */
 export async function clearPrivateEntries(userId: string) {
   for (const table of ["journals", "falls", "user_vault"])
     await result(cloud().from(table).delete().eq("user_id", userId));

@@ -11,6 +11,7 @@ const result = spawnSync(
     "supabase/functions/push-message/index.ts",
     "supabase/functions/reminders/index.ts",
     "supabase/functions/delete-account/index.ts",
+    "supabase/functions/report-alert/index.ts",
   ],
   {
     stdio: "inherit",

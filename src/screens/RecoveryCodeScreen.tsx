@@ -15,7 +15,7 @@ export default function RecoveryCodeScreen() {
     <Page
       bare
       title="Your recovery code"
-      lede="If you ever forget your PIN, this code is the only way to open your journal. Mortify cannot recover it for you."
+      lede="You need this code to open your journal on a new phone, or if you ever forget your PIN. Mortify cannot recover it for you."
       bar={<Mark large />}
     >
       <article className="card accent code-card">

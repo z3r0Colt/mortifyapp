@@ -22,6 +22,8 @@ const pinPattern = /^\d{6,12}$/;
 type State = {
   loaded: boolean;
   security: Security | null;
+  /** The account holds a journal this phone has no PIN for yet. */
+  hasVault: boolean;
   key: CryptoKey | null;
   error: string;
   /** A recovery code to show once, then forget. */
@@ -62,15 +64,21 @@ export const usePrivacy = create<State>((set, get) => {
       throw new Error("That PIN did not open your journal. Please try again.");
     }
   };
-  /** Wraps the key under a new PIN in the account and on this device. */
-  const savePin = async (userId: string, raw: string, pin: string) => {
+  /** Locks the key under a new PIN on this phone only. The PIN-locked copy
+   *  never goes to the account: a short PIN could be guessed there offline. */
+  const savePin = async (
+    userId: string,
+    raw: string,
+    pin: string,
+    keyId: string | undefined,
+  ) => {
     const salt = newSalt();
     const pinKey = await wrapDataKey(pin, salt, raw);
-    await updateVault(userId, { salt, pin_key: pinKey });
     const security: Security = {
       ...(get().security ?? { id: "main", userId, lockEnabled: true }),
       salt,
       pinKey,
+      keyId,
     };
     await db.security.put(security);
     set({ security, key: await importDataKey(raw) });
@@ -78,6 +86,7 @@ export const usePrivacy = create<State>((set, get) => {
   return {
     loaded: false,
     security: null,
+    hasVault: false,
     key: null,
     error: "",
     recoveryCode: null,
@@ -90,32 +99,23 @@ export const usePrivacy = create<State>((set, get) => {
           await db.security.clear();
           security = null;
         }
+        let hasVault = !!security;
         if (user && navigator.onLine)
           try {
-            // The account holds the PIN-wrapped key; this device keeps a copy
-            // for opening offline, plus its own lock settings.
+            // The account holds the key locked by the recovery code; this
+            // phone holds its own copy locked by its PIN.
             const vault = await fetchVault(user.id);
-            if (!vault) {
-              if (security) {
-                await clearNativeKey().catch(() => {});
-                await db.security.clear();
-              }
+            hasVault = !!vault;
+            const stale =
+              !vault || (security?.keyId && security.keyId !== vault.key_id);
+            if (security && stale) {
+              // The journal was cleared, or begun again on another phone.
+              await clearNativeKey().catch(() => {});
+              await db.security.clear();
               security = null;
-            } else if (
-              !security ||
-              security.salt !== vault.salt ||
-              security.pinKey.data !== vault.pin_key.data
-            ) {
-              // A first open here, or the PIN changed on another phone.
-              security = {
-                id: "main",
-                userId: user.id,
-                salt: vault.salt,
-                pinKey: vault.pin_key,
-                lockEnabled: security?.lockEnabled ?? true,
-                lockAfter: security?.lockAfter,
-                biometricEnabled: security?.biometricEnabled,
-              };
+            } else if (security && vault && !security.keyId) {
+              // Set up before keys had ids: this copy matched the account.
+              security = { ...security, keyId: vault.key_id };
               await db.security.put(security);
             }
           } catch {
@@ -123,6 +123,7 @@ export const usePrivacy = create<State>((set, get) => {
           }
         set({
           security,
+          hasVault,
           loaded: true,
           error: "",
           key:
@@ -141,27 +142,34 @@ export const usePrivacy = create<State>((set, get) => {
         throw new Error("Use a PIN of 6 to 12 digits.");
       const user = signedIn();
       online("set your PIN");
+      if (await fetchVault(user.id)) {
+        set({ hasVault: true });
+        throw new Error(
+          "Your journal is already in your account. Open it with your recovery code.",
+        );
+      }
       const raw = newDataKey();
       const code = newRecoveryCode();
       const salt = newSalt();
       const recoverySalt = newSalt();
-      const vault = {
-        salt,
-        pin_key: await wrapDataKey(pin, salt, raw),
+      const keyId = crypto.randomUUID();
+      await saveVault(user.id, {
+        key_id: keyId,
         recovery_salt: recoverySalt,
         recovery_key: await wrapDataKey(code, recoverySalt, raw),
-      };
-      await saveVault(user.id, vault);
+      });
       const security: Security = {
         id: "main",
         userId: user.id,
         salt,
-        pinKey: vault.pin_key,
+        pinKey: await wrapDataKey(pin, salt, raw),
+        keyId,
         lockEnabled: true,
       };
       await db.security.put(security);
       set({
         security,
+        hasVault: true,
         key: await importDataKey(raw),
         recoveryCode: code,
         recoveryReason: "setup",
@@ -226,8 +234,12 @@ export const usePrivacy = create<State>((set, get) => {
       if (!pinPattern.test(next))
         throw new Error("Use a new PIN of 6 to 12 digits.");
       const user = signedIn();
-      online("change your PIN");
-      await savePin(user.id, await rawKey(current), next);
+      await savePin(
+        user.id,
+        await rawKey(current),
+        next,
+        get().security?.keyId,
+      );
     },
     recover: async (input, pin) => {
       const code = normalizeRecoveryCode(input);
@@ -249,17 +261,7 @@ export const usePrivacy = create<State>((set, get) => {
       } catch {
         throw new Error("That recovery code does not match. Please check it.");
       }
-      if (!get().security)
-        set({
-          security: {
-            id: "main",
-            userId: user.id,
-            salt: vault.salt,
-            pinKey: vault.pin_key,
-            lockEnabled: true,
-          },
-        });
-      await savePin(user.id, raw, pin);
+      await savePin(user.id, raw, pin, vault.key_id);
     },
     replaceRecoveryCode: async (pin) => {
       const user = signedIn();
@@ -286,7 +288,7 @@ export const usePrivacy = create<State>((set, get) => {
         .filter((item) => item.table !== "flee_logs")
         .delete();
       await db.security.clear();
-      set({ security: null, key: null });
+      set({ security: null, hasVault: false, key: null });
     },
   };
 });

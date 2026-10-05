@@ -3,9 +3,34 @@ import { Page } from "../components/Page";
 import { Icon } from "../components/Icon";
 import { Action } from "../components/Action";
 import { reinstallLatest, usePwa, type UpdateCheck } from "../state/pwa";
+import { nativePlatform, isNative } from "../native/platform";
+import { devicePlatform, isInstalled } from "../platform";
 const outside = (
   <span className="visually-hidden"> (opens outside Mortify)</span>
 );
+// A problem report is an email the user writes and sends himself. It carries
+// the build and the kind of device so the trouble can be found, and nothing
+// from his account or journal.
+function problemReport() {
+  const how = isNative()
+    ? `${nativePlatform()} app`
+    : `${devicePlatform()}, ${isInstalled() ? "installed" : "in the browser"}`;
+  const body = [
+    "What happened?",
+    "",
+    "",
+    "What were you trying to do?",
+    "",
+    "",
+    "----",
+    `Mortify ${__APP_VERSION__} (${__BUILD_DATE__})`,
+    `Device: ${how}`,
+    `Browser: ${navigator.userAgent}`,
+  ].join("\n");
+  return `mailto:mortify@gentleking.org?subject=${encodeURIComponent(
+    `Problem report, Mortify ${__APP_VERSION__}`,
+  )}&body=${encodeURIComponent(body)}`;
+}
 // Contact, a plain account of the user's data, and where the content comes from.
 export default function AboutScreen() {
   const checkForUpdate = usePwa((s) => s.checkForUpdate);
@@ -22,10 +47,16 @@ export default function AboutScreen() {
           Questions, trouble, or something that does not look right? Write to us
           and we will answer as soon as we can.
         </p>
-        <a className="button block" href="mailto:mortify@gentleking.org">
-          <Icon name="mail" size={18} />
-          mortify@gentleking.org
-        </a>
+        <div className="stack">
+          <a className="button block" href="mailto:mortify@gentleking.org">
+            <Icon name="mail" size={18} />
+            mortify@gentleking.org
+          </a>
+          <a className="button block" href={problemReport()}>
+            <Icon name="flag" size={18} />
+            Report a problem
+          </a>
+        </div>
         <p className="label" style={{ marginTop: 12 }}>
           Mortify cannot give counsel or respond to emergencies. Speak with your
           pastor, and in danger call your local emergency number.
@@ -59,6 +90,15 @@ export default function AboutScreen() {
             Settings › Account › Delete my account removes all of it for good.
           </li>
         </ul>
+        <a
+          className="button block"
+          href={`${import.meta.env.BASE_URL}privacy-policy/`}
+          target="_blank"
+          rel="noreferrer"
+        >
+          Read the privacy policy
+          {outside}
+        </a>
       </article>
       <h2 className="section-title">Sources</h2>
       <article className="card">
