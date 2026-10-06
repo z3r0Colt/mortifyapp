@@ -1,6 +1,8 @@
 import { describe, expect, it, vi, afterEach } from "vitest";
 import { featuredSermonsSchema, loadPacks, packSchema } from "./loader";
+import { readFileSync } from "node:fs";
 import pack from "../../public/content/lust.json";
+import index from "../../public/content/index.json";
 afterEach(() => vi.unstubAllGlobals());
 describe("content validation", () => {
   it("accepts the lust pack and rejects incomplete packs", () => {
@@ -24,6 +26,15 @@ describe("content validation", () => {
         afterFallReadings: [{ ref: "PLACEHOLDER REFERENCE" }],
       }).success,
     ).toBe(false);
+  });
+  it("every battle pack in the index matches the schema", () => {
+    for (const file of index as string[]) {
+      const json = JSON.parse(
+        readFileSync(`public/content/${file}`, "utf8"),
+      ) as unknown;
+      const result = packSchema.safeParse(json);
+      expect(result.success, `${file}: ${result.error?.message}`).toBe(true);
+    }
   });
   it("refuses unsafe content paths", async () => {
     vi.stubGlobal(

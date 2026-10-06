@@ -80,3 +80,13 @@ export function resolveReference(bible: Bible, reference: string): Passage {
     text: verses.map((row) => row.text).join(" "),
   };
 }
+/** A whole chapter, such as "Psalm 4" or "Romans 6". */
+export const chapterPattern = /^(.+?)\s+([1-9]\d*)$/;
+export function resolveChapterReference(bible: Bible, reference: string) {
+  const match = chapterPattern.exec(reference.trim());
+  if (!match)
+    throw new Error(
+      `Invalid chapter reference: ${reference}. Use Book and chapter, such as Psalm 4.`,
+    );
+  return resolveChapter(bible, match[1], Number(match[2]));
+}

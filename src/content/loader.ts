@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { referencePattern } from "../bible/resolver";
+import { chapterPattern, referencePattern } from "../bible/resolver";
 export const scriptureReferenceSchema = z
   .string()
   .trim()
@@ -7,6 +7,11 @@ export const scriptureReferenceSchema = z
     referencePattern,
     "Use a Scripture reference, such as Romans 8:13 or Psalm 119:9-11.",
   );
+/** A whole chapter to read, such as Psalm 51 or Romans 6. */
+export const chapterReferenceSchema = z
+  .string()
+  .trim()
+  .regex(chapterPattern, "Use a book and chapter, such as Psalm 51.");
 
 const excerpt = z
   .object({
@@ -37,6 +42,8 @@ export const packSchema = z.object({
   name: z.string().min(1),
   screenBased: z.boolean(),
   verses: z.array(scriptureReferenceSchema).min(1),
+  /** Whole chapters for the morning, read in turn. */
+  chapters: z.array(chapterReferenceSchema).default([]),
   counsel: z.array(readingSchema).min(1),
   prayers: z
     .array(z.object({ title: z.string().min(1), text: z.string().min(1) }))

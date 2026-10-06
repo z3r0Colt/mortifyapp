@@ -10,10 +10,16 @@ import { saveEntry } from "../data/pending";
 import { heartRoots, occasionTags } from "../data/patterns";
 import { encryptText } from "../privacy/crypto";
 import { journalKey } from "../state/privacy";
+import { Scripture } from "../components/Scripture";
+import { ContentReading } from "../components/ContentReading";
+import { ChapterReading } from "../components/ChapterReading";
+import { useEveningReading, useQuestionSet } from "../content/useDaily";
 export default function ExamineScreen() {
   const packs = useBattlePacks();
   const [battle, setBattle] = useState(packs[0]?.id ?? "");
   const pack = packs.find((p) => p.id === battle);
+  const reading = useEveningReading();
+  const questions = useQuestionSet(pack);
   const [roots, setRoots] = useState<string[]>([]);
   const [occasions, setOccasions] = useState<string[]>([]);
   const [text, setText] = useState("");
@@ -48,6 +54,20 @@ export default function ExamineScreen() {
         </div>
       ) : (
         <>
+          {reading && (
+            <>
+              <div className="card">
+                <h2 className="section-title">An evening psalm</h2>
+                <ChapterReading reference={reading.psalm} />
+              </div>
+              <div className="card">
+                <Scripture reference={reading.verse} />
+              </div>
+              <div className="card">
+                <ContentReading reading={reading.counsel} />
+              </div>
+            </>
+          )}
           {packs.length > 1 && (
             <label>
               Battle
@@ -66,7 +86,7 @@ export default function ExamineScreen() {
           <article className="card">
             <h2 className="section-title">Questions for tonight</h2>
             <ol className="numbered">
-              {pack.examinationQuestions.slice(0, 3).map((q, i) => (
+              {questions.map((q, i) => (
                 <li key={i}>{q}</li>
               ))}
             </ol>

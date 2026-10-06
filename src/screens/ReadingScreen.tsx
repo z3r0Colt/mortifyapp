@@ -7,6 +7,7 @@ import { loadFeaturedSermons } from "../content/loader";
 import { SermonList } from "../components/SermonList";
 import { ListGroup, ListLink } from "../components/List";
 import { Scripture } from "../components/Scripture";
+import { ChapterReading } from "../components/ChapterReading";
 import { ContentReading } from "../components/ContentReading";
 import { Paragraphs } from "../components/Paragraphs";
 import { Icon, type IconName } from "../components/Icon";
@@ -65,6 +66,14 @@ export default function ReadingScreen() {
           </Section>
           <Section icon="pen" title="Counsel">
             <ContentReading reading={data.counsel} />
+          </Section>
+          {data.chapter && (
+            <Section icon="book" title="A chapter for your battle">
+              <ChapterReading reference={data.chapter} preview={4} />
+            </Section>
+          )}
+          <Section icon="book" title="Proverbs for today">
+            <ChapterReading reference={data.proverbs} preview={6} />
           </Section>
           {(preached.length > 0 || featured?.general.length) && (
             <Section icon="headphones" title="Hear the Word preached">

@@ -123,8 +123,9 @@ export default function AboutScreen() {
           <li>
             <Icon name="book" size={18} />
             Counsel is quoted from public domain works of John Owen, Thomas
-            Watson and John Bunyan, as published by the Christian Classics
-            Ethereal Library.
+            Watson, John Bunyan and William Gurnall, as published by the
+            Christian Classics Ethereal Library, and of Thomas Brooks and
+            Richard Sibbes, from the Nichol editions of their works (1862–1866).
           </li>
           <li>
             <Icon name="book" size={18} />
@@ -133,17 +134,52 @@ export default function AboutScreen() {
           <li>
             <Icon name="headphones" size={18} />
             <span>
-              Sermons are preached by Shawn Anderson of Sycamore Reformed
-              Presbyterian Church, Kokomo, Indiana, and published on{" "}
+              Sermons are preached by{" "}
               <a
                 href="https://www.sermonaudio.com/broadcasters/sycamorerpc/"
                 target="_blank"
                 rel="noreferrer"
               >
-                SermonAudio
+                Shawn Anderson
+                {outside}
+              </a>{" "}
+              of Sycamore Reformed Presbyterian Church, Kokomo, Indiana,{" "}
+              <a
+                href="https://www.sermonaudio.com/speakers/10608"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Barry York
                 {outside}
               </a>
-              .
+              ,{" "}
+              <a
+                href="https://www.sermonaudio.com/speakers/7649"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Alistair Begg
+                {outside}
+              </a>{" "}
+              of Truth For Life,{" "}
+              <a
+                href="https://www.sermonaudio.com/speakers/10822"
+                target="_blank"
+                rel="noreferrer"
+              >
+                R.C. Sproul
+                {outside}
+              </a>{" "}
+              of Ligonier Ministries, and{" "}
+              <a
+                href="https://www.sermonaudio.com/speakers/12754"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Derek Thomas
+                {outside}
+              </a>
+              , and published on SermonAudio.
             </span>
           </li>
         </ul>
