@@ -102,31 +102,41 @@
     {
       "for": "fall",
       "title": "A prayer of confession",
-      "text": "Faithful Father, you made me to work and to rest in you, and every hour I have is your gift. I come through Jesus Christ. I confess that I have been slothful. I have wasted the time you gave me, put off my duties, and chosen ease over faithfulness. I have neglected prayer, your Word, my family, and my calling, and I have drifted through days without seeking your glory. I have used screens and distractions to escape what you set before me. I have loved my own comfort more than your will, and I have acted as if my time were my own. The sluggard craves and gets nothing, and I have craved ease and lost much good. Forgive me, Lord. Christ always did what pleased you, and he finished the work you gave him to do. For his sake pardon me. Holy Spirit, put this sloth to death and stir me up to zeal. Teach me to number my days, that I may get a heart of wisdom. I thank you for your Sabbath rest, and for the rest I have in Christ, which frees me to work gladly. In his name. Amen."
+      "opening": "Faithful Father, Lord of every hour, you made me to work and to rest in you, and every day I have is your gift; I bless you that I may come to you through Jesus Christ.",
+      "text": "I confess that I have been slothful. I have wasted the time you gave me, put off my duties, and chosen ease over faithfulness. I have neglected prayer, your Word, my family, and my calling, and I have drifted through days without seeking your glory. I have used screens and distractions to escape what you set before me. I have loved my own comfort more than your will, and I have acted as if my time were my own. The sluggard craves and gets nothing, and I have craved ease and lost much good. Forgive me, Lord. Christ always did what pleased you, and he finished the work you gave him to do. For his sake pardon me. Holy Spirit, put this sloth to death and stir me up to zeal. Teach me to number my days, that I may get a heart of wisdom.",
+      "closing": "I thank you for the Lord's Day, and for the rest I have in Christ, which frees me to work gladly. To you be glory, Father, Son, and Holy Spirit, in all my days. Amen."
     },
     {
       "for": "flee",
       "title": "When I am drifting",
-      "text": "Lord, I am drifting again, and I know what I should be doing. Wake me up. Give me strength to do the next thing in front of me, and to do it heartily, as for you and not for men. Help me put away what distracts me, now and not later. Teach me to make the best use of the time, because the days are evil. Lord Jesus, your food was to do the will of the one who sent you. Let your will be my food today. Amen."
+      "opening": "O God, you are my God; early will I seek you, for your steadfast love is better than life.",
+      "text": "Lord, I am drifting again, and I know what I should be doing. Wake me up. Give me strength to do the next thing in front of me, and to do it heartily, as for you and not for men. Help me put away what distracts me, now and not later. Teach me to make the best use of the time, because the days are evil. Lord Jesus, your food was to do the will of the one who sent you. Let your will be my food today.",
+      "closing": "In Jesus' name, who finished the work you gave him. Amen."
     },
     {
       "for": "flee",
       "title": "For faithful diligence",
-      "text": "Father, make me faithful in little things. Give me a steady love for the work you have given me, whether it is great or small. Teach me to rest well on your Lord's Day and to work hard on the other six. Guard me from both idleness and restless busyness. Do not let me be slothful in zeal, but make me fervent in spirit, serving the Lord. And when my day is done, let me rest in you, knowing that my labor in the Lord is not in vain. Through Jesus Christ. Amen."
+      "opening": "Lord of the harvest, faithful in all your works, you never slumber nor sleep.",
+      "text": "Father, make me faithful in little things. Give me a steady love for the work you have given me, whether it is great or small. Teach me to rest well on your Lord's Day and to work hard on the other six. Guard me from both idleness and restless busyness. Do not let me be slothful in zeal, but make me fervent in spirit, serving the Lord. And when my day is done, let me rest in you, knowing that my labor in the Lord is not in vain.",
+      "closing": "Through Jesus Christ, my faithful Lord, to whom be glory for ever. Amen."
     },
     {
       "for": "fall",
       "title": "Confessing spiritual slothfulness",
+      "opening": "O God, thou art our God, early will we seek thee; our God, and we will praise thee, our fathers' God, and we will exalt thee.",
       "text": "We have been slothful in the business of religion, and not fervent in spirit, serving the Lord. The things which remain are ready to die, and our works have not been found perfect before God. We have observed the winds, and therefore have not sown, have regarded the clouds, and therefore have not reaped; and with the sluggard have frightened ourselves with the fancy of a lion in the way, a lion in the streets, and have turned on our bed as the door on the hinges; still crying, Yet a little sleep, a little slumber. We have lost our first love, and where is now the blessedness we sometimes spake of? Our goodness hath been as the morning cloud and the early dew, which passeth away.",
+      "closing": "Now to God the Father, and our Lord Jesus Christ, who gave himself for our sins, that he might deliver us from this present evil world, according to the will of God and our Father, be glory for ever and ever. Amen.",
       "author": "Matthew Henry",
-      "source": "A Method for Prayer, ch. 2"
+      "source": "arranged from A Method for Prayer, chs. 1, 2 and 7"
     },
     {
       "for": "flee",
       "title": "That we may be diligent in our duty",
+      "opening": "Thou hast appointed us a great High Priest, in whose name we may come boldly to the throne of grace, that we may find mercy and grace to help in time of need.",
       "text": "Lord, quicken us to work the works of him that sent us, while it is day, because the night comes wherein no man can work; and what good our hand finds to do, to do it with all our might, because there is no work or knowledge in the grave, whither we are going. Lord, grant that we may never be slothful in any good business, but fervent in spirit, serving the Lord; steadfast and unmovable, always abounding in the work of the Lord, forasmuch as we know that our labour is not in vain in the Lord.",
+      "closing": "Now unto him that is able to keep us from falling, and to present us faultless before the presence of his glory with exceeding joy, to the only wise God our Saviour, be glory and majesty, dominion and power, now and ever. Amen.",
       "author": "Matthew Henry",
-      "source": "A Method for Prayer, ch. 3"
+      "source": "arranged from A Method for Prayer, chs. 1, 3 and 7"
     }
   ],
   "examinationQuestions": [

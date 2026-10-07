@@ -99,31 +99,41 @@
     {
       "for": "fall",
       "title": "A prayer of confession",
-      "text": "Faithful Father, the earth is yours and everything in it, and you have promised never to leave or forsake your children. I come through Jesus Christ. I confess that I have coveted. I have wanted more than you have given me, and I have set my heart on things that will rust and pass away. I have looked to money for a security that belongs to you alone, and I have measured my life by what I own. My covetousness is idolatry: it has put a created thing in the place of the Creator. I have tried to serve two masters, and I have been tight-fisted toward you and toward my neighbor. I do not want only to escape its worry and debt; I want to hate it because it robs you of the trust that is yours. Forgive me, Lord. Christ, though he was rich, became poor for my sake, so that I might become rich in him. He is my treasure, and in him I have an inheritance that can never perish, spoil, or fade. For his sake pardon me. Holy Spirit, put this greed to death, and make me content and open-handed. I thank you that you did not spare your own Son, and that with him you will graciously give me all things. In Jesus' name. Amen."
+      "opening": "Faithful Father, the earth is yours and everything in it, and you are the treasure of my heart; I bless you that you have promised never to leave or forsake your children, and that I may come to you through Jesus Christ.",
+      "text": "I confess that I have coveted. I have wanted more than you have given me, and I have set my heart on things that will rust and pass away. I have looked to money for a security that belongs to you alone, and I have measured my life by what I own. My covetousness is idolatry: it has put a created thing in the place of the Creator. I have tried to serve two masters, and I have been tight-fisted toward you and toward my neighbor. I do not want only to escape its worry and debt; I want to hate it because it robs you of the trust that is yours. Forgive me, Lord. Christ, though he was rich, became poor for my sake, so that I might become rich in him. He is my treasure, and in him I have an inheritance that can never perish, spoil, or fade. For his sake pardon me. Holy Spirit, put this greed to death, and make me content and open-handed.",
+      "closing": "I thank you that you did not spare your own Son, and that with him you will graciously give me all things. To you be the glory, Father, Son, and Holy Spirit, my portion for ever. Amen."
     },
     {
       "for": "flee",
       "title": "When I want more",
-      "text": "Lord, my heart is pulled toward something I do not have. Stop me here, before I buy it, scheme for it, or brood over it. You are my portion, and you know what I need before I ask. Life does not consist in the abundance of possessions; I brought nothing into this world and I can take nothing out. Turn my eyes back to what you have already given, and let me thank you for it now. Lord Jesus, you had nowhere to lay your head, and you were rich toward God. Be my treasure. Holy Spirit, loosen my grip, and make me glad to give something away today. Amen."
+      "opening": "O Lord, you are my portion and my inheritance, and in your presence there is fullness of joy.",
+      "text": "Lord, my heart is pulled toward something I do not have. Stop me here, before I buy it, scheme for it, or brood over it. You are my portion, and you know what I need before I ask. Life does not consist in the abundance of possessions; I brought nothing into this world and I can take nothing out. Turn my eyes back to what you have already given, and let me thank you for it now. Lord Jesus, you had nowhere to lay your head, and you were rich toward God. Be my treasure. Holy Spirit, loosen my grip, and make me glad to give something away today.",
+      "closing": "Blessed be your name, for you give me all things richly to enjoy. In Jesus' name. Amen."
     },
     {
       "for": "flee",
       "title": "For a generous heart",
-      "text": "Father, you love a cheerful giver, for you are the most generous Giver of all. Make me like you. Teach me to hold money and things as your steward and not their owner, and to use them for your glory and my neighbor's good. Make me honest in my work, faithful and joyful in my giving, and free from the love of money. Let me be rich in good works and ready to share. Fix my hope not on uncertain riches but on you, who richly provide everything for me to enjoy. And as I let go of what I cannot keep, let me lay hold of the life that is truly life. Through Jesus Christ. Amen."
+      "opening": "Most generous Father, you love a cheerful giver, for you are the greatest Giver of all, and you gave me your own beloved Son.",
+      "text": "Make me like you. Teach me to hold money and things as your steward and not their owner, and to use them for your glory and my neighbor's good. Make me honest in my work, faithful and joyful in my giving, and free from the love of money. Let me be rich in good works and ready to share. Fix my hope not on uncertain riches but on you, who richly provide everything for me to enjoy. And as I let go of what I cannot keep, let me lay hold of the life that is truly life.",
+      "closing": "Thanks be to you for your inexpressible gift, through Jesus Christ my Lord. Amen."
     },
     {
       "for": "fall",
       "title": "Confessing covetousness and love of the world",
+      "opening": "Whom have we in heaven but thee; and there is none upon earth that we desire besides thee, or in comparison of thee: when our flesh and our heart fail, be thou the strength of our heart, and our portion for ever; the portion of our inheritance in the other world, and of our cup in this, and then we will say that the lines are fallen to us in pleasant places, and that we have a goodly heritage.",
       "text": "Our conversation has not been without covetousness, nor have we learned in every state to be content with such things as we have. Who can say he is clean from that love of money, which is the root of all evil, that covetousness which is idolatry? We have sought great things to ourselves, when thou hast said, Seek them not.",
+      "closing": "Now to God the Father, and our Lord Jesus Christ, who gave himself for our sins, that he might deliver us from this present evil world, according to the will of God and our Father, be glory for ever and ever. Amen.",
       "author": "Matthew Henry",
-      "source": "A Method for Prayer, ch. 2"
+      "source": "arranged from A Method for Prayer, chs. 1, 2 and 7"
     },
     {
       "for": "flee",
       "title": "That the love of the world be rooted out",
+      "opening": "Thou art the Father of lights, with whom is no variableness or shadow of turning, and from whom proceedeth every good and perfect gift.",
       "text": "Let the love of the world be rooted out of us, and that covetousness which is idolatry; and let the love of God in Christ be rooted in us. Shed abroad that love in our hearts by the Holy Ghost, and give us to love thee the Lord our God with all our heart, and soul, and mind, and might; and to do all we do in religion from a principle of love to thee.",
+      "closing": "Do for us exceeding abundantly above what we are able to ask or think, according to the power that worketh in us: And supply all our needs according to thy riches in glory by Christ Jesus. To God, only wise, be glory through Jesus Christ for ever. Amen.",
       "author": "Matthew Henry",
-      "source": "A Method for Prayer, ch. 9"
+      "source": "arranged from A Method for Prayer, chs. 1, 9 and 7"
     }
   ],
   "examinationQuestions": [

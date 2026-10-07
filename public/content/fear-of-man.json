@@ -102,24 +102,32 @@
     {
       "for": "fall",
       "title": "A prayer of confession",
-      "text": "Almighty God, you alone are to be feared, and the fear of you is the beginning of wisdom. I come through Jesus Christ. I confess that I have feared people more than you. I have kept silent when I should have spoken, and spoken when I should have kept silent. I have hidden my faith, bent the truth, and done what I knew was wrong, because I wanted to be liked or was afraid of being mocked. I have made the opinion of others my idol, and I have loved the praise of man more than the praise of God. The fear of man has been a snare to me, and it has made me a coward toward you and a flatterer toward them. Forgive me, Lord. Christ was not ashamed of me. He endured the cross, despising its shame, and he made the good confession before Pilate. For his sake pardon my cowardice. Holy Spirit, put this fear to death, and fill me with a holy fear of God that drives out the fear of man. Make me both bold and kind. I thank you that you are for me, so that no one can finally be against me, and that nothing can separate me from your love. In Jesus' name. Amen."
+      "opening": "Almighty God, King of kings and Lord of lords, you alone are to be feared, and the fear of you is the beginning of wisdom; I bless you that I may come to you through Jesus Christ.",
+      "text": "I confess that I have feared people more than you. I have kept silent when I should have spoken, and spoken when I should have kept silent. I have hidden my faith, bent the truth, and done what I knew was wrong, because I wanted to be liked or was afraid of being mocked. I have made the opinion of others my idol, and I have loved the praise of man more than the praise of God. The fear of man has been a snare to me, and it has made me a coward toward you and a flatterer toward them. Forgive me, Lord. Christ was not ashamed of me. He endured the cross, despising its shame, and he made the good confession before Pilate. For his sake pardon my cowardice. Holy Spirit, put this fear to death, and fill me with a holy fear of God that drives out the fear of man. Make me both bold and kind.",
+      "closing": "I thank you that you are for me, so that no one can finally be against me, and that nothing can separate me from your love. To the King eternal, immortal, invisible, the only God, be honor and glory for ever and ever. Amen."
     },
     {
       "for": "flee",
       "title": "When I fear what they will think",
-      "text": "Lord, I feel the pressure to please them, and I am tempted to hide or give way. Remind me now that you are my judge and my helper, and that their opinion does not decide my worth. You are on my side; I will not fear what man can do to me. Give me courage to do what is right and say what is true, with gentleness and respect. If I am mocked for Christ, let me count it an honor. Lord Jesus, you were despised and rejected for me; do not let me be ashamed of you. Holy Spirit, make me steady. Amen."
+      "opening": "O Lord, my light and my salvation, whom shall I fear? You are the stronghold of my life.",
+      "text": "Lord, I feel the pressure to please them, and I am tempted to hide or give way. Remind me now that you are my judge and my helper, and that their opinion does not decide my worth. You are on my side; I will not fear what man can do to me. Give me courage to do what is right and say what is true, with gentleness and respect. If I am mocked for Christ, let me count it an honor. Lord Jesus, you were despised and rejected for me; do not let me be ashamed of you. Holy Spirit, make me steady.",
+      "closing": "In Jesus' name, the name above every name. Amen."
     },
     {
       "for": "flee",
       "title": "For a holy fear",
-      "text": "Father, teach me to fear you rightly, with reverence and love, as your child who knows both your greatness and your goodness. Let your approval be enough for me. Free me from needing the applause of others and from dreading their frown. Make me faithful in small things when no one sees, and steady when everyone is watching. Give me a clear conscience before you and before others. Let me live for the day when my Master will say to me, Well done, good and faithful servant. Through Jesus Christ. Amen."
+      "opening": "Holy and loving Father, great and greatly to be praised, teach me to fear you rightly, with reverence and love, as your child who knows both your greatness and your goodness.",
+      "text": "Let your approval be enough for me. Free me from needing the applause of others and from dreading their frown. Make me faithful in small things when no one sees, and steady when everyone is watching. Give me a clear conscience before you and before others. Let me live for the day when my Master will say to me, Well done, good and faithful servant.",
+      "closing": "Through Jesus Christ, my faithful Master and my Friend, to whom be glory for ever. Amen."
     },
     {
       "for": "flee",
       "title": "That we may not fear the reproach of men",
+      "opening": "Thou art the blessed and only Potentate; the King of kings, and the Lord of lords, who only hast immortality, dwelling in the light which no man can approach unto, whom no man hath seen nor can see.",
       "text": "Lord, teach us to endure hardness as good soldiers of Jesus Christ; that we may not fear the reproach of men, or their revilings, nor be ashamed of Christ or of his words, knowing whom we have believed, even one who is able to keep what we have committed to him against that day. Though bonds and afflictions should abide us, Lord, grant that none of these things may move us, and that we may not count life itself dear to us, so we may finish our course with joy. Enable us in all things to approve ourselves to God, and then to pass by honour and dishonour, by evil report and good report, clad with the armour of righteousness on the right hand and on the left, as those that account it a very small thing to be judged of man's judgment, for he that judgeth us is the Lord.",
+      "closing": "Now to the King eternal, immortal, invisible, the only wise God, be honour and glory for ever and ever. Amen.",
       "author": "Matthew Henry",
-      "source": "A Method for Prayer, ch. 3"
+      "source": "arranged from A Method for Prayer, chs. 1, 3 and 7"
     }
   ],
   "examinationQuestions": [

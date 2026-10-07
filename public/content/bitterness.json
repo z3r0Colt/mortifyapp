@@ -100,31 +100,41 @@
     {
       "for": "fall",
       "title": "A prayer of confession",
-      "text": "Gracious Father, you have forgiven me a debt I could never pay, and you have cast all my sins behind your back. I come to you through Jesus Christ. I confess that I have held on to bitterness. I have kept a record of wrongs, replayed old injuries in my mind, and quietly wished harm on those who hurt me. I have lived every day on your forgiveness while refusing to give mine. I have told myself that my resentment was justice, when it was really a way of keeping the wrong alive and keeping myself on the throne. A root of bitterness has grown in me, and it has troubled me and defiled others. This is sin against you, who command me to forgive as you in Christ have forgiven me. Lord, have mercy on me. Christ prayed for those who nailed him to the cross, and his blood speaks a better word than the blood of Abel. For his sake forgive me, and give me a heart that forgives from within. Holy Spirit, pull up this root and heal what has festered. Where justice must still be sought, let me seek it without malice. I thank you that vengeance belongs to you, that you judge rightly, and that I am free to let go. In Jesus' name. Amen."
+      "opening": "Gracious and forgiving Father, I praise you that you have forgiven me a debt I could never pay, and cast all my sins behind your back, and that through Jesus Christ I may call you mine.",
+      "text": "I confess that I have held on to bitterness. I have kept a record of wrongs, replayed old injuries in my mind, and quietly wished harm on those who hurt me. I have lived every day on your forgiveness while refusing to give mine. I have told myself that my resentment was justice, when it was really a way of keeping the wrong alive and keeping myself on the throne. A root of bitterness has grown in me, and it has troubled me and defiled others. This is sin against you, who command me to forgive as you in Christ have forgiven me. Lord, have mercy on me. Christ prayed for those who nailed him to the cross, and his blood speaks a better word than the blood of Abel. For his sake forgive me, and give me a heart that forgives from within. Holy Spirit, pull up this root and heal what has festered. Where justice must still be sought, let me seek it without malice.",
+      "closing": "I thank you that vengeance belongs to you, that you judge rightly, and that I am free to let go. Glory be to you, Father, Son, and Holy Spirit, the God of all grace, for ever and ever. Amen."
     },
     {
       "for": "flee",
       "title": "When old hurts return",
-      "text": "Lord, the old wound is open again, and I feel the bitterness rising. I bring it to you instead of feeding it. You saw what was done to me, and you will judge justly; I do not have to carry this. Keep me from replaying it again. Lord Jesus, you were betrayed, mocked, and forsaken, and you forgave. Let your forgiveness of me loom larger in my mind than their sin against me. Give me grace to bless and not to curse, and to pray for the one who wronged me, even now. Holy Spirit, soften what has grown hard. Amen."
+      "opening": "Righteous Father, Judge of all the earth, who sees every wrong and loves me still, I come to you through Jesus, who forgave his enemies.",
+      "text": "Lord, the old wound is open again, and I feel the bitterness rising. I bring it to you instead of feeding it. You saw what was done to me, and you will judge justly; I do not have to carry this. Keep me from replaying it again. Lord Jesus, you were betrayed, mocked, and forsaken, and you forgave. Let your forgiveness of me loom larger in my mind than their sin against me. Give me grace to bless and not to curse, and to pray for the one who wronged me, even now. Holy Spirit, soften what has grown hard.",
+      "closing": "Blessed be your name, Lord Jesus, Friend of sinners, for ever. Amen."
     },
     {
       "for": "flee",
       "title": "For a forgiving heart",
-      "text": "Father, make me tenderhearted. Put away from me all bitterness, wrath, anger, clamor, and slander, with all malice. Teach me to forgive as you have forgiven me in Christ: freely, fully, and without keeping score. Show me where I have taken pleasure in resentment, and let that pleasure die. Where peace can be made, give me courage to seek it; where it cannot, give me rest in leaving the matter with you. Remind me how often others have had to bear with me. Fill my heart with the love that covers a multitude of sins, and make me a peacemaker in my home and my church. Through Jesus Christ. Amen."
+      "opening": "O God of love, who in Christ has made peace with me by the blood of his cross, I adore your patience and your kindness.",
+      "text": "Father, make me tenderhearted. Put away from me all bitterness, wrath, anger, clamor, and slander, with all malice. Teach me to forgive as you have forgiven me in Christ: freely, fully, and without keeping score. Show me where I have taken pleasure in resentment, and let that pleasure die. Where peace can be made, give me courage to seek it; where it cannot, give me rest in leaving the matter with you. Remind me how often others have had to bear with me. Fill my heart with the love that covers a multitude of sins, and make me a peacemaker in my home and my church.",
+      "closing": "Through Jesus Christ, in whom I am forgiven, to whom be all praise and love for ever. Amen."
     },
     {
       "for": "fall",
       "title": "Confessing unpeaceableness toward others",
+      "opening": "Thou hast proclaimed thy name, The Lord, the Lord God, merciful and gracious, slow to anger, abundant in goodness and truth: keeping mercy for thousands, forgiving iniquity, transgression, and sin. And this name of thine is our strong tower.",
       "text": "We have been verily guilty concerning our brother; for we have not studied the things that make for peace, nor things wherewith we might edify one another. We have been ready to judge our brother, and to set at nought our brother, forgetting that we must all shortly stand before the judgment-seat of Christ.",
+      "closing": "Now to God the Father, and our Lord Jesus Christ, who gave himself for our sins, that he might deliver us from this present evil world, according to the will of God and our Father, be glory for ever and ever. Amen.",
       "author": "Matthew Henry",
-      "source": "A Method for Prayer, ch. 2"
+      "source": "arranged from A Method for Prayer, chs. 1, 2 and 7"
     },
     {
       "for": "flee",
       "title": "That all bitterness may be put away",
+      "opening": "Thou hast appointed us a great High Priest, in whose name we may come boldly to the throne of grace, that we may find mercy and grace to help in time of need.",
       "text": "Far be it from us to say that we will recompense evil, or that we should avenge ourselves. But we pray that all bitterness, and wrath, and anger, and clamour, and evil-speaking may be put away from us, with all malice; and that we may be kind one to another, and tender-hearted, forgiving one another, even as God for Christ's sake we hope hath forgiven us. O make us merciful as our Father which is in heaven is merciful, who hath promised that with the merciful he will show himself merciful.",
+      "closing": "Now unto him that is able to keep us from falling, and to present us faultless before the presence of his glory with exceeding joy, to the only wise God our Saviour, be glory and majesty, dominion and power, now and ever. Amen.",
       "author": "Matthew Henry",
-      "source": "A Method for Prayer, ch. 8"
+      "source": "arranged from A Method for Prayer, chs. 1, 8 and 7"
     }
   ],
   "examinationQuestions": [

@@ -1647,3 +1647,45 @@ input.recovery-input {
 #tonight {
   scroll-margin-top: calc(20px + env(safe-area-inset-top));
 }
+
+/* ---------- Prayers ---------- */
+/* Set out like a prayer book: a centred title over a brass rule, with the
+   words of adoration at the opening and close in the display face. */
+.prayer-head {
+  margin-bottom: 1.2rem;
+  text-align: center;
+}
+.card .prayer-head h2 {
+  margin: 0;
+  font-size: 1.6rem;
+  line-height: 1.2;
+}
+.prayer-rule {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 12px;
+}
+.prayer-rule::before,
+.prayer-rule::after {
+  content: "";
+  width: 44px;
+  height: 1px;
+  background: var(--brass);
+  opacity: 0.6;
+}
+.prayer-rule i {
+  width: 6px;
+  height: 6px;
+  background: var(--brass);
+  transform: rotate(45deg);
+}
+.prayer-praise {
+  font-family: var(--display);
+  font-size: 1.3rem;
+  line-height: 1.55;
+}
+.prayer.prominent .prayer-body {
+  font-size: 1.08rem;
+}

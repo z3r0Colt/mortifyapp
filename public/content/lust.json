@@ -102,31 +102,41 @@
     {
       "for": "fall",
       "title": "A prayer of confession",
-      "text": "Holy Father, your eyes are too pure to look on evil, and nothing in me is hidden from you. I come to you only through Jesus Christ, your Son. I confess that I have sinned against you with my eyes, my thoughts, and my body. I have looked where I should have turned away. I have fed desires you forbid, and I have treated another person, made in your image, as a thing for my pleasure. I have gone looking for comfort, escape, and power in a counterfeit, when you offered me yourself. Against you, you only, have I sinned. I have grieved your Holy Spirit and dishonored the body that belongs to you. I do not only want to be rid of the shame; teach me to hate this sin because it is against you and against your love. I have no plea in myself. But Christ bore this very sin in his body on the tree, and his blood cleanses from all sin. He lives to intercede for me. For his sake, forgive me and wash me. Create in me a clean heart, O God, and renew a right spirit within me. By your Spirit put this lust to death at its root, and give me a greater delight in you than in any pleasure of sin. Keep me from ever calling it small again. I thank you that there is now no condemnation for those who are in Christ Jesus. In his name. Amen."
+      "opening": "Holy, holy, holy Lord God, your eyes are too pure to look on evil, and nothing in me is hidden from you; yet you are my Father, and I bless you that I may come to you through Jesus Christ, your Son.",
+      "text": "I confess that I have sinned against you with my eyes, my thoughts, and my body. I have looked where I should have turned away. I have fed desires you forbid, and I have treated another person, made in your image, as a thing for my pleasure. I have gone looking for comfort, escape, and power in a counterfeit, when you offered me yourself. Against you, you only, have I sinned. I have grieved your Holy Spirit and dishonored the body that belongs to you. I do not only want to be rid of the shame; teach me to hate this sin because it is against you and against your love. I have no plea in myself. But Christ bore this very sin in his body on the tree, and his blood cleanses from all sin. He lives to intercede for me. For his sake, forgive me and wash me. Create in me a clean heart, O God, and renew a right spirit within me. By your Spirit put this lust to death at its root, and give me a greater delight in you than in any pleasure of sin. Keep me from ever calling it small again.",
+      "closing": "I thank you that there is now no condemnation for those who are in Christ Jesus. To him who loves me and has freed me from my sins by his blood be glory and dominion for ever and ever. Amen."
     },
     {
       "for": "flee",
       "title": "In the hour of temptation",
-      "text": "Lord Jesus, you were tempted in every way as I am, yet without sin, and you know how fierce this hour is. I will not hide it from you. Help me now. Do not let me give this thought one more moment, or take one more look. Turn my eyes from worthless things, and give me strength to get up and go. Remind me that my body is a temple of the Holy Spirit, and that I was bought with a price, your own blood. Show me again the joy that is in you, greater than this passing pleasure. Holy Spirit, by your power put to death what is rising in me. I belong to you. Amen."
+      "opening": "Holy Father, I flee to you now, through Jesus, my great High Priest, at the throne of grace.",
+      "text": "Lord Jesus, you were tempted in every way as I am, yet without sin, and you know how fierce this hour is. I will not hide it from you. Help me now. Do not let me give this thought one more moment, or take one more look. Turn my eyes from worthless things, and give me strength to get up and go. Remind me that my body is a temple of the Holy Spirit, and that I was bought with a price, your own blood. Show me again the joy that is in you, greater than this passing pleasure. Holy Spirit, by your power put to death what is rising in me.",
+      "closing": "I belong to you. To you, who are able to keep me from falling, be glory for ever. Amen."
     },
     {
       "for": "flee",
       "title": "For a pure heart",
-      "text": "Father, you have promised that the pure in heart shall see you. I want that blessing more than anything this world offers. Make my heart pure. Fill my mind with what is true, honorable, and lovely, so that there is no room left for what defiles. Teach me to see every man and woman as your image bearer, to honor them and never to use them. Guard my eyes, my hands, and my hours alone. Make me watchful over the occasions of sin, and quick to bring them into the light before trusted believers. Above all, satisfy me with your steadfast love, so that I do not hunger for counterfeits. Through Jesus Christ my Lord. Amen."
+      "opening": "Beautiful and holy God, you are the fountain of all true joy, and you have promised that the pure in heart shall see you.",
+      "text": "I want that blessing more than anything this world offers. Make my heart pure. Fill my mind with what is true, honorable, and lovely, so that there is no room left for what defiles. Teach me to see every man and woman as your image bearer, to honor them and never to use them. Guard my eyes, my hands, and my hours alone. Make me watchful over the occasions of sin, and quick to bring them into the light before trusted believers. Above all, satisfy me with your steadfast love, so that I do not hunger for counterfeits.",
+      "closing": "Through Jesus Christ my Lord, my joy and my crown, to whom be glory for ever. Amen."
     },
     {
       "for": "fall",
       "title": "Confessing sensuality and flesh-pleasing",
+      "opening": "Holy, holy, holy, Lord God Almighty, which art, and wast, and art to come.",
       "text": "We have minded the things of the flesh more than the things of the Spirit, and have lived in pleasure on the earth, and been wanton, and have nourished our hearts as in a day of slaughter. We have made provision for the flesh to fulfil the lusts of it; even those lusts which war against our souls: and in many instances have acted as if we had been lovers of pleasure more than lovers of God.",
+      "closing": "Now to God the Father, and our Lord Jesus Christ, who gave himself for our sins, that he might deliver us from this present evil world, according to the will of God and our Father, be glory for ever and ever. Amen.",
       "author": "Matthew Henry",
-      "source": "A Method for Prayer, ch. 2"
+      "source": "arranged from A Method for Prayer, chs. 1, 2 and 7"
     },
     {
       "for": "flee",
       "title": "That the flesh may be crucified in us",
+      "opening": "Thou hast appointed us a great High Priest, in whose name we may come boldly to the throne of grace, that we may find mercy and grace to help in time of need.",
       "text": "O let no iniquity have dominion over us, because we are not under the law, but under grace. Let the flesh be crucified in us with its affections and lusts; that walking in the Spirit we may not fulfil the lusts of the flesh. Let our old man be crucified with Christ, that the body of sin may be destroyed, that henceforth we may not serve sin; and let not sin reign in our mortal bodies (in our immortal souls) that we should obey it in the lusts thereof. But being made free from sin, let us become the servants of righteousness. Let the law of the Spirit of life, which is in Christ Jesus, make us free from the law of sin and death. Give us grace to put off the old man, which is corrupt according to the deceitful lusts, that we may put on the new man, which after God is created in righteousness and true holiness.",
+      "closing": "Now unto him that is able to keep us from falling, and to present us faultless before the presence of his glory with exceeding joy, to the only wise God our Saviour, be glory and majesty, dominion and power, now and ever. Amen.",
       "author": "Matthew Henry",
-      "source": "A Method for Prayer, ch. 3"
+      "source": "arranged from A Method for Prayer, chs. 1, 3 and 7"
     }
   ],
   "examinationQuestions": [

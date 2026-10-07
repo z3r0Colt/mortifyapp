@@ -102,31 +102,41 @@
     {
       "for": "fall",
       "title": "A prayer of confession",
-      "text": "Generous Father, every good and perfect gift comes from you, and you give to each one as you will. I come in the name of your Son. I confess that I have envied. I have looked at the gifts, the success, and the blessings you have given others, and I have resented them. I have been secretly glad at their trouble and sorry at their joy. In my heart I have accused you of being unfair, as if you owed me what you freely gave to them. Envy has made me blind to my own mercies and cold toward my neighbor. It is rebellion against your wise providence, and it is rottenness to the bones. Forgive me, Lord. Christ, who had everything, made himself poor for my sake, so that by his poverty I might become rich. In him you have given me every spiritual blessing, and you have given me yourself. For his sake pardon my envy. Holy Spirit, put it to death, and teach me to rejoice with those who rejoice. Make me content with your portion for me, and glad of your goodness to others. I thank you that you are my portion forever. In Jesus' name. Amen."
+      "opening": "Generous Father, every good and perfect gift comes from you, and you give to each one as you will; I adore your wisdom and your kindness, and I come in the name of your Son.",
+      "text": "I confess that I have envied. I have looked at the gifts, the success, and the blessings you have given others, and I have resented them. I have been secretly glad at their trouble and sorry at their joy. In my heart I have accused you of being unfair, as if you owed me what you freely gave to them. Envy has made me blind to my own mercies and cold toward my neighbor. It is rebellion against your wise providence, and it is rottenness to the bones. Forgive me, Lord. Christ, who had everything, made himself poor for my sake, so that by his poverty I might become rich. In him you have given me every spiritual blessing, and you have given me yourself. For his sake pardon my envy. Holy Spirit, put it to death, and teach me to rejoice with those who rejoice. Make me content with your portion for me, and glad of your goodness to others.",
+      "closing": "I thank you that you are my portion for ever. To you, Father, Son, and Holy Spirit, be glory in the church throughout all ages. Amen."
     },
     {
       "for": "flee",
       "title": "When envy stirs",
-      "text": "Lord, I see what another has, and something sour is rising in me. I confess it to you now, before it grows. You are good, and you do me no wrong when you are generous to someone else. Turn my eyes from their portion to mine, for you have given me Christ, and with him all things. Help me to thank you for their blessing and to ask for their good, even now. Holy Spirit, root out this envy, and give me a heart that is glad at my neighbor's joy. Amen."
+      "opening": "O Lord, you are good to all, and your tender mercies are over all your works.",
+      "text": "Lord, I see what another has, and something sour is rising in me. I confess it to you now, before it grows. You are good, and you do me no wrong when you are generous to someone else. Turn my eyes from their portion to mine, for you have given me Christ, and with him all things. Help me to thank you for their blessing and to ask for their good, even now. Holy Spirit, root out this envy, and give me a heart that is glad at my neighbor's joy.",
+      "closing": "Blessed be your name, for in Christ you have given me all things. Amen."
     },
     {
       "for": "flee",
       "title": "For a glad heart toward others",
-      "text": "Father, love does not envy. Fill me with that love. Teach me to see the gifts you give others as gifts to your whole church, and to delight in them. Free me from comparing myself with others, and from measuring my worth by what I have or what I do. Let my worth rest in this, that I am your child through Christ. Give me joy in serving where you have placed me, without needing to be first or seen. Make me quick to praise and slow to compete, so that the good of others makes me thankful and not bitter. For Christ's sake. Amen."
+      "opening": "Father of love, you have loved me with an everlasting love, and love does not envy.",
+      "text": "Fill me with that love. Teach me to see the gifts you give others as gifts to your whole church, and to delight in them. Free me from comparing myself with others, and from measuring my worth by what I have or what I do. Let my worth rest in this, that I am your child through Christ. Give me joy in serving where you have placed me, without needing to be first or seen. Make me quick to praise and slow to compete, so that the good of others makes me thankful and not bitter.",
+      "closing": "For Christ's sake, in whom I am your beloved child, to whom be glory for ever. Amen."
     },
     {
       "for": "fall",
       "title": "Confessing envy and uncharitableness",
+      "opening": "Thou art the Father of lights, with whom is no variableness or shadow of turning, and from whom proceedeth every good and perfect gift.",
       "text": "Contrary to the royal law of charity, we have vaunted ourselves, and been puffed up, have behaved ourselves unseemly, and sought our own, have been easily provoked, have rejoiced in iniquity, and been secretly glad at calamities. We have been desirous of vain-glory, provoking one another, envying one another; when we should have considered one another to provoke to love and to good works.",
+      "closing": "To God be glory in the church by Christ Jesus, throughout all ages, world without end. Amen.",
       "author": "Matthew Henry",
-      "source": "A Method for Prayer, ch. 2"
+      "source": "arranged from A Method for Prayer, chs. 1, 2 and 7"
     },
     {
       "for": "flee",
       "title": "That envy may be put to death in us",
+      "opening": "Thou hast appointed us a great High Priest, in whose name we may come boldly to the throne of grace, that we may find mercy and grace to help in time of need.",
       "text": "Mortify in us all envy, hatred, malice, and uncharitableness; pluck up these roots of bitterness out of our minds, and give us grace to love one another with a pure heart fervently, as becomes the followers of the Lord Jesus, who has given us this as his new commandment. O that brotherly love may continue among us, love without dissimulation.",
+      "closing": "To God be glory in the church by Christ Jesus, throughout all ages, world without end. Amen.",
       "author": "Matthew Henry",
-      "source": "A Method for Prayer, ch. 9"
+      "source": "arranged from A Method for Prayer, chs. 1, 9 and 7"
     }
   ],
   "examinationQuestions": [

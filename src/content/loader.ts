@@ -46,7 +46,11 @@ export const prayerSchema = z
   .object({
     for: z.enum(["fall", "flee"]),
     title: z.string().min(1),
+    /** Words of adoration that open the prayer. */
+    opening: z.string().min(1).optional(),
     text: z.string().min(1),
+    /** Thanks and praise that close the prayer, ending with Amen. */
+    closing: z.string().min(1).optional(),
     author: z.string().min(1).optional(),
     source: z.string().min(1).optional(),
   })

@@ -95,9 +95,18 @@ describe("prayers", () => {
   it("the original prayers speak to sisters as well as brothers", () => {
     for (const p of packs)
       for (const x of p.prayers.filter((x) => !x.author))
-        expect(x.text, `${p.id}: ${x.title}`).not.toMatch(
-          /\b(brethren|a brother)\b/i,
-        );
+        expect(
+          [x.opening, x.text, x.closing].join(" "),
+          `${p.id}: ${x.title}`,
+        ).not.toMatch(/\b(brethren|a brother)\b/i);
+  });
+  it("every prayer opens in adoration and closes with Amen", () => {
+    for (const p of packs)
+      for (const x of p.prayers) {
+        expect(x.opening, `${p.id}: ${x.title}`).toBeTruthy();
+        expect(x.closing, `${p.id}: ${x.title}`).toMatch(/Amen\.$/);
+        expect(x.text, `${p.id}: ${x.title}`).not.toMatch(/Amen\.$/);
+      }
   });
 });
 describe("sermon links", () => {

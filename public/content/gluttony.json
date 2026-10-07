@@ -97,24 +97,32 @@
     {
       "for": "fall",
       "title": "A prayer of confession",
-      "text": "Bountiful Father, every good thing I eat comes from your hand, and you give food in due season to all that live. I come through Jesus Christ. I confess that I have sinned in eating. I have eaten far beyond need, without thanks, and without thought of your glory. I have run to food for comfort, escape, and reward, as if it could fill the place in my heart that belongs to you. I have made my belly a god, and I have let appetite rule where your Spirit should rule. I do not want only to be free of what it does to my body; teach me to hate it because it has made a gift into an idol. Forgive me, Lord. Christ, hungry in the wilderness, would not turn stones into bread, but lived by every word that comes from your mouth. He is the bread of life, and whoever comes to him shall not hunger. For his sake pardon me. Holy Spirit, put this gluttony to death, and grow in me the fruit of self-control. Teach me to eat and drink to your glory, with thanks and with enough. I thank you that you satisfy the longing soul and fill the hungry soul with good things. In Jesus' name. Amen."
+      "opening": "Bountiful Father, every good thing I eat comes from your hand, and you open your hand and satisfy the desire of every living thing; I bless you that I may come to you through Jesus Christ, the bread of life.",
+      "text": "I confess that I have sinned in eating. I have eaten far beyond need, without thanks, and without thought of your glory. I have run to food for comfort, escape, and reward, as if it could fill the place in my heart that belongs to you. I have made my belly a god, and I have let appetite rule where your Spirit should rule. I do not want only to be free of what it does to my body; teach me to hate it because it has made a gift into an idol. Forgive me, Lord. Christ, hungry in the wilderness, would not turn stones into bread, but lived by every word that comes from your mouth. He is the bread of life, and whoever comes to him shall not hunger. For his sake pardon me. Holy Spirit, put this gluttony to death, and grow in me the fruit of self-control. Teach me to eat and drink to your glory, with thanks and with enough.",
+      "closing": "I thank you that you satisfy the longing soul and fill the hungry soul with good things. Blessed be your name, Father, Son, and Holy Spirit, for ever. Amen."
     },
     {
       "for": "flee",
       "title": "When I want more",
-      "text": "Lord, I have had enough, and still I want more. Stop me here. Remind me that man does not live by bread alone. Whatever I am really hungry for right now, whether comfort, rest, or company, let me bring it to you instead. You are the bread of life. Help me put the food away, give thanks for what I have eaten, and turn to the next thing you have for me. Lord Jesus, you were hungry and did not give way. Holy Spirit, give me self-control. Amen."
+      "opening": "O Lord, your steadfast love is better than life, and in you my soul is satisfied.",
+      "text": "Lord, I have had enough, and still I want more. Stop me here. Remind me that man does not live by bread alone. Whatever I am really hungry for right now, whether comfort, rest, or company, let me bring it to you instead. You are the bread of life. Help me put the food away, give thanks for what I have eaten, and turn to the next thing you have for me. Lord Jesus, you were hungry and did not give way. Holy Spirit, give me self-control.",
+      "closing": "Blessed be your name, Lord Jesus, bread of life. Amen."
     },
     {
       "for": "flee",
       "title": "For a thankful table",
-      "text": "Father, teach me to receive food as your gift, with thanks, and to stop when I have had enough. Make my meals times of gratitude and fellowship rather than escape. Help me care for this body as your temple, neither despising it nor indulging it. If my eating has gone beyond my control, give me humility to seek help. Satisfy me with yourself, so that I do not look to food for what only you can give. Whether I eat or drink, or whatever I do, let me do it all to your glory. Through Jesus Christ. Amen."
+      "opening": "Faithful Provider, the eyes of all look to you, and you give them their food in due season.",
+      "text": "Father, teach me to receive food as your gift, with thanks, and to stop when I have had enough. Make my meals times of gratitude and fellowship rather than escape. Help me care for this body as your temple, neither despising it nor indulging it. If my eating has gone beyond my control, give me humility to seek help. Satisfy me with yourself, so that I do not look to food for what only you can give. Whether I eat or drink, or whatever I do, let me do it all to your glory.",
+      "closing": "Through Jesus Christ, who feeds my soul, to whom be thanks for ever. Amen."
     },
     {
       "for": "flee",
       "title": "That we may not make a god of our belly",
+      "opening": "Thy loving-kindness is better than life; our souls shall be satisfied with that as with marrow and fatness, and then our mouths shall praise thee with joyful lips.",
       "text": "We know that every thing is sanctified by the word of God and prayer; and that man lives not by bread alone, but by every word that proceedeth out of the mouth of God; and therefore, according to our Master's example, we look up to heaven, and pray for a blessing upon our food, abundantly bless our provision. Lord, grant that we may not feed ourselves without fear, that we may not make a god of our belly, that our hearts may never be overcharged with surfeiting or drunkenness, but that whether we eat or drink, or whatever we do, we may do all to the glory of God.",
+      "closing": "Now unto him that is able to keep us from falling, and to present us faultless before the presence of his glory with exceeding joy, to the only wise God our Saviour, be glory and majesty, dominion and power, now and ever. Amen.",
       "author": "Matthew Henry",
-      "source": "A Method for Prayer, ch. 6"
+      "source": "arranged from A Method for Prayer, chs. 1, 6 and 7"
     }
   ],
   "examinationQuestions": [

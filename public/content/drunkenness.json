@@ -102,24 +102,32 @@
     {
       "for": "fall",
       "title": "A prayer of confession",
-      "text": "Holy and merciful Father, you made my body for yourself, and you call me to present it to you as a living sacrifice. I come only through Jesus Christ. I confess that I have given myself to drink and drugs. I have been mastered by what you never meant to rule me. I have run to the bottle, the pills, or the high for the comfort, courage, and rest that only you can give. I have lied to hide it, spent what was not mine to waste, hurt those who love me, and dulled the mind you gave me to know you. I have made a god of my own relief. I do not want only to be free of its shame and its cost; teach me to hate it because it has turned me from you, the fountain of living waters. Have mercy on me, Lord. Christ drank the cup of your wrath to the dregs, so that I might lift up the cup of salvation. He came to set captives free, and if the Son sets me free, I will be free indeed. For his sake forgive me. Holy Spirit, break this bondage and fill me with yourself. Give me humility to seek help from my pastor, from believers who will walk with me, and from those who can care for my body. I thank you that some of your people were once like this, and they were washed. In Jesus' name. Amen."
+      "opening": "Holy and merciful Father, fountain of living waters, you made my body for yourself and you call me to present it to you as a living sacrifice; I bless you that I may come to you through Jesus Christ.",
+      "text": "I confess that I have given myself to drink and drugs. I have been mastered by what you never meant to rule me. I have run to the bottle, the pills, or the high for the comfort, courage, and rest that only you can give. I have lied to hide it, spent what was not mine to waste, hurt those who love me, and dulled the mind you gave me to know you. I have made a god of my own relief. I do not want only to be free of its shame and its cost; teach me to hate it because it has turned me from you, the fountain of living waters. Have mercy on me, Lord. Christ drank the cup of your wrath to the dregs, so that I might lift up the cup of salvation. He came to set captives free, and if the Son sets me free, I will be free indeed. For his sake forgive me. Holy Spirit, break this bondage and fill me with yourself. Give me humility to seek help from my pastor, from believers who will walk with me, and from those who can care for my body.",
+      "closing": "I thank you that some of your people were once like this, and they were washed, sanctified, and justified in the name of the Lord Jesus. To you be glory for ever and ever. Amen."
     },
     {
       "for": "flee",
       "title": "When the craving comes",
-      "text": "Lord, the craving is strong, and I know exactly where I want to turn. Turn me to you instead. Do not let me take the first step toward it, not even in my mind. You are the fountain of living waters; do not let me go back to broken cisterns that hold no water. You have promised that no temptation has overtaken me that is not common to man, and that you will provide the way of escape. Show it to me now, and give me strength to take it. Let someone answer when I call. Lord Jesus, you were tempted in the wilderness and did not give way; stand with me in this hour. Amen."
+      "opening": "O God, you are my God; my soul thirsts for you, and you alone can satisfy me.",
+      "text": "Lord, the craving is strong, and I know exactly where I want to turn. Turn me to you instead. Do not let me take the first step toward it, not even in my mind. You are the fountain of living waters; do not let me go back to broken cisterns that hold no water. You have promised that no temptation has overtaken me that is not common to man, and that you will provide the way of escape. Show it to me now, and give me strength to take it. Let someone answer when I call. Lord Jesus, you were tempted in the wilderness and did not give way; stand with me in this hour.",
+      "closing": "You are able to keep me from falling; to you be glory now and for ever. Amen."
     },
     {
       "for": "flee",
       "title": "For freedom",
-      "text": "Father, I am weak, but your power is made perfect in weakness. Free me from this bondage. Teach me to hate the sin and not only its consequences. Show me the people, places, money, and moods that lead me back, and give me courage to cut them off. Make me honest with my pastor and with those who walk with me, and humble enough to accept help for my body as well as my soul. When I stumble, keep me from despair, and raise me up again in Christ. Let me be filled with the Spirit and not with wine, and let my joy be in you. Through Jesus Christ. Amen."
+      "opening": "Mighty Redeemer, you came to set captives free, and your steadfast love is better than life.",
+      "text": "Father, I am weak, but your power is made perfect in weakness. Free me from this bondage. Teach me to hate the sin and not only its consequences. Show me the people, places, money, and moods that lead me back, and give me courage to cut them off. Make me honest with my pastor and with those who walk with me, and humble enough to accept help for my body as well as my soul. When I stumble, keep me from despair, and raise me up again in Christ. Let me be filled with the Spirit and not with wine, and let my joy be in you.",
+      "closing": "Through Jesus Christ, who makes me free indeed, to whom be all glory. Amen."
     },
     {
       "for": "flee",
       "title": "To live soberly in this present world",
+      "opening": "As the hart panteth after the water-brooks, so panteth our soul after thee, O God; our soul thirsteth for God, for the living God.",
       "text": "Let the grace of God, which hath appeared to us, and to all men, bringing salvation, effectually teach us to deny all ungodliness and worldly fleshly lusts, and to live soberly, righteously, and godly in this present world, looking for the blessed hope, and the glorious appearing of the great God and our Saviour Jesus Christ, who gave himself for us, that he might redeem us from all iniquity, and purify unto himself a peculiar people zealous of good works.",
+      "closing": "Now unto him that is able to keep us from falling, and to present us faultless before the presence of his glory with exceeding joy, to the only wise God our Saviour, be glory and majesty, dominion and power, now and ever. Amen.",
       "author": "Matthew Henry",
-      "source": "A Method for Prayer, ch. 3"
+      "source": "arranged from A Method for Prayer, chs. 1, 3 and 7"
     }
   ],
   "examinationQuestions": [
