@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { randomItem } from "../content/selection";
 import { Page } from "../components/Page";
 import { useBattlePacks } from "../content/selection";
 import { journalsSince } from "../data/remote";
@@ -10,7 +11,16 @@ import { ContentReading } from "../components/ContentReading";
 export default function PatternsScreen() {
   const [patterns, setPatterns] = useState<ReturnType<typeof weeklyPatterns>>();
   const [error, setError] = useState("");
-  const pack = useBattlePacks()[0];
+  const packs = useBattlePacks();
+  // A different word each visit, from any of the user's battles.
+  const [word] = useState(() => {
+    if (!packs.length) return null;
+    const pack = randomItem(packs);
+    return {
+      verse: randomItem(pack.verses),
+      counsel: randomItem(pack.counsel),
+    };
+  });
   const user = useAuth((s) => s.user);
   useEffect(() => {
     if (!user) return;
@@ -80,13 +90,13 @@ export default function PatternsScreen() {
           Reading examinations…
         </p>
       )}
-      {pack && (
+      {word && (
         <>
           <article className="card">
-            <Scripture reference={pack.verses[0]} />
+            <Scripture reference={word.verse} />
           </article>
           <article className="card">
-            <ContentReading reading={pack.counsel[0]} />
+            <ContentReading reading={word.counsel} />
           </article>
         </>
       )}

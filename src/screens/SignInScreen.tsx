@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { Page } from "../components/Page";
 import { Action } from "../components/Action";
+import { ActionForm } from "../components/ActionForm";
 import { Icon } from "../components/Icon";
 import { OnboardingBar } from "../components/Steps";
 import { cloud, result, supabase } from "../brethren/client";
@@ -37,14 +38,6 @@ export default function SignInScreen() {
     );
     setSent(true);
   };
-  const submit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    (
-      e.currentTarget.querySelector(
-        "button.primary",
-      ) as HTMLButtonElement | null
-    )?.click();
-  };
   return (
     <Page
       bare
@@ -52,7 +45,7 @@ export default function SignInScreen() {
       lede={
         sent
           ? `We sent a code to ${email.trim()}. Type it here to continue.`
-          : "Your account keeps your battles, times and journal safe if you change phones. Your journal is encrypted with a PIN you choose next, so only you can read it."
+          : "Your account keeps your battles, times and journal safe if you change phones. Your journal is encrypted with a PIN you will choose, so only you can read it."
       }
       bar={<OnboardingBar step={1} />}
     >
@@ -61,7 +54,7 @@ export default function SignInScreen() {
           Mortify cannot reach its server right now. Please try again later.
         </p>
       ) : sent ? (
-        <form className="card fade" onSubmit={submit}>
+        <ActionForm className="card fade">
           <label style={{ marginTop: 0 }}>
             Code from the email
             <input
@@ -107,9 +100,9 @@ export default function SignInScreen() {
               Use a different email
             </button>
           </div>
-        </form>
+        </ActionForm>
       ) : (
-        <form className="card" onSubmit={submit}>
+        <ActionForm className="card">
           <label style={{ marginTop: 0 }}>
             Email
             <input
@@ -129,7 +122,7 @@ export default function SignInScreen() {
             <Icon name="mail" size={16} />
             New here or returning, this same step signs you in.
           </p>
-        </form>
+        </ActionForm>
       )}
     </Page>
   );

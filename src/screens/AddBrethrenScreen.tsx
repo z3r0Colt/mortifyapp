@@ -12,7 +12,7 @@ export default function AddBrethrenScreen() {
     "id" | "display_name" | "sex" | "church_name"
   > | null>(null);
   const [sent, setSent] = useState(false);
-  const { profile, peers } = useBrethren();
+  const { profile, peers, load } = useBrethren();
   return (
     <Page
       title="Add by private code"
@@ -66,7 +66,8 @@ export default function AddBrethrenScreen() {
           </div>
           {sent ? (
             <p role="status">
-              Request sent. Your link will begin when it is accepted.
+              Request sent. It shows as waiting in your circle until{" "}
+              {found.display_name} accepts.
             </p>
           ) : (
             <Action
@@ -74,6 +75,7 @@ export default function AddBrethrenScreen() {
               run={async () => {
                 await result(cloud().rpc("request_link", { p_code: code }));
                 setSent(true);
+                await load();
               }}
             >
               Confirm and send request

@@ -1,12 +1,18 @@
 import { create } from "zustand";
 import { cloud, result } from "../brethren/client";
 import { useAuth } from "./auth";
-import type { Profile, Sharing, LinkRequest } from "../brethren/types";
+import type {
+  Profile,
+  Sharing,
+  LinkRequest,
+  SentRequest,
+} from "../brethren/types";
 import { db } from "../data/db";
 type State = {
   profile: Profile | null;
   peers: Profile[];
   requests: LinkRequest[];
+  sent: SentRequest[];
   sharing: Sharing | null;
   loaded: boolean;
   error: string;
@@ -17,6 +23,7 @@ export const useBrethren = create<State>((set) => ({
   profile: null,
   peers: [],
   requests: [],
+  sent: [],
   sharing: null,
   loaded: false,
   error: "",
@@ -25,6 +32,7 @@ export const useBrethren = create<State>((set) => ({
       profile: null,
       peers: [],
       requests: [],
+      sent: [],
       sharing: null,
       loaded: false,
       error: "",
@@ -36,6 +44,7 @@ export const useBrethren = create<State>((set) => ({
         profile: null,
         peers: [],
         requests: [],
+        sent: [],
         sharing: null,
         loaded: true,
       });
@@ -50,13 +59,14 @@ export const useBrethren = create<State>((set) => ({
           profile: null,
           peers: [],
           requests: [],
+          sent: [],
           sharing: null,
           loaded: true,
           error: "",
         });
         return;
       }
-      const [peers, requests, sharing] = await Promise.all([
+      const [peers, requests, sharing, sent] = await Promise.all([
         result(
           cloud()
             .from("profiles")
@@ -72,6 +82,9 @@ export const useBrethren = create<State>((set) => ({
             .eq("user_id", user.id)
             .single(),
         ),
+        // Requests this user sent. Kept apart so the circle still opens
+        // before the server has this function.
+        result(cloud().rpc("sent_requests")).catch(() => []),
       ]);
       if (useAuth.getState().user?.id === user.id)
         await db.cloudKv.put({
@@ -83,6 +96,7 @@ export const useBrethren = create<State>((set) => ({
           profile,
           peers: peers as Profile[],
           requests: requests as LinkRequest[],
+          sent: sent as SentRequest[],
           sharing: sharing as Sharing,
           loaded: true,
           error: "",

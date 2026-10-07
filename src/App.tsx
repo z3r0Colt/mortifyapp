@@ -60,6 +60,7 @@ import WelcomeScreen from "./screens/WelcomeScreen";
 import JournalScreen from "./screens/JournalScreen";
 import AboutScreen from "./screens/AboutScreen";
 import BibleScreen from "./screens/BibleScreen";
+import { clearDrafts } from "./state/drafts";
 function Router() {
   const { value, loaded, error } = usePreferences();
   const app = useApp();
@@ -100,6 +101,7 @@ function Router() {
   }, [loaded, authReady, user?.id, brethrenLoaded]);
   useEffect(() => {
     useBrethren.getState().clear();
+    clearDrafts();
     if (user) {
       void useBrethren.getState().load();
       const stopOutbox = watchOutbox();
@@ -177,7 +179,12 @@ function Router() {
     ].includes(location.pathname)
   )
     return <Navigate to="/onboarding/welcome" replace />;
-  if (user && value.onboarded && !privacy.key) return <PinScreen />;
+  // Flee holds nothing private, so it opens without the PIN: the hour of
+  // temptation is no time to type one. It stays in the same place in the
+  // tree, so locking part-way through does not send the user back to the
+  // start. Everything else waits for the PIN.
+  if (user && value.onboarded && !privacy.key && location.pathname !== "/flee")
+    return <PinScreen />;
   if (privacy.recoveryCode) return <RecoveryCodeScreen />;
   // Accounts made before the question was asked answer it once. Never in the
   // hour of temptation, and never offline, where the answer cannot be saved.

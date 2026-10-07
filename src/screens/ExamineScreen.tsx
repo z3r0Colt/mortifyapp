@@ -14,15 +14,20 @@ import { Scripture } from "../components/Scripture";
 import { ContentReading } from "../components/ContentReading";
 import { ChapterReading } from "../components/ChapterReading";
 import { useEveningReading, useQuestionSet } from "../content/useDaily";
+import { useDraft } from "../state/drafts";
 export default function ExamineScreen() {
   const packs = useBattlePacks();
-  const [battle, setBattle] = useState(packs[0]?.id ?? "");
+  // Held as a draft so a lock part-way through does not lose the writing.
+  const [draft, setDraft, clearDraft] = useDraft("examine", {
+    battle: packs[0]?.id ?? "",
+    roots: [] as string[],
+    occasions: [] as string[],
+    text: "",
+  });
+  const { battle, roots, occasions, text } = draft;
   const pack = packs.find((p) => p.id === battle);
   const reading = useEveningReading();
   const questions = useQuestionSet(pack);
-  const [roots, setRoots] = useState<string[]>([]);
-  const [occasions, setOccasions] = useState<string[]>([]);
-  const [text, setText] = useState("");
   const [saved, setSaved] = useState<"saved" | "waiting" | null>(null);
   if (!pack)
     return (
@@ -56,9 +61,21 @@ export default function ExamineScreen() {
         <>
           {reading && (
             <>
+              {/* The readings come first, but someone who has read them
+                  can go straight to the questions and the writing. */}
+              <button
+                className="quiet"
+                onClick={() =>
+                  document
+                    .getElementById("tonight")
+                    ?.scrollIntoView({ block: "start" })
+                }
+              >
+                Go to tonight's questions
+              </button>
               <div className="card">
                 <h2 className="section-title">An evening psalm</h2>
-                <ChapterReading reference={reading.psalm} />
+                <ChapterReading reference={reading.psalm} preview={4} />
               </div>
               <div className="card">
                 <Scripture reference={reading.verse} />
@@ -69,11 +86,11 @@ export default function ExamineScreen() {
             </>
           )}
           {packs.length > 1 && (
-            <label>
+            <label id="tonight">
               Battle
               <select
                 value={battle}
-                onChange={(e) => setBattle(e.target.value)}
+                onChange={(e) => setDraft({ battle: e.target.value })}
               >
                 {packs.map((p) => (
                   <option value={p.id} key={p.id}>
@@ -83,7 +100,10 @@ export default function ExamineScreen() {
               </select>
             </label>
           )}
-          <article className="card">
+          <article
+            className="card"
+            id={packs.length > 1 ? undefined : "tonight"}
+          >
             <h2 className="section-title">Questions for tonight</h2>
             <ol className="numbered">
               {questions.map((q, i) => (
@@ -95,19 +115,19 @@ export default function ExamineScreen() {
             title="Heart roots"
             options={heartRoots}
             value={roots}
-            onChange={setRoots}
+            onChange={(roots) => setDraft({ roots })}
           />
           <Tags
             title="Occasions of sin"
             options={occasionTags}
             value={occasions}
-            onChange={setOccasions}
+            onChange={(occasions) => setDraft({ occasions })}
           />
           <label>
             Private examination
             <textarea
               value={text}
-              onChange={(e) => setText(e.target.value)}
+              onChange={(e) => setDraft({ text: e.target.value })}
               maxLength={20000}
             />
           </label>
@@ -130,6 +150,7 @@ export default function ExamineScreen() {
                     body: await encryptText(journalKey(), text),
                   },
                 });
+                clearDraft();
                 setSaved(uploaded ? "saved" : "waiting");
               }}
             >

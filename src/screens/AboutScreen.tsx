@@ -89,7 +89,8 @@ export default function AboutScreen() {
           </li>
           <li>
             <Icon name="check" size={18} />
-            Settings › Account › Delete my account removes all of it for good.
+            Settings › Account and data › Delete my account removes all of it
+            for good.
           </li>
         </ul>
         <a

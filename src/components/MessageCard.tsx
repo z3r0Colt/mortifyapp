@@ -30,6 +30,9 @@ export function MessageCard({
     (s) => s.packs.find((p) => p.id === message.battle_id)?.name,
   );
   const replies = rows.filter((r) => r.parent_message_id === message.id);
+  const praying = replies.some(
+    (r) => r.message_type === "praying" && r.sender_id === user?.id,
+  );
   const requestIds = new Set(
     rows
       .filter(
@@ -108,7 +111,10 @@ export function MessageCard({
         </p>
       )}
       <div className="message-actions">
-        {message.message_type === "pray_for_me" && !outgoing && (
+        {message.message_type === "pray_for_me" && !outgoing && praying && (
+          <span className="label">You are praying for this</span>
+        )}
+        {message.message_type === "pray_for_me" && !outgoing && !praying && (
           <Action
             className="primary"
             run={async () => {

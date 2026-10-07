@@ -17,6 +17,7 @@ import { usePreferences } from "./state/preferences";
 import { useApp } from "./state/app";
 import { codeCheckDue, usePrivacy } from "./state/privacy";
 import { useAuth } from "./state/auth";
+import { useBrethren } from "./state/brethren";
 import { decryptText, encryptText, type CipherText } from "./privacy/crypto";
 import type { User } from "@supabase/supabase-js";
 
@@ -150,7 +151,7 @@ test("first launch cannot skip trust/battle choices", async () => {
   signedIn();
   window.history.replaceState({}, "", "/onboarding/times");
   render(<App />);
-  fireEvent.click(await screen.findByRole("button", { name: "Begin" }));
+  fireEvent.click(await screen.findByRole("button", { name: "Continue" }));
   await screen.findByRole("heading", {
     name: "Are you trusting in Christ alone?",
   });
@@ -163,7 +164,7 @@ test.each(["no", "unsure"] as const)(
     signedIn({ trust, battles: ["lust"] });
     window.history.replaceState({}, "", "/onboarding/times");
     render(<App />);
-    fireEvent.click(await screen.findByRole("button", { name: "Begin" }));
+    fireEvent.click(await screen.findByRole("button", { name: "Continue" }));
     await screen.findByRole("heading", { name: "Keep your journal private" });
     expect(savedPrefs()?.onboarded).toBe(true);
   },
@@ -337,19 +338,87 @@ test("the PIN box is not a password field, so password managers leave it alone",
   expect(pin.getAttribute("data-1p-ignore")).not.toBeNull();
 });
 
-test("with several battles, Flee asks which temptation before the steps", async () => {
+test("Flee opens without the PIN and asks which temptation before the steps", async () => {
   signedIn({ onboarded: true, trust: "yes", battles: ["lust", "pride"] });
   await usePrivacy.getState().setup("123456");
+  usePrivacy.setState({ key: null, recoveryCode: null });
   window.history.replaceState({}, "", "/flee");
   render(<App />);
-  fireEvent.change(await screen.findByLabelText("PIN"), {
-    target: { value: "123456" },
-  });
-  fireEvent.click(screen.getByRole("button", { name: "Open Mortify" }));
   await screen.findByRole("heading", { name: "What are you fleeing?" });
+  expect(screen.queryByLabelText("PIN")).toBeNull();
   fireEvent.click(screen.getByRole("button", { name: "Pride" }));
   await screen.findByRole("heading", { name: "Attend to the Word" });
-  expect(screen.getByText("Pride")).toBeTruthy();
+  // The battle is not printed over every step for anyone glancing at the phone.
+  expect(screen.queryByText("Pride")).toBeNull();
+  expect(usePrivacy.getState().key).toBeNull();
+});
+
+test("the PIN screen offers Flee", async () => {
+  signedIn({ onboarded: true, trust: "yes", battles: ["lust"] });
+  await usePrivacy.getState().setup("123456");
+  usePrivacy.setState({ key: null, recoveryCode: null });
+  render(<App />);
+  await screen.findByLabelText("PIN");
+  fireEvent.click(screen.getByRole("link", { name: /Flee/ }));
+  await screen.findByRole("heading", { name: "Attend to the Word" });
+});
+
+test("with no brethren linked, Flee does not hold the user at the prayer step", async () => {
+  signedIn({ onboarded: true, trust: "yes", battles: ["lust"] });
+  window.history.replaceState({}, "", "/flee");
+  render(<App />);
+  await screen.findByRole("heading", { name: "Attend to the Word" });
+  for (let i = 0; i < 3; i++)
+    fireEvent.click(screen.getByRole("button", { name: "Continue" }));
+  await screen.findByRole("heading", { name: "Ask your brethren to pray" });
+  act(() =>
+    useBrethren.setState({ loaded: true, error: "", profile: null, peers: [] }),
+  );
+  expect(screen.getByText(/no brethren linked in Mortify yet/)).toBeTruthy();
+  const next = screen.getByRole("button", { name: "Continue" });
+  expect((next as HTMLButtonElement).disabled).toBe(false);
+  fireEvent.click(next);
+  await screen.findByRole("heading", { name: "Now get up and go." });
+  expect(
+    screen.getByRole("heading", { name: "Did you stand firm?" }),
+  ).toBeTruthy();
+  fireEvent.click(screen.getByRole("button", { name: "Not yet" }));
+  await screen.findByRole("heading", { name: "Keep fleeing" });
+  expect(account.rows.flee_logs).toHaveLength(1);
+  fireEvent.click(screen.getByRole("button", { name: "Turn to prayer again" }));
+  await screen.findByRole("heading", { name: "Turn to prayer" });
+});
+
+test("Enter on the second PIN box sets the PIN", async () => {
+  signedIn({ onboarded: true, trust: "yes", battles: ["lust"] });
+  render(<App />);
+  await screen.findByRole("heading", { name: "Keep your journal private" });
+  fireEvent.change(screen.getByLabelText("PIN"), {
+    target: { value: "123456" },
+  });
+  const confirm = screen.getByLabelText("Confirm PIN");
+  fireEvent.change(confirm, { target: { value: "123456" } });
+  fireEvent.keyDown(confirm, { key: "Enter" });
+  await screen.findByRole("heading", { name: "Your recovery code" });
+});
+
+test("a lock part-way through an examination keeps the writing", async () => {
+  signedIn({ onboarded: true, trust: "yes", battles: ["lust"] });
+  await usePrivacy.getState().setup("123456");
+  window.history.replaceState({}, "", "/examine");
+  render(<App />);
+  const open = async () => {
+    fireEvent.change(await screen.findByLabelText("PIN"), {
+      target: { value: "123456" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Open Mortify" }));
+    return (await screen.findByLabelText(
+      "Private examination",
+    )) as HTMLTextAreaElement;
+  };
+  fireEvent.change(await open(), { target: { value: "Words not yet saved" } });
+  act(() => usePrivacy.getState().lock());
+  expect((await open()).value).toBe("Words not yet saved");
 });
 
 test("a short trip away does not lock, but a long one does", async () => {

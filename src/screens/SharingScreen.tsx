@@ -4,25 +4,7 @@ import { Action } from "../components/Action";
 import { ListGroup, ListLink, SwitchRow } from "../components/List";
 import { useBrethren } from "../state/brethren";
 import { cloud, result } from "../brethren/client";
-import type { Sharing } from "../brethren/types";
-const choices: [keyof Omit<Sharing, "user_id">, string, string][] = [
-  ["share_battles", "Battles", "The names of the battles you have chosen."],
-  [
-    "share_temptations",
-    "Temptations",
-    "When you ask for help in temptation and when you stood firm.",
-  ],
-  [
-    "share_falls",
-    "Falls",
-    "A plain note that you fell and confessed, with no private detail.",
-  ],
-  [
-    "share_blocker_status",
-    "Protection status",
-    "Whether your phone’s protection is on or off.",
-  ],
-];
+import { sharingChoices } from "../brethren/sharing";
 export default function SharingScreen() {
   const { sharing, load, profile } = useBrethren();
   const [name, setName] = useState(profile?.display_name ?? "");
@@ -108,7 +90,7 @@ export default function SharingScreen() {
       </article>
       {sharing && (
         <ListGroup title={`What my ${circle} see`}>
-          {choices.map(([key, title, description]) => (
+          {sharingChoices.map(([key, title, description]) => (
             <SwitchRow
               key={key}
               label={title}

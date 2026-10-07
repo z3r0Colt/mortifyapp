@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mark, Page } from "../components/Page";
+import { OnboardingBar } from "../components/Steps";
 import { Icon } from "../components/Icon";
 import { usePrivacy } from "../state/privacy";
 import { useAuth } from "../state/auth";
@@ -23,7 +24,9 @@ export default function RecoveryCodeScreen() {
       bare
       title="Your recovery code"
       lede="You need this code to open your journal on a new phone, or if you ever forget your PIN. Mortify cannot recover it for you."
-      bar={<Mark large />}
+      bar={
+        recoveryReason === "setup" ? <OnboardingBar step={7} /> : <Mark large />
+      }
     >
       <article className="card accent code-card">
         <p className="eyebrow">Write this down</p>

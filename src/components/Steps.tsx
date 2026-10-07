@@ -17,11 +17,13 @@ export function Steps({ step, count }: { step: number; count: number }) {
     </div>
   );
 }
+// From the gospel to reminders: gospel, account, brother or sister, trust,
+// battles, times, PIN, recovery code, reminders.
 export function OnboardingBar({ step }: { step: number }) {
   return (
     <>
       <Brand />
-      <Steps step={step} count={6} />
+      <Steps step={step} count={9} />
     </>
   );
 }

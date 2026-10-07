@@ -1,18 +1,15 @@
-import { useState, type FormEvent } from "react";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Mark, Page } from "../components/Page";
 import { Action } from "../components/Action";
+import { ActionForm } from "../components/ActionForm";
 import { Icon } from "../components/Icon";
 import { PinInput } from "../components/PinInput";
+import { OnboardingBar } from "../components/Steps";
 import { usePrivacy } from "../state/privacy";
 import { useCircleWords } from "../brethren/words";
+import { signOut } from "../brethren/account";
 type Mode = "pin" | "recover" | "reset";
-// Enter submits through the form's primary button so its errors still show.
-const submit = (e: FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  (
-    e.currentTarget.querySelector("button.primary") as HTMLButtonElement | null
-  )?.click();
-};
 export default function PinScreen() {
   const { circle } = useCircleWords();
   const {
@@ -38,6 +35,13 @@ export default function PinScreen() {
   // A PIN belongs to one phone. On a new phone the journal is opened once with
   // the recovery code, and then this phone gets a PIN of its own.
   const newPhone = !security && hasVault;
+  // Flee needs no PIN, so it is offered wherever one is asked for.
+  const flee = (
+    <Link className="button block" to="/flee">
+      <Icon name="exit" size={18} />
+      In temptation? Flee
+    </Link>
+  );
   if (mode === "recover" || (newPhone && mode === "pin"))
     return (
       <Page
@@ -50,7 +54,7 @@ export default function PinScreen() {
         }
         bar={mark}
       >
-        <form onSubmit={submit}>
+        <ActionForm>
           <label>
             Recovery code
             <input
@@ -99,10 +103,16 @@ export default function PinScreen() {
               </button>
             )}
           </div>
-        </form>
+        </ActionForm>
         <button className="quiet" onClick={() => reset("reset")}>
           I do not have my recovery code
         </button>
+        {newPhone && (
+          <Action className="quiet" run={signOut}>
+            Use a different account
+          </Action>
+        )}
+        {newPhone && flee}
       </Page>
     );
   if (mode === "reset")
@@ -115,8 +125,7 @@ export default function PinScreen() {
         </p>
         <p>
           If your journal still opens on another phone, you can make a new
-          recovery code there instead, under Settings › Privacy, PIN, and your
-          data.
+          recovery code there instead, under Settings › Recovery code.
         </p>
         <div className="stack">
           <Action
@@ -148,9 +157,9 @@ export default function PinScreen() {
           ? "Enter your PIN to continue."
           : "Choose a PIN of 6 to 12 digits. Your journal is encrypted with it before it leaves this phone, so only you can read it."
       }
-      bar={mark}
+      bar={security ? mark : <OnboardingBar step={6} />}
     >
-      <form onSubmit={submit}>
+      <ActionForm>
         <PinInput label="PIN" value={pin} onChange={setPin} autoFocus />
         {!security && (
           <PinInput label="Confirm PIN" value={repeat} onChange={setRepeat} />
@@ -192,7 +201,8 @@ export default function PinScreen() {
             Next you will get a recovery code in case you ever forget it.
           </p>
         )}
-      </form>
+      </ActionForm>
+      {security && flee}
     </Page>
   );
 }

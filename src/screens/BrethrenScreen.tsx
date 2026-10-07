@@ -10,7 +10,7 @@ import { useBrethren } from "../state/brethren";
 import { cloud, result } from "../brethren/client";
 import { useMessages } from "../state/messages";
 export default function BrethrenScreen() {
-  const { profile, peers, requests, load } = useBrethren();
+  const { profile, peers, requests, sent, load } = useBrethren();
   const unread = useMessages(
     (s) =>
       s.rows.filter((m) => !m.read && m.receiver_id === profile?.id).length,
@@ -104,9 +104,32 @@ export default function BrethrenScreen() {
         </>
       )}
       <h2 className="section-title">Your {circle}</h2>
-      {peers.length ? (
-        peers.map((peer) => <BrotherCard key={peer.id} peer={peer} />)
-      ) : (
+      {peers.map((peer) => (
+        <BrotherCard key={peer.id} peer={peer} />
+      ))}
+      {sent.map((r) => (
+        <article className="card fade" key={r.link_id}>
+          <div className="person">
+            <Initial name={r.display_name} />
+            <span className="row-text">
+              <strong>{r.display_name}</strong>
+              <span>Has not yet accepted your request</span>
+            </span>
+          </div>
+          <Action
+            className="quiet"
+            run={async () => {
+              await result(
+                cloud().rpc("withdraw_request", { p_link: r.link_id }),
+              );
+              await load();
+            }}
+          >
+            Withdraw request
+          </Action>
+        </article>
+      ))}
+      {!peers.length && !sent.length && (
         <p className="notice">
           No accepted links yet. Share your code with someone you know.
         </p>

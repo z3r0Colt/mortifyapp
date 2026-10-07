@@ -6,6 +6,9 @@ import { cloud, result } from "../brethren/client";
 import { useBrethren } from "../state/brethren";
 import { Icon } from "../components/Icon";
 import { usePreferences } from "../state/preferences";
+import { ListGroup, SwitchRow } from "../components/List";
+import { sharingChoices, type SharingKey } from "../brethren/sharing";
+import { useAuth } from "../state/auth";
 const points = [
   "A small closed circle of up to eight believers, ideally from your own church.",
   "Brothers link with brothers and sisters with sisters, only by a private code.",
@@ -18,6 +21,15 @@ export default function ProfileSetupScreen() {
   const known = usePreferences((s) => s.value.sex);
   const [sex, setSex] = useState<"brother" | "sister">(known ?? "brother");
   const [church, setChurch] = useState("");
+  // Chosen here, before anyone is linked, so nothing is shown that the
+  // user has not seen and agreed to. Changeable later under Sharing.
+  const [sharing, setSharing] = useState<Record<SharingKey, boolean>>({
+    share_battles: true,
+    share_temptations: true,
+    share_falls: false,
+    share_blocker_status: true,
+  });
+  const user = useAuth((s) => s.user);
   const load = useBrethren((s) => s.load);
   const navigate = useNavigate();
   return (
@@ -67,6 +79,21 @@ export default function ProfileSetupScreen() {
           onChange={(e) => setChurch(e.target.value)}
         />
       </label>
+      <ListGroup title="What they may see">
+        {sharingChoices.map(([key, title, description]) => (
+          <SwitchRow
+            key={key}
+            label={title}
+            detail={description}
+            checked={sharing[key]}
+            onChange={async (on) => setSharing({ ...sharing, [key]: on })}
+          />
+        ))}
+      </ListGroup>
+      <p className="hint">
+        Your journal and confessions are never shared. You can change these
+        choices at any time.
+      </p>
       <Action
         className="primary"
         run={async () => {
@@ -78,8 +105,21 @@ export default function ProfileSetupScreen() {
               p_church: church.trim() || null,
             }),
           );
+          // The profile now exists, so a failure here must not leave the
+          // user stuck on setup: send him to Sharing to choose again.
+          const chosen = await result(
+            cloud()
+              .from("shared_settings")
+              .update(sharing)
+              .eq("user_id", user!.id),
+          ).then(
+            () => true,
+            () => false,
+          );
           await load();
-          navigate("/brethren", { replace: true });
+          navigate(chosen ? "/brethren" : "/brethren/sharing", {
+            replace: true,
+          });
         }}
       >
         Save profile

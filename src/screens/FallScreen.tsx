@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Page } from "../components/Page";
 import { Action } from "../components/Action";
@@ -12,6 +12,7 @@ import { Icon } from "../components/Icon";
 import { Steps } from "../components/Steps";
 import { UrgentHelp } from "../components/UrgentHelp";
 import { useCircleWords } from "../brethren/words";
+import { useDraft } from "../state/drafts";
 const titles = [
   "Return to Christ",
   "Confession",
@@ -22,21 +23,42 @@ const titles = [
 export default function FallScreen() {
   const { circle } = useCircleWords();
   const packs = useBattlePacks();
-  const [battle, setBattle] = useState(packs[0]?.id ?? "");
+  // Held as a draft so a lock part-way through returns to the same step
+  // with the words still there.
+  const [draft, setDraft, clearDraft] = useDraft("fall", {
+    battle: packs[0]?.id ?? "",
+    step: 0,
+    confession: "",
+    reflection: "",
+  });
+  const { battle, step, confession, reflection } = draft;
+  const setStep = (step: number) => setDraft({ step });
   const pack = packs.find((p) => p.id === battle);
-  const [step, setStep] = useState(0);
-  const [confession, setConfession] = useState("");
-  const [reflection, setReflection] = useState("");
   const navigate = useNavigate();
   useEffect(() => {
     if (step)
       (document.scrollingElement ?? document.documentElement).scrollTop = 0;
   }, [step]);
-  // Leaving is offered only before anything private has been written.
+  // Leaving is offered only before anything private has been written;
+  // after that the way is back a step, never lost.
   const close = (
-    <Link className="icon-button" to="/" aria-label="Return home">
+    <Link
+      className="icon-button"
+      to="/"
+      aria-label="Return home"
+      onClick={clearDraft}
+    >
       <Icon name="close" size={20} />
     </Link>
+  );
+  const back = (
+    <button
+      className="icon-button"
+      aria-label="Back a step"
+      onClick={() => setStep(step - 1)}
+    >
+      <Icon name="back" size={20} />
+    </button>
   );
   if (!pack)
     return (
@@ -58,7 +80,7 @@ export default function FallScreen() {
       }
       bar={
         <>
-          {step === 0 ? close : <span />}
+          {step === 0 ? close : back}
           <Steps step={step} count={titles.length} />
         </>
       }
@@ -66,13 +88,12 @@ export default function FallScreen() {
       <div className="flow fade" key={step}>
         {step === 0 && (
           <>
-            <UrgentHelp pack={pack} />
             {packs.length > 1 && (
-              <label>
+              <label style={{ marginTop: 0 }}>
                 Battle
                 <select
                   value={battle}
-                  onChange={(e) => setBattle(e.target.value)}
+                  onChange={(e) => setDraft({ battle: e.target.value })}
                 >
                   {packs.map((p) => (
                     <option key={p.id} value={p.id}>
@@ -82,6 +103,7 @@ export default function FallScreen() {
                 </select>
               </label>
             )}
+            <UrgentHelp pack={pack} />
             {pack.afterFallReadings.map((r, i) => (
               <article className="card" key={i}>
                 <ContentReading reading={r} />
@@ -99,7 +121,7 @@ export default function FallScreen() {
               Private confession (optional)
               <textarea
                 value={confession}
-                onChange={(e) => setConfession(e.target.value)}
+                onChange={(e) => setDraft({ confession: e.target.value })}
                 maxLength={20000}
               />
             </label>
@@ -123,7 +145,7 @@ export default function FallScreen() {
               Private reflection (optional)
               <textarea
                 value={reflection}
-                onChange={(e) => setReflection(e.target.value)}
+                onChange={(e) => setDraft({ reflection: e.target.value })}
                 maxLength={20000}
               />
             </label>
@@ -154,6 +176,7 @@ export default function FallScreen() {
                   reflection: await encryptText(journalKey(), reflection),
                 },
               });
+              clearDraft();
               navigate("/", { replace: true });
             }}
           >

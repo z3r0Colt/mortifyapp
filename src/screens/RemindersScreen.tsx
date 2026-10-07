@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import { Mark, Page } from "../components/Page";
+import { Page } from "../components/Page";
+import { OnboardingBar } from "../components/Steps";
 import { Action } from "../components/Action";
 import { Icon } from "../components/Icon";
 import { IphoneInstallSteps } from "../components/NotificationHelp";
@@ -10,6 +11,7 @@ import { clock } from "../data/clock";
 import { devicePlatform, isInstalled } from "../platform";
 import { isNative } from "../native/platform";
 import { useCircleWords } from "../brethren/words";
+import { db } from "../data/db";
 // The last onboarding step: a gentle daily nudge back to the Word and prayer.
 export default function RemindersScreen() {
   const { circle } = useCircleWords();
@@ -24,7 +26,7 @@ export default function RemindersScreen() {
       bare
       title="Reminders"
       lede={`A quiet reminder each morning to read and each evening to examine the day, and a note when your ${circle} ask for prayer.`}
-      bar={<Mark large />}
+      bar={<OnboardingBar step={8} />}
     >
       <ul className="list">
         <li>
@@ -71,7 +73,17 @@ export default function RemindersScreen() {
           </Action>
         </div>
       )}
-      <button className="quiet" onClick={home}>
+      <button
+        className="quiet"
+        onClick={async () => {
+          // "Not now" here also rests the card on Home, so the same
+          // question is not asked again the moment Home opens.
+          await db.cloudKv
+            .put({ key: "notify-dismissed", value: String(Date.now()) })
+            .catch(() => {});
+          home();
+        }}
+      >
         {needsInstall ? "Continue for now" : "Not now"}
       </button>
       <p className="hint" style={{ justifyContent: "center" }}>

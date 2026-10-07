@@ -3,8 +3,8 @@ import { useContent } from "../content/useContent";
 import { loadBible } from "../bible/loader";
 import { resolveChapterReference } from "../bible/resolver";
 import { Icon } from "./Icon";
-// A whole chapter from the BSB: in full (the evening psalm), or its opening
-// verses with the way into the rest (the morning chapters).
+// A whole chapter from the BSB, or its opening verses with the way into the
+// rest (the morning chapters and the evening psalm).
 export function ChapterReading({
   reference,
   preview,

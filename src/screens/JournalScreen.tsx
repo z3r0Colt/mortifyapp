@@ -28,6 +28,8 @@ export default function JournalScreen() {
   const packs = useApp((s) => s.packs);
   const [entries, setEntries] = useState<Entry[]>();
   const [error, setError] = useState("");
+  // Once a journal holds more than one battle, it can be read one at a time.
+  const [shown, setShown] = useState("");
   const load = async () => {
     if (!user) return;
     const key = journalKey();
@@ -88,6 +90,10 @@ export default function JournalScreen() {
   }, [user?.id]);
   const name = (battle: string) =>
     packs.find((p) => p.id === battle)?.name ?? battle;
+  const battles = [...new Set(entries?.map((e) => e.battle))];
+  // A battle whose last entry was deleted falls back to showing every one.
+  const filter = battles.length > 1 && battles.includes(shown) ? shown : "";
+  const visible = entries?.filter((e) => !filter || e.battle === filter);
   return (
     <Page
       title="My journal"
@@ -107,67 +113,82 @@ export default function JournalScreen() {
           after a fall will be kept here.
         </p>
       ) : (
-        entries.map((entry) => (
-          <article className="card journal-entry fade" key={entry.id}>
-            <p className="eyebrow">
-              {entry.date.toLocaleString(undefined, {
-                weekday: "short",
-                month: "short",
-                day: "numeric",
-                year: "numeric",
-                hour: "numeric",
-                minute: "2-digit",
-              })}
-            </p>
-            <h2>
-              {entry.kind === "journals" ? "Examination" : "After a fall"}
-              <span className="tag">{name(entry.battle)}</span>
-            </h2>
-            {entry.waiting && (
-              <p className="label">Waiting to upload when you reconnect.</p>
-            )}
-            {entry.text && <p className="journal-text">{entry.text}</p>}
-            {entry.tags && entry.tags.length > 0 && (
-              <div className="row" style={{ gap: 6, marginBottom: 12 }}>
-                {entry.tags.map((tag) => (
-                  <span className="tag" key={tag}>
-                    {tag}
-                  </span>
+        <>
+          {battles.length > 1 && (
+            <label style={{ marginTop: 0 }}>
+              Show
+              <select value={filter} onChange={(e) => setShown(e.target.value)}>
+                <option value="">Every battle</option>
+                {battles.map((b) => (
+                  <option key={b} value={b}>
+                    {name(b)}
+                  </option>
                 ))}
-              </div>
-            )}
-            {entry.confession && (
-              <>
-                <h3 className="section-title">Confession</h3>
-                <p className="journal-text">{entry.confession}</p>
-              </>
-            )}
-            {entry.reflection && (
-              <>
-                <h3 className="section-title">Reflection</h3>
-                <p className="journal-text">{entry.reflection}</p>
-              </>
-            )}
-            {blank(entry) && <p className="label">No words were written.</p>}
-            <Action
-              className="quiet"
-              run={async () => {
-                if (
-                  !window.confirm(
-                    "Permanently delete this entry? This cannot be undone.",
+              </select>
+            </label>
+          )}
+          {visible!.map((entry) => (
+            <article className="card journal-entry fade" key={entry.id}>
+              <p className="eyebrow">
+                {entry.date.toLocaleString(undefined, {
+                  weekday: "short",
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                  hour: "numeric",
+                  minute: "2-digit",
+                })}
+              </p>
+              <h2>
+                {entry.kind === "journals" ? "Examination" : "After a fall"}
+                <span className="tag">{name(entry.battle)}</span>
+              </h2>
+              {entry.waiting && (
+                <p className="label">Waiting to upload when you reconnect.</p>
+              )}
+              {entry.text && <p className="journal-text">{entry.text}</p>}
+              {entry.tags && entry.tags.length > 0 && (
+                <div className="row" style={{ gap: 6, marginBottom: 12 }}>
+                  {entry.tags.map((tag) => (
+                    <span className="tag" key={tag}>
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+              {entry.confession && (
+                <>
+                  <h3 className="section-title">Confession</h3>
+                  <p className="journal-text">{entry.confession}</p>
+                </>
+              )}
+              {entry.reflection && (
+                <>
+                  <h3 className="section-title">Reflection</h3>
+                  <p className="journal-text">{entry.reflection}</p>
+                </>
+              )}
+              {blank(entry) && <p className="label">No words were written.</p>}
+              <Action
+                className="quiet"
+                run={async () => {
+                  if (
+                    !window.confirm(
+                      "Permanently delete this entry? This cannot be undone.",
+                    )
                   )
-                )
-                  return;
-                if (entry.waiting) await db.pending.delete(entry.id);
-                else await deleteEntry(entry.kind, entry.id);
-                await load();
-              }}
-            >
-              <Icon name="close" size={16} />
-              Delete
-            </Action>
-          </article>
-        ))
+                    return;
+                  if (entry.waiting) await db.pending.delete(entry.id);
+                  else await deleteEntry(entry.kind, entry.id);
+                  await load();
+                }}
+              >
+                <Icon name="close" size={16} />
+                Delete
+              </Action>
+            </article>
+          ))}
+        </>
       )}
     </Page>
   );

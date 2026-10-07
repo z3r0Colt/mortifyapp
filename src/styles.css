@@ -1169,6 +1169,10 @@ a.verse-card:hover .read-button {
 .dock > * + * {
   margin-top: 10px;
 }
+.dock-question {
+  margin: 0 0 4px;
+  text-align: center;
+}
 
 /* ---------- Brethren ---------- */
 .code-card {
@@ -1637,4 +1641,9 @@ input.recovery-input {
 }
 .no-animation {
   animation: none;
+}
+
+/* Examine's jump to the questions stops clear of the notch. */
+#tonight {
+  scroll-margin-top: calc(20px + env(safe-area-inset-top));
 }

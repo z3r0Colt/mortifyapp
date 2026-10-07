@@ -20,6 +20,12 @@ export type LinkRequest = {
   display_name: string;
   church_name: string | null;
 };
+/** A request this user sent that waits on the other to accept. */
+export type SentRequest = {
+  link_id: string;
+  display_name: string;
+  church_name: string | null;
+};
 export type SharedEvent = {
   id: string;
   user_id: string;

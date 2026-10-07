@@ -59,6 +59,27 @@ await assert.rejects(
   db.query("select public.respond_link($1,true)", [request]),
   /unavailable/,
 );
+assert.deepEqual(
+  (await db.query("select link_id,display_name from sent_requests()")).rows,
+  [{ link_id: request, display_name: "Person 2" }],
+  "the one who asks sees the request waiting",
+);
+await asUser(ids[1]);
+assert.equal(
+  (await db.query("select * from sent_requests()")).rows.length,
+  0,
+  "the one asked does not see it as sent",
+);
+await db.query("select public.withdraw_request($1)", [request]);
+await asUser(ids[0]);
+assert.equal(
+  (await db.query("select * from sent_requests()")).rows.length,
+  1,
+  "only the one who asked can withdraw",
+);
+await db.query("select public.withdraw_request($1)", [request]);
+assert.equal((await db.query("select * from sent_requests()")).rows.length, 0);
+await db.query("select public.request_link($1)", [profiles[1].brethren_code]);
 await asUser(ids[1]);
 assert.equal(
   (await db.query("select * from pending_requests()")).rows.length,

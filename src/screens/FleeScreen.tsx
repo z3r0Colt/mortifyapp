@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Page } from "../components/Page";
 import { Action } from "../components/Action";
@@ -16,6 +16,7 @@ import { SermonList } from "../components/SermonList";
 import { useContent } from "../content/useContent";
 import { loadFeaturedSermons } from "../content/loader";
 import { useCircleWords } from "../brethren/words";
+import { useBrethren } from "../state/brethren";
 const titles = [
   "Attend to the Word",
   "Receive counsel",
@@ -30,7 +31,13 @@ export default function FleeScreen() {
   const [step, setStep] = useState(0);
   const [sought, setSought] = useState(false);
   const [session] = useState(() => crypto.randomUUID());
-  const started = useRef(false);
+  // After "Not yet", the battle goes on: offer the way back in, not Home.
+  const [notYet, setNotYet] = useState(false);
+  // With no brethren linked yet there is no one to ask in the app, so the
+  // prayer step does not hold the user back.
+  const noCircle = useBrethren(
+    (s) => s.loaded && !s.error && (!s.profile || !s.peers.length),
+  );
   const { data: featured } = useContent(loadFeaturedSermons);
   const choose = (pack: Pack) => ({
     pack,
@@ -48,15 +55,9 @@ export default function FleeScreen() {
     packs.length === 1 ? choose(packs[0]) : null,
   );
   useEffect(() => {
-    if (selection && !started.current) {
-      started.current = true;
-      void queueEvent("temptation", selection.pack.id, session).catch(() => {});
-    }
-  }, [selection, session]);
-  useEffect(() => {
-    if (step)
+    if (step || notYet)
       (document.scrollingElement ?? document.documentElement).scrollTop = 0;
-  }, [step]);
+  }, [step, notYet]);
   const close = (
     <Link className="icon-button" to="/" aria-label="Return home">
       <Icon name="close" size={20} />
@@ -95,7 +96,7 @@ export default function FleeScreen() {
       </Page>
     );
   const { pack, verse, counsel, prayer, action } = selection;
-  const finish = async (answer: "stood" | "not-yet") => {
+  const answer = async (answer: "stood" | "not-yet") => {
     await saveEntry({
       table: "flee_logs",
       row: {
@@ -105,14 +106,60 @@ export default function FleeScreen() {
         answer,
       },
     });
-    if (answer === "stood")
+    if (answer === "stood") {
       await queueEvent("stood_firm", pack.id).catch(() => {});
-    navigate("/", { replace: true });
+      navigate("/", { replace: true });
+    } else setNotYet(true);
   };
+  const next = () => {
+    // Shared only once the user has sought help, never on opening Flee.
+    // The session id keeps a second pass from sharing it twice.
+    if (step === 3)
+      void queueEvent("temptation", pack.id, session).catch(() => {});
+    setStep(step + 1);
+  };
+  if (notYet)
+    return (
+      <Page
+        bare
+        eyebrow="In temptation"
+        title="Keep fleeing"
+        lede="Do not stay alone with this temptation. Christ has not left you."
+        bar={close}
+      >
+        <div className="stack fade">
+          <button
+            className="primary"
+            onClick={() => {
+              setNotYet(false);
+              setStep(2);
+            }}
+          >
+            Turn to prayer again
+          </button>
+          {!noCircle && (
+            <button
+              onClick={() => {
+                setNotYet(false);
+                setStep(3);
+              }}
+            >
+              Ask your {circle} to pray
+            </button>
+          )}
+          <Link className="button" to="/fall" replace>
+            I have fallen
+          </Link>
+          <Link className="button quiet" to="/" replace>
+            Return home
+          </Link>
+        </div>
+      </Page>
+    );
   return (
     <Page
       bare
-      eyebrow={pack.name}
+      eyebrow="In temptation"
       title={step === 3 ? `Ask your ${circle} to pray` : titles[step]}
       bar={
         <>
@@ -143,7 +190,11 @@ export default function FleeScreen() {
         )}
         {step === 3 && (
           <div className="stack">
-            <PrayerStep battle={pack.id} onChosen={() => setSought(true)} />
+            <PrayerStep
+              battle={pack.id}
+              noCircle={noCircle}
+              onChosen={() => setSought(true)}
+            />
           </div>
         )}
         {step === 4 && (
@@ -159,30 +210,32 @@ export default function FleeScreen() {
                 <SermonList sermons={featured.flee} />
               </div>
             )}
-            <h2>Did you stand firm?</h2>
           </>
         )}
       </div>
       <div className="dock">
         {step < 4 ? (
           <>
-            {step === 3 && !sought && (
+            {step === 3 && !sought && !noCircle && (
               <p className="label">Ask for prayer or call someone to go on.</p>
             )}
             <button
               className="primary"
-              disabled={step === 3 && !sought}
-              onClick={() => setStep(step + 1)}
+              disabled={step === 3 && !sought && !noCircle}
+              onClick={next}
             >
               Continue
             </button>
           </>
         ) : (
           <div className="stack">
-            <Action className="primary" run={() => finish("stood")}>
+            {/* The question sits with its answers, so it is never scrolled
+                out of sight behind them. */}
+            <h2 className="dock-question">Did you stand firm?</h2>
+            <Action className="primary" run={() => answer("stood")}>
               Yes, by God's grace
             </Action>
-            <Action run={() => finish("not-yet")}>Not yet</Action>
+            <Action run={() => answer("not-yet")}>Not yet</Action>
           </div>
         )}
       </div>

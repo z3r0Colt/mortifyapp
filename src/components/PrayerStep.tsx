@@ -4,52 +4,67 @@ import { Icon } from "./Icon";
 import { useAuth } from "../state/auth";
 import { useBrethren } from "../state/brethren";
 import { requestPrayer } from "../brethren/outbox";
-import { useIsSister } from "../brethren/words";
+import { useCircleWords } from "../brethren/words";
 // onChosen fires once the user has asked for prayer or called someone, so
-// the Flee screen can let him go on only after he has sought help.
+// the Flee screen can let him go on only after he has sought help. With no
+// circle yet (noCircle) nothing here holds him back.
 export function PrayerStep({
   battle,
+  noCircle,
   onChosen,
 }: {
   battle: string;
+  noCircle: boolean;
   onChosen: () => void;
 }) {
   const { peers } = useBrethren();
   const user = useAuth((s) => s.user);
+  const { circle, Circle, one } = useCircleWords();
   const [status, setStatus] = useState("");
+  const [asked, setAsked] = useState(false);
   const [calls, setCalls] = useState(false);
-  const sister = useIsSister();
   const calledMyself = (
     <button onClick={onChosen}>I have called someone</button>
   );
+  if (!user || noCircle)
+    return (
+      <>
+        <p>Seek the care of a trusted believer in your church.</p>
+        <p className="notice">
+          You have no {circle} linked in Mortify yet. Call a trusted {one} from
+          your own contacts and ask for prayer. When this hour has passed, you
+          can link with a few from your church under {Circle}.
+        </p>
+      </>
+    );
   return (
     <>
       <p>Seek the care of a trusted believer in your church.</p>
-      {user ? (
+      {asked ? (
+        <p role="status" className="notice">
+          {status}
+        </p>
+      ) : (
         <Action
           className="primary"
           run={async () => {
-            setStatus(await requestPrayer(battle));
+            await requestPrayer(battle);
+            setStatus(
+              navigator.onLine
+                ? `Your ${circle} have been asked to pray for you.`
+                : `Your request will go to your ${circle} when Mortify reconnects.`,
+            );
+            setAsked(true);
             onChosen();
           }}
         >
-          Ask my {sister ? "sisters" : "brethren"} to pray
+          Ask my {circle} to pray
         </Action>
-      ) : (
-        <>
-          <p className="notice">
-            Call a trusted believer from your own contacts and ask for prayer.
-          </p>
-          {calledMyself}
-        </>
       )}
-      {status && <p role="status">{status}</p>}
-      {user && (
-        <button aria-expanded={calls} onClick={() => setCalls(!calls)}>
-          <Icon name="phone" size={18} />
-          Call a {sister ? "sister" : "brother"}
-        </button>
-      )}
+      <button aria-expanded={calls} onClick={() => setCalls(!calls)}>
+        <Icon name="phone" size={18} />
+        Call a {one}
+      </button>
       {calls && (
         <div className="stack fade">
           {peers

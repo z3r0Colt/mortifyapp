@@ -9,6 +9,9 @@ import { useCircleWords } from "../brethren/words";
 export function TellBrethrenStep({ battle }: { battle: string }) {
   const { circle, one } = useCircleWords();
   const { sharing } = useBrethren();
+  const noCircle = useBrethren(
+    (s) => s.loaded && !s.error && (!s.profile || !s.peers.length),
+  );
   const user = useAuth((s) => s.user);
   const [note, setNote] = useState("");
   const [sent, setSent] = useState(false);
@@ -22,7 +25,7 @@ export function TellBrethrenStep({ battle }: { battle: string }) {
         <Icon name="lock" size={16} />
         Your private confession is never included.
       </p>
-      {user ? (
+      {user && !noCircle ? (
         <>
           {!sharing?.share_falls && (
             <p className="notice">
@@ -59,7 +62,10 @@ export function TellBrethrenStep({ battle }: { battle: string }) {
           )}
         </>
       ) : (
-        <p>You may speak to a trusted believer in person or by phone.</p>
+        <p className="notice">
+          You have no {circle} linked in Mortify yet. You may speak to a trusted{" "}
+          {one} in person or by phone.
+        </p>
       )}
     </>
   );

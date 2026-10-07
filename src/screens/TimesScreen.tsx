@@ -82,7 +82,7 @@ export default function TimesScreen() {
             navigate("/", { replace: true });
           }}
         >
-          {value.onboarded ? "Save times" : "Begin"}
+          {value.onboarded ? "Save times" : "Continue"}
         </Action>
       </div>
     </Page>

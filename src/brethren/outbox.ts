@@ -82,9 +82,6 @@ async function enqueue(
 }
 export async function requestPrayer(battle: string) {
   await enqueue({ kind: "prayer", battle });
-  return navigator.onLine
-    ? "Your request is saved for delivery to your accepted circle."
-    : "Your request is saved and will be sent when Mortify reconnects.";
 }
 export async function circleNote(body: string) {
   if (body.length > 500)

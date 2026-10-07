@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { Page } from "../components/Page";
 import { Action } from "../components/Action";
+import { ActionForm } from "../components/ActionForm";
 import { Icon } from "../components/Icon";
 import { ListGroup, ListLink, SwitchRow } from "../components/List";
 import { usePrivacy } from "../state/privacy";
 import { PinInput } from "../components/PinInput";
-import { exportData, deleteDeviceData } from "../privacy/data";
 import { isNative } from "../native/platform";
 import { biometricAvailable } from "../native/vault";
 import { passkeyAvailable } from "../privacy/passkey";
@@ -68,11 +68,11 @@ export default function PrivacyScreen() {
   };
   return (
     <Page
-      title="Privacy"
+      title="PIN and lock"
       back={{ to: "/settings", label: "Settings" }}
       lede={`Your journal and confessions are encrypted with your PIN before they leave this phone. Only you can read them, not your ${circle} and not anyone who runs Mortify.`}
     >
-      <ListGroup>
+      <ListGroup title="Opening Mortify on this phone">
         <SwitchRow
           label="PIN lock"
           detail="Ask for your PIN each time Mortify opens on this phone. If this is off, anyone who can open Mortify here can read your journal."
@@ -108,17 +108,7 @@ export default function PrivacyScreen() {
         )}
       </ListGroup>
       {pending && (
-        <form
-          className="card fade"
-          onSubmit={(e) => {
-            e.preventDefault();
-            (
-              e.currentTarget.querySelector(
-                "button.primary",
-              ) as HTMLButtonElement | null
-            )?.click();
-          }}
-        >
+        <ActionForm className="card fade">
           <PinInput
             label={
               pending === "change-pin" ? "Current PIN" : "Confirm with your PIN"
@@ -145,7 +135,7 @@ export default function PrivacyScreen() {
               Cancel
             </button>
           </div>
-        </form>
+        </ActionForm>
       )}
       {security?.lockEnabled && (
         <article className="card">
@@ -160,7 +150,7 @@ export default function PrivacyScreen() {
           >
             {(
               [
-                [0, "No time"],
+                [0, "Right away"],
                 [1, "1 min"],
                 [5, "5 min"],
                 [15, "15 min"],
@@ -220,32 +210,6 @@ export default function PrivacyScreen() {
           Lock now
         </button>
       )}
-      <article className="card">
-        <h2>Export your data</h2>
-        <p>
-          The download includes your private text in a readable form. Keep the
-          file somewhere private.
-        </p>
-        <Action run={exportData}>
-          <Icon name="download" size={18} />
-          Download my data as JSON
-        </Action>
-      </article>
-      <article className="card">
-        <h2>Clear this phone</h2>
-        <p>
-          Signs you out and removes everything Mortify keeps on this phone. Your
-          account and journal stay safe; sign in again to get them back.
-        </p>
-        <Action
-          run={async () => {
-            if (window.confirm("Sign out and clear Mortify from this phone?"))
-              await deleteDeviceData();
-          }}
-        >
-          Sign out and clear this phone
-        </Action>
-      </article>
     </Page>
   );
 }

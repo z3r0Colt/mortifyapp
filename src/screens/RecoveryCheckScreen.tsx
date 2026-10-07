@@ -1,18 +1,13 @@
-import { useState, type FormEvent } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Page } from "../components/Page";
 import { Action } from "../components/Action";
+import { ActionForm } from "../components/ActionForm";
 import { PinInput } from "../components/PinInput";
 import { usePrivacy } from "../state/privacy";
 // Once a year (or whenever the user asks) he types his recovery code to be
 // sure he still has it. If he cannot find it, he makes a new one while his
 // journal still opens, instead of finding out on a new phone.
-const submit = (e: FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  (
-    e.currentTarget.querySelector("button.primary") as HTMLButtonElement | null
-  )?.click();
-};
 export default function RecoveryCheckScreen() {
   const { checkRecoveryCode, snoozeCodeCheck, replaceRecoveryCode } =
     usePrivacy();
@@ -41,7 +36,7 @@ export default function RecoveryCheckScreen() {
         back={back}
         lede="Your journal still opens on this phone, so you can make a new code now. Your old code will stop working."
       >
-        <form onSubmit={submit}>
+        <ActionForm>
           <PinInput
             label="Confirm with your PIN"
             value={pin}
@@ -60,7 +55,7 @@ export default function RecoveryCheckScreen() {
               Go back
             </button>
           </div>
-        </form>
+        </ActionForm>
       </Page>
     );
   return (
@@ -69,7 +64,7 @@ export default function RecoveryCheckScreen() {
       back={back}
       lede="You need it to open your journal on a new phone, or if you forget your PIN. Type it here to be sure it still works."
     >
-      <form onSubmit={submit}>
+      <ActionForm>
         <label>
           Recovery code
           <input
@@ -102,7 +97,7 @@ export default function RecoveryCheckScreen() {
             I cannot find my code
           </button>
         </div>
-      </form>
+      </ActionForm>
       <Action
         className="quiet"
         run={async () => {

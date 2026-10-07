@@ -43,6 +43,18 @@ export default function HomeScreen() {
           <Icon name="arrow" size={24} />
         </span>
       </Link>
+      {/* Repentance sits beside Flee, not below the cards, so it is as
+          easy to find in the hour it is needed. */}
+      <Link className="return-row" to="/fall">
+        <span className="tile">
+          <Icon name="turn" size={20} />
+        </span>
+        <span className="row-text">
+          I have fallen
+          <span className="row-detail">Return to Christ in repentance.</span>
+        </span>
+        <Icon name="chevron" size={18} className="chevron" />
+      </Link>
       <TodayVerse />
       <div className="grid-2">
         <Link className="card time-card" to="/reading">
@@ -61,16 +73,6 @@ export default function HomeScreen() {
         </Link>
       </div>
       <NotifyCard />
-      <Link className="return-row" to="/fall">
-        <span className="tile">
-          <Icon name="turn" size={20} />
-        </span>
-        <span className="row-text">
-          I have fallen
-          <span className="row-detail">Return to Christ in repentance.</span>
-        </span>
-        <Icon name="chevron" size={18} className="chevron" />
-      </Link>
       <ProtectionReminder />
       <RecoveryCheckCard />
       {notify === "ready" && <InstallCard dismissible />}
