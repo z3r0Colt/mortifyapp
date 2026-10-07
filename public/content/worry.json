@@ -100,16 +100,26 @@
   ],
   "prayers": [
     {
+      "for": "fall",
       "title": "A prayer of confession",
-      "text": "Almighty and faithful Father, you number the hairs of my head, feed the birds of the air, and clothe the grass of the field. Nothing comes to pass apart from your will. I come through Jesus Christ. I confess that I have worried. I have carried tomorrow in my own arms as if you were not my Father. I have doubted your power, your wisdom, and your love. I have prayed little and fretted much, and I have let fear crowd out faith and service. My worry is unbelief, and it dishonors you. Forgive me, Lord. In the garden Christ entrusted himself to you, saying, Not my will but yours be done, and he now reigns over all things for his church. For his sake pardon me. Holy Spirit, put this anxious unbelief to death, and teach me to cast all my cares on you, because you care for me. Guard my heart and mind with your peace, which surpasses all understanding. I thank you that you will supply every need of mine according to your riches in glory in Christ Jesus. In his name. Amen."
+      "text": "Almighty and faithful Father, you number the hairs of my head, feed the birds of the air, and clothe the grass of the field. Nothing comes to pass apart from your will. I come through Jesus Christ. I confess that I have worried. I have carried tomorrow in my own arms as if you were not my Father. I have doubted your power, your wisdom, and your love. I have prayed little and fretted much, and I have let fear crowd out faith and service. Underneath my worry is a heart that wants to be in control, and does not trust you to be. My worry is unbelief, and it dishonors you. Forgive me, Lord. In the garden Christ entrusted himself to you, saying, Not my will, but yours, be done, and he now reigns over all things for his church. For his sake pardon me. Holy Spirit, put this anxious unbelief to death, and teach me to cast all my cares on you, because you care for me. Guard my heart and mind with your peace, which surpasses all understanding. I thank you that you will supply every need of mine according to your riches in glory in Christ Jesus. In his name. Amen."
     },
     {
+      "for": "flee",
       "title": "When worry rushes in",
       "text": "Lord, my thoughts are racing ahead to what might happen. Stop me, and bring me back to today. You know what I need before I ask. I cast this care on you right now, and I name it before you. Help me not to be anxious about tomorrow, for tomorrow will be anxious for itself. Give me grace to do the next duty in front of me and to leave the rest with you. Lord Jesus, you calmed the wind and the sea with a word; calm my heart. Amen."
     },
     {
+      "for": "flee",
       "title": "When I am afraid",
       "text": "Father, I am afraid, and I thank you that I may tell you so. You are my refuge and strength, a very present help in trouble. You have not given me a spirit of fear, but of power, love, and self-control. Remind me that I am held in your hand, and that no one can snatch me from it. Whatever comes today will not come without your will, and you will turn it for my good. Let me trust you in the dark as in the light. Through Jesus Christ. Amen."
+    },
+    {
+      "for": "flee",
+      "title": "Casting our care upon our Father",
+      "text": "Father, we ask not for bread for a great while to come, but that we may have this day our daily bread; for we would learn, and the Lord teach us, not to take thought for the morrow, what we shall eat, or what we shall drink, or wherewithal we shall be clothed; but we cast the care upon thee, our heavenly Father, who knowest that we have need of all these things; who feedest the fowls of the air, though they sow not, neither do they reap, and wilt much more feed us, who are of more value than many sparrows.",
+      "author": "Matthew Henry",
+      "source": "A Method for Prayer, ch. 8"
     }
   ],
   "examinationQuestions": [

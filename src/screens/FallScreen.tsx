@@ -2,7 +2,8 @@ import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Page } from "../components/Page";
 import { Action } from "../components/Action";
-import { useBattlePacks } from "../content/selection";
+import { fallPrayers, useBattlePacks } from "../content/selection";
+import { PrayerCard } from "../components/PrayerCard";
 import { saveEntry } from "../data/pending";
 import { encryptText } from "../privacy/crypto";
 import { journalKey } from "../state/privacy";
@@ -113,10 +114,9 @@ export default function FallScreen() {
         )}
         {step === 1 && (
           <>
-            <div className="card accent">
-              <h2>{pack.prayers[0].title}</h2>
-              <p>{pack.prayers[0].text}</p>
-            </div>
+            {fallPrayers(pack).map((prayer) => (
+              <PrayerCard key={prayer.title} prayer={prayer} />
+            ))}
             <label>
               Private confession (optional)
               <textarea

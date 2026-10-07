@@ -100,16 +100,33 @@
   ],
   "prayers": [
     {
+      "for": "fall",
       "title": "A prayer of confession",
-      "text": "Holy Father, every word I speak is known to you, and I will give account for every careless word. I come through Jesus Christ. I confess that I have sinned with my tongue. I have gossiped and slandered, spoken harshly, boasted, complained, mocked, and flattered. I have torn down what you call me to build up. With the same tongue I have blessed you and cursed people made in your likeness. My tongue has been a fire, and it has shown the evil in my heart, for out of the abundance of the heart the mouth speaks. Forgive me, Lord. Christ never spoke a sinful word; when he was reviled, he did not revile in return, and gracious words came from his lips. For his sake pardon me, and give me grace to seek forgiveness from those I have wounded. Holy Spirit, put this sin to death and make my heart clean, so that my speech will be gracious. I thank you that you have put a new song in my mouth. In Jesus' name. Amen."
+      "text": "Holy Father, every word I speak is known to you, and I will give account for every careless word. I come through Jesus Christ. I confess that I have sinned with my tongue. I have gossiped and slandered, spoken harshly, boasted, complained, mocked, and flattered. I have torn down what you call me to build up. With the same tongue I have blessed you and cursed people made in your likeness. My tongue has been a fire, and it has shown the evil in my heart, for out of the abundance of the heart the mouth speaks. The problem is not only my words but the pride, envy, and anger they come from. Forgive me, Lord. Christ never spoke a sinful word; when he was reviled, he did not revile in return, and gracious words came from his lips. For his sake pardon me, and give me grace to seek forgiveness from those I have wounded. Holy Spirit, put this sin to death and make my heart clean, so that my speech will be gracious. I thank you that you have put a new song in my mouth. In Jesus' name. Amen."
     },
     {
+      "for": "flee",
       "title": "Before I speak",
-      "text": "Lord, set a guard over my mouth and keep watch over the door of my lips. I am about to say something I should not. Stop me. Make me quick to hear, slow to speak, and slow to anger. Let no corrupting talk come out of my mouth, but only what is good for building up, so that it may give grace to those who hear. If I must speak a hard truth, let me speak it in love. Lord Jesus, give me your words. Amen."
+      "text": "Lord, set a guard over my mouth and keep watch over the door of my lips. I am about to say something I should not. Stop me. Make me quick to hear, slow to speak, and slow to anger. Let no corrupting talk come out of my mouth, but only what is good for building up, so that it may give grace to those who hear. If I must speak a hard truth, let me speak it in love, or wait until I can. Lord Jesus, give me your words. Amen."
     },
     {
+      "for": "flee",
       "title": "For gracious speech",
-      "text": "Father, let the words of my mouth and the meditation of my heart be acceptable in your sight, O Lord, my rock and my redeemer. Make my speech always gracious, seasoned with salt. Teach me to encourage, to give thanks, to speak well of others when they are absent, and to keep confidences. Give me courage to speak of Christ, and wisdom to be silent when silence is better. Use my tongue to bless my family, my brethren, and my neighbors. Through Jesus Christ. Amen."
+      "text": "Father, let the words of my mouth and the meditation of my heart be acceptable in your sight, O Lord, my rock and my redeemer. Make my speech always gracious, seasoned with salt. Teach me to encourage, to give thanks, to speak well of others when they are absent, and to keep confidences. Give me courage to speak of Christ, and wisdom to be silent when silence is better. Use my tongue to bless my family, my church, and my neighbors. Through Jesus Christ. Amen."
+    },
+    {
+      "for": "fall",
+      "title": "Confessing the sins of our tongue",
+      "text": "In the multitude of our words there wanteth not sin, nor can a man full of talk be justified. While the lips of the righteous feed many, our lips have poured out foolishness, and spoken frowardness. Much corrupt communication hath proceeded out of our mouths; that foolish talking and jesting which is not convenient; and little of that which is good, and to the use of edifying, and which might minister grace unto the hearers. If for every idle word that men speak they must give an account, and by our words we must be justified, and by our words we must be condemned, woe unto us; for we are undone! for we are of unclean lips, and dwell in the midst of a people of unclean lips.",
+      "author": "Matthew Henry",
+      "source": "A Method for Prayer, ch. 2"
+    },
+    {
+      "for": "flee",
+      "title": "To govern our tongues well",
+      "text": "Lord, enable us to take heed to our ways, that we offend not with our tongue, and to keep our mouth as it were with a bridle, that it may not be hasty to utter any thing. Set a watch, O Lord, before our mouth, keep the door of our lips, that we may not offend in word. Let our speech be always with grace, seasoned with salt, and enable us always out of the good treasure of our heart to bring forth good things. Let our mouth speak wisdom, and our tongue talk of judgment; and let not thy words depart out of our mouth, nor out of the mouth of our seed, or our seed's seed, from henceforth and for ever. Enable us always to open our mouth with wisdom, and let the law of kindness be in our tongue: give us to know what is acceptable, that our tongue may be as choice silver, and our lips may feed many.",
+      "author": "Matthew Henry",
+      "source": "A Method for Prayer, ch. 3"
     }
   ],
   "examinationQuestions": [

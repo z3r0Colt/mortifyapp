@@ -37,6 +37,24 @@ export const sermonSchema = z
   })
   .strict();
 export type Sermon = z.infer<typeof sermonSchema>;
+/**
+ * A prayer: for confession after a fall, or for the hour of temptation.
+ * Original prayers carry no author; one copied from a historic source
+ * names its author and the work it comes from.
+ */
+export const prayerSchema = z
+  .object({
+    for: z.enum(["fall", "flee"]),
+    title: z.string().min(1),
+    text: z.string().min(1),
+    author: z.string().min(1).optional(),
+    source: z.string().min(1).optional(),
+  })
+  .strict()
+  .refine((p) => !p.author === !p.source, {
+    message: "A historic prayer needs both its author and its source.",
+  });
+export type Prayer = z.infer<typeof prayerSchema>;
 export const packSchema = z.object({
   id: z.string().regex(/^[a-z0-9-]+$/),
   name: z.string().min(1),
@@ -46,8 +64,13 @@ export const packSchema = z.object({
   chapters: z.array(chapterReferenceSchema).default([]),
   counsel: z.array(readingSchema).min(1),
   prayers: z
-    .array(z.object({ title: z.string().min(1), text: z.string().min(1) }))
-    .min(1),
+    .array(prayerSchema)
+    .refine((list) => list.some((p) => p.for === "fall"), {
+      message: "Include a prayer of confession for after a fall.",
+    })
+    .refine((list) => list.some((p) => p.for === "flee"), {
+      message: "Include a prayer for the hour of temptation.",
+    }),
   examinationQuestions: z.array(z.string().min(1)).min(3),
   fleeActions: z.array(z.string().min(1)).min(1),
   afterFallReadings: z.array(readingSchema).min(1),

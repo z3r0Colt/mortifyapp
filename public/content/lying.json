@@ -100,16 +100,33 @@
   ],
   "prayers": [
     {
+      "for": "fall",
       "title": "A prayer of confession",
-      "text": "God of truth, you cannot lie, and lying lips are an abomination to you. I come through Jesus Christ, who is the truth. I confess that I have lied. I have told outright lies, half-truths, and exaggerations. I have hidden what I should have confessed, and I have deceived to protect myself or to look better than I am. In this I have imitated the father of lies and not my Father in heaven. I have broken trust with others and grieved your Spirit. Forgive me, Lord. Christ was condemned by false witnesses and kept silent; he bore the punishment for my deceit. For his sake pardon me, and give me courage to make things right with those I have deceived. Holy Spirit, put this falsehood to death, and make me truthful in the inward being. Let my yes be yes and my no be no. I thank you that in Christ I am freed from the fear that drives me to hide. In his name. Amen."
+      "text": "God of truth, you cannot lie, and lying lips are an abomination to you. I come through Jesus Christ, who is the truth. I confess that I have lied. I have told outright lies, half-truths, and exaggerations. I have hidden what I should have confessed, and I have deceived to protect myself or to look better than I am. Behind my lies is a heart that fears people more than you, and loves its own reputation more than your glory. In this I have imitated the father of lies and not my Father in heaven. I have broken trust with others and grieved your Spirit. Forgive me, Lord. Christ was condemned by false witnesses and kept silent; he bore the punishment for my deceit. For his sake pardon me, and give me courage to make things right with those I have deceived. Holy Spirit, put this falsehood to death, and make me truthful in the inward being. Let my yes be yes and my no be no. I thank you that in Christ I am fully known and fully forgiven, so I no longer need to hide. In his name. Amen."
     },
     {
+      "for": "flee",
       "title": "When I am tempted to lie",
-      "text": "Lord, I am about to bend the truth to protect myself. Stop me. You see everything already; there is nothing to hide from you. Give me courage to tell the truth even if it costs me. Remind me that I have put off the old self with its practices, and have put on the new self, created after your likeness in true righteousness and holiness. Lord Jesus, you are the truth; let me speak as your disciple. Amen."
+      "text": "Lord, I am about to bend the truth to protect myself. Stop me before I speak. You see everything already; there is nothing I can hide from you. Give me courage to tell the truth even if it costs me. Remind me that I have put off the old self with its practices, and have put on the new self, created after your likeness in true righteousness and holiness. Lord Jesus, you are the truth; let me speak as your disciple. Holy Spirit, give me honest words now. Amen."
     },
     {
+      "for": "flee",
       "title": "For a truthful heart",
-      "text": "Father, you desire truth in the inward being. Make me honest with you, with myself, and with others. Free me from the fear of man and the love of praise that tempt me to deceive. Teach me to confess my faults plainly, to keep my promises, and to speak the truth in love. Let me be someone others can trust, so that my life honors the God of truth. Through Jesus Christ. Amen."
+      "text": "Father, you desire truth in the inward being. Make me honest with you, with myself, and with others. Free me from the fear of man and the love of praise that tempt me to deceive. Teach me to confess my faults plainly, to keep my promises even when they hurt, and to speak the truth in love. Let me be someone others can trust, so that my life honors the God of truth. Through Jesus Christ. Amen."
+    },
+    {
+      "for": "fall",
+      "title": "Confessing deceit",
+      "text": "And if in any thing we have gone beyond and defrauded our brother, if we have walked with vanity, and our foot hath hasted to deceit, and any blot hath cleaved to our hands, Lord, discover it to us, that if we have done iniquity, we may do so no more.",
+      "author": "Matthew Henry",
+      "source": "A Method for Prayer, ch. 2"
+    },
+    {
+      "for": "flee",
+      "title": "For simplicity and godly sincerity",
+      "text": "O that we may always have our conversation in the world in simplicity and godly sincerity, not with fleshly wisdom, but by the grace of God! Lord, uphold us in our integrity, and set us before thy face for ever, and let integrity and uprightness preserve us, for we wait on thee. Let our hearts be sound in thy statutes, that we be not ashamed; and let our eye be single, that our whole body may be full of light.",
+      "author": "Matthew Henry",
+      "source": "A Method for Prayer, ch. 3"
     }
   ],
   "examinationQuestions": [

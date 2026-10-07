@@ -100,16 +100,33 @@
   ],
   "prayers": [
     {
+      "for": "fall",
       "title": "A prayer of confession",
-      "text": "Most holy God, you dwell in the high and holy place, and also with the one who is contrite and lowly in spirit. I come only in the name of your Son. I confess that I have been proud. I have sought my own glory and the praise of others. I have looked down on others in my heart, and I have taken credit for gifts that were yours to give. What do I have that I did not receive? Yet I have boasted as if I had not received it. I have no excuse. But you set forth Christ as the atoning sacrifice for sin. He humbled himself to death on a cross for proud sinners, and he lives to intercede for me. For his sake, forgive me. By your Holy Spirit, put this pride to death at its root. Teach me to count others more significant than myself, to be glad when they are honored, and to be content to be unseen. I thank you that you oppose the proud but give grace to the humble, and that this grace is mine in Christ. Hear me for his sake, to whom with you and the Holy Spirit be all glory. Amen."
+      "text": "Most holy God, you dwell in the high and holy place, and also with the one who is contrite and lowly in spirit. I come only in the name of your Son. I confess that I have been proud. I have sought my own glory and the praise of others. I have looked down on others in my heart, and I have taken credit for gifts that were yours to give. What do I have that I did not receive? Yet I have boasted as if I had not received it. Pride is the root under so many of my sins, and it sets me against you, for you oppose the proud. I have no excuse. But you set forth Christ as the atoning sacrifice for sin. He humbled himself to death on a cross for proud sinners, and he lives to intercede for me. For his sake, forgive me. By your Holy Spirit, put this pride to death at its root. Teach me to count others more significant than myself, to be glad when they are honored, and to be content to be unseen. I thank you that you give grace to the humble, and that this grace is mine in Christ. Hear me for his sake, to whom with you and the Holy Spirit be all glory. Amen."
     },
     {
+      "for": "flee",
       "title": "When pride lifts its head",
-      "text": "Lord Jesus, you are gentle and lowly in heart, and I feel my heart lifting itself up even now. I want to be noticed, admired, and proved right. Bring me low before I fall, for pride goes before destruction. Remind me that I have nothing I did not receive from you, and that every good gift comes from above. Let me boast only in your cross, by which the world has been crucified to me and I to the world. Spirit of God, put this pride to death, and clothe me with humility before God and before the people in front of me. Amen."
+      "text": "Lord Jesus, you are gentle and lowly in heart, and I feel my heart lifting itself up even now. I want to be noticed, admired, and proved right. Bring me low before I fall, for pride goes before destruction. Remind me that I have nothing I did not receive from you. Let me boast only in your cross, by which the world has been crucified to me and I to the world. Holy Spirit, put this pride to death, and clothe me with humility before God and before the people in front of me. Amen."
     },
     {
+      "for": "flee",
       "title": "For a lowly heart",
       "text": "Father, you are high and lifted up, and I am dust and ashes before you. Yet you look with favor on the one who is humble and trembles at your word. Make me that one. Turn my eyes from myself to your majesty and your grace. Keep me from despising anyone, even in my thoughts. Make me glad when others are honored and quiet when I am overlooked. Make me like your Son, who emptied himself, took the form of a servant, and became obedient to the point of death. Let me serve gladly in his name, and give you all the glory. Amen."
+    },
+    {
+      "for": "fall",
+      "title": "Confessing the pride of our hearts",
+      "text": "We have all reason to be humbled for the pride of our hearts, that we have thought of ourselves above what hath been meet, and have not thought soberly, nor walked humbly with our God. We have leaned to our own understanding, and trusted in our own hearts; and have sacrificed to our own net. We have sought our own glory more than the glory of him that sent us; and have been puffed up for that for which we should have mourned.",
+      "author": "Matthew Henry",
+      "source": "A Method for Prayer, ch. 2"
+    },
+    {
+      "for": "flee",
+      "title": "For humility and meekness",
+      "text": "Lord, give us all to learn of Christ to be meek and lowly in heart, that we may find rest to our souls; and that herein the same mind may be in us that was also in Christ Jesus. Lord, hide pride from us, and clothe us with humility, and put upon us the ornament of a meek and quiet spirit, which in thy sight is of great price. Lord, give us grace to walk worthy of the vocation wherewith we are called, with all lowliness and meekness, with long-suffering forbearing one another in love.",
+      "author": "Matthew Henry",
+      "source": "A Method for Prayer, ch. 3"
     }
   ],
   "examinationQuestions": [

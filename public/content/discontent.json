@@ -99,16 +99,33 @@
   ],
   "prayers": [
     {
+      "for": "fall",
       "title": "A prayer of confession",
-      "text": "Wise and sovereign Father, you work all things according to the counsel of your will, and you have set my lot in love. I come in the name of your Son. I confess that I have been discontented. I have grumbled about my circumstances as if you had made a mistake. I have complained in my heart and with my mouth, and I have forgotten your many mercies. Like Israel in the wilderness, I have murmured against your goodness while you fed me every day. This is unbelief and ingratitude. Forgive me, Lord. Christ endured the cross for the joy set before him, and he learned obedience through what he suffered. For his sake pardon me. Holy Spirit, put this grumbling to death, and teach me, as you taught Paul, the secret of being content in plenty and in want. I thank you that your grace is sufficient for me, and that all things work together for good for those who love you. In Jesus' name. Amen."
+      "text": "Wise and sovereign Father, you work all things according to the counsel of your will, and the lines have fallen for me in the place you chose. I come in the name of your Son. I confess that I have been discontented. I have grumbled about my circumstances as if you had made a mistake. I have complained in my heart and with my mouth, and I have forgotten your many mercies. Like Israel in the wilderness, I have murmured against you while you fed me every day. Underneath my complaining is a proud heart that thinks it deserves better, and an unbelieving heart that does not trust your goodness. This is ingratitude toward the kindest of fathers. Forgive me, Lord. Christ endured the cross for the joy set before him, and he learned obedience through what he suffered, without one murmur. For his sake pardon me. Holy Spirit, put this grumbling to death, and teach me, as you taught Paul, the secret of being content in plenty and in want. I thank you that your grace is sufficient for me, and that all things work together for good for those who love you. In Jesus' name. Amen."
     },
     {
+      "for": "flee",
       "title": "When I start to complain",
-      "text": "Lord, I feel the complaint rising in me again. I bring it to you instead of letting it run. You have not wronged me. You are good, and your way is perfect even when I cannot understand it. Help me count your mercies, beginning now. Teach me to say, The Lord gave and the Lord has taken away; blessed be the name of the Lord. Lord Jesus, you had nowhere to lay your head, and you did not grumble. Spirit of God, give me a thankful heart. Amen."
+      "text": "Lord, I feel the complaint rising in me again. I bring it to you instead of letting it run. You have not wronged me. You are good, and your way is perfect even when I cannot understand it. Help me to count your mercies, beginning now, and to name them one by one. Teach me to say, The Lord gave and the Lord has taken away; blessed be the name of the Lord. Lord Jesus, you had nowhere to lay your head, and you did not grumble. Holy Spirit, give me a thankful heart and a quiet mouth. Amen."
     },
     {
+      "for": "flee",
       "title": "For a thankful heart",
-      "text": "Father, you have given me far more than I deserve: life and breath, daily bread, the gospel, your Son, your Spirit, and your church. Forgive me for overlooking so much. Open my eyes to your daily kindness. Make me content with what I have, because you have said that you will never leave me nor forsake me. Teach me to give thanks in all circumstances, for this is your will for me in Christ Jesus. Let my mouth be full of praise instead of complaint, so that others may see your goodness. Through Jesus Christ. Amen."
+      "text": "Father, you have given me far more than I deserve: life and breath, daily bread, the gospel, your Son, your Spirit, and your church. Forgive me for passing over so much. Open my eyes to your daily kindness. Make me content with what I have, because you have said that you will never leave me nor forsake me. Teach me to give thanks in all circumstances, for this is your will for me in Christ Jesus. Let my mouth be full of your praise instead of complaint, so that others may see your goodness and come to trust you too. Through Jesus Christ. Amen."
+    },
+    {
+      "for": "fall",
+      "title": "Confessing our fretting under affliction",
+      "text": "When thou hast chastised us, and we were chastised, we have been as a bullock unaccustomed to the yoke; and though our own foolishness hath perverted our way, yet our heart hath fretted against the Lord; and thus in our distress we have trespassed yet more against the Lord. We have either despised the chastening of the Lord, or fainted when we have been rebuked of him; and if we faint in the day of adversity, our strength is small.",
+      "author": "Matthew Henry",
+      "source": "A Method for Prayer, ch. 2"
+    },
+    {
+      "for": "flee",
+      "title": "For contentment and patience",
+      "text": "Lord, teach us whatsoever state we are in therewith to be content; let us know both how to be abased, and how to abound; every where and in all things let us be instructed both to be full and to be hungry, both to abound and to suffer need. And let godliness with contentment be great gain to us; and a little with the fear of the Lord and quietness, is better than great treasure and trouble therewith. Lord, grant that our conversation may be without covetousness, and we may always be content with such things as we have; still saying, The will of the Lord be done.",
+      "author": "Matthew Henry",
+      "source": "A Method for Prayer, ch. 3"
     }
   ],
   "examinationQuestions": [

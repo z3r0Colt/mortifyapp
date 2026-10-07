@@ -100,16 +100,33 @@
   ],
   "prayers": [
     {
+      "for": "fall",
       "title": "A prayer of confession",
-      "text": "Generous Father, every good and perfect gift comes from you, and you give to each as you will. I come in the name of your Son. I confess that I have envied. I have looked at the gifts, the success, and the blessings you have given others, and I have resented them. I have been secretly glad at their trouble and sorry at their joy. In my heart I have accused you of being unfair, as if you owed me what you gave to them. This is rebellion against your wise providence, and it is rottenness to the bones. Forgive me, Lord. Christ, who had everything, made himself poor for my sake, so that by his poverty I might become rich. In him you have given me every spiritual blessing. For his sake pardon my envy. Holy Spirit, put it to death, and teach me to rejoice with those who rejoice. Make me content with your portion for me, and glad of your goodness to others. I thank you that you are my portion forever. In Jesus' name. Amen."
+      "text": "Generous Father, every good and perfect gift comes from you, and you give to each one as you will. I come in the name of your Son. I confess that I have envied. I have looked at the gifts, the success, and the blessings you have given others, and I have resented them. I have been secretly glad at their trouble and sorry at their joy. In my heart I have accused you of being unfair, as if you owed me what you freely gave to them. Envy has made me blind to my own mercies and cold toward my neighbor. It is rebellion against your wise providence, and it is rottenness to the bones. Forgive me, Lord. Christ, who had everything, made himself poor for my sake, so that by his poverty I might become rich. In him you have given me every spiritual blessing, and you have given me yourself. For his sake pardon my envy. Holy Spirit, put it to death, and teach me to rejoice with those who rejoice. Make me content with your portion for me, and glad of your goodness to others. I thank you that you are my portion forever. In Jesus' name. Amen."
     },
     {
+      "for": "flee",
       "title": "When envy stirs",
-      "text": "Lord, I see what another has, and something bitter is rising in me. I confess it to you now. You are good, and you do me no wrong when you are generous to someone else. Turn my eyes from their portion to mine, for you have given me Christ, and with him all things. Help me to thank you for their blessing and to pray for their good. Spirit of God, root out this envy, and give me a heart that loves my neighbor's joy. Amen."
+      "text": "Lord, I see what another has, and something sour is rising in me. I confess it to you now, before it grows. You are good, and you do me no wrong when you are generous to someone else. Turn my eyes from their portion to mine, for you have given me Christ, and with him all things. Help me to thank you for their blessing and to ask for their good, even now. Holy Spirit, root out this envy, and give me a heart that is glad at my neighbor's joy. Amen."
     },
     {
+      "for": "flee",
       "title": "For a glad heart toward others",
-      "text": "Father, love does not envy. Fill me with that love. Teach me to see the gifts you give others as gifts to your whole church, and to delight in them. Free me from comparing myself with others, and from measuring my worth by what I have or what I do. Let my worth rest in this, that I am your child through Christ. Give me joy in serving where you have placed me, without needing to be first. Make me quick to praise and slow to compete, so that the good of others makes me thankful and not sour. For Christ's sake. Amen."
+      "text": "Father, love does not envy. Fill me with that love. Teach me to see the gifts you give others as gifts to your whole church, and to delight in them. Free me from comparing myself with others, and from measuring my worth by what I have or what I do. Let my worth rest in this, that I am your child through Christ. Give me joy in serving where you have placed me, without needing to be first or seen. Make me quick to praise and slow to compete, so that the good of others makes me thankful and not bitter. For Christ's sake. Amen."
+    },
+    {
+      "for": "fall",
+      "title": "Confessing envy and uncharitableness",
+      "text": "Contrary to the royal law of charity, we have vaunted ourselves, and been puffed up, have behaved ourselves unseemly, and sought our own, have been easily provoked, have rejoiced in iniquity, and been secretly glad at calamities. We have been desirous of vain-glory, provoking one another, envying one another; when we should have considered one another to provoke to love and to good works.",
+      "author": "Matthew Henry",
+      "source": "A Method for Prayer, ch. 2"
+    },
+    {
+      "for": "flee",
+      "title": "That envy may be put to death in us",
+      "text": "Mortify in us all envy, hatred, malice, and uncharitableness; pluck up these roots of bitterness out of our minds, and give us grace to love one another with a pure heart fervently, as becomes the followers of the Lord Jesus, who has given us this as his new commandment. O that brotherly love may continue among us, love without dissimulation.",
+      "author": "Matthew Henry",
+      "source": "A Method for Prayer, ch. 9"
     }
   ],
   "examinationQuestions": [

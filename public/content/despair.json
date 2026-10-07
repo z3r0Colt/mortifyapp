@@ -100,16 +100,33 @@
   ],
   "prayers": [
     {
+      "for": "fall",
       "title": "A prayer of confession",
-      "text": "God of all comfort and Father of mercies, you are near to the brokenhearted, and you do not despise a broken and contrite heart. I come only in the name of your Son. I confess that I have given up hope in your mercy. I have believed the voice that says I am beyond saving, and I have trusted my feelings more than your promises. I have thought my sin greater than the blood of Christ, and treated his promises as if they were for others and not for me. I have pulled away from prayer, from your Word, and from your people. This too is sin, and I bring it to you. Christ said that whoever comes to him he will never cast out. I come now, just as I am. He died for the ungodly, and he lives to intercede for me. For his sake forgive me. Holy Spirit, lift my head, and pour your love into my heart. Be my hope. I thank you that your mercies are new every morning, and that your faithfulness is great. In Jesus' name. Amen."
+      "text": "God of all comfort and Father of mercies, you are near to the brokenhearted, and you do not despise a broken and contrite heart. I come only in the name of your Son. I confess that I have given up hope in your mercy. I have listened to the voice that says I am beyond saving, and I have trusted my feelings more than your promises. I have thought my sin greater than the blood of Christ, and I have treated your promises as if they were for others and not for me. I have pulled away from prayer, from your Word, and from your people, and I have let the darkness tell me who you are. This too is sin, and I bring it to you, not to be crushed by it but to be forgiven. Christ said that whoever comes to him he will never cast out. I come now, just as I am. He died for the ungodly, and he lives forever to intercede for me. For his sake forgive me. Holy Spirit, lift up my head, and pour your love into my heart. Be my hope when I have none of my own. I thank you that your mercies are new every morning, and that your faithfulness is great. In Jesus' name. Amen."
     },
     {
+      "for": "flee",
       "title": "When everything looks dark",
-      "text": "Lord, I cannot see the way out, and I am tired. I do not feel your nearness, but your Word says you are near. Hold on to me when I cannot hold on to you. Why are you cast down, O my soul? Hope in God. Keep me from the lie that nothing will ever change. Give me enough light for the next step and strength to take it, and bring a brother or sister to my side today. Lord Jesus, you were a man of sorrows and acquainted with grief, so I am not alone in this. Amen."
+      "text": "Lord, I cannot see the way out, and I am tired. I do not feel you near, but your Word says that you are near. Hold on to me when I cannot hold on to you. Why are you cast down, O my soul? Hope in God, for I shall again praise him. Keep me from the lie that nothing will ever change. Give me enough light for the next step and strength to take it. Do not let me be alone with this; bring a believer to my side today, and give me courage to call someone now. Lord Jesus, you were a man of sorrows, acquainted with grief. You know this place. Amen."
     },
     {
+      "for": "flee",
       "title": "When I feel beyond hope",
-      "text": "Father, I feel beyond your reach, but nothing in all creation can separate your children from your love in Christ Jesus. My feelings are not the final word; your promise is. I put my hope in you, not in how I feel. You are working in ways I cannot see. Help me to wait for you more than the watchman waits for the morning. Keep me close to your Word and your people until the light returns. I believe; help my unbelief. Amen."
+      "text": "Father, I feel beyond your reach, but nothing in all creation can separate your children from your love in Christ Jesus. My feelings are not the final word; your promise is. I rest my hope on what Christ has done, not on what I feel. You are at work in ways I cannot see. Help me to wait for you more than watchmen wait for the morning. Keep me close to your Word and your people until the light returns, and do not let me make any lasting choice in this darkness. I believe; help my unbelief. Amen."
+    },
+    {
+      "for": "fall",
+      "title": "Confessing our dejection and distrust",
+      "text": "We have said in our haste, We are cut off from before thine eyes, and that the Lord hath forsaken us, our God hath forgotten us, as if God would be favourable no more; as if he had forgotten to be gracious, and had in anger shut up his tender mercies. This has been our infirmity.",
+      "author": "Matthew Henry",
+      "source": "A Method for Prayer, ch. 2"
+    },
+    {
+      "for": "flee",
+      "title": "For the grace of hope",
+      "text": "Let patience work experience in us, and experience hope, such a hope as maketh not ashamed. Through patience and comfort of the scriptures let us have hope, and be saved by hope. Let the God of Jacob be our help, and our hope always be in the Lord our God. Let us be begotten again to a lively hope by the resurrection of Jesus Christ, and let that hope be to us as an anchor of the soul, sure and steadfast, entering into that within the veil, whither the forerunner is for us entered. Let us have Christ in us the hope of glory, and never be moved away from that hope of the gospel; but enable us to give diligence unto the full assurance of hope unto the end.",
+      "author": "Matthew Henry",
+      "source": "A Method for Prayer, ch. 3"
     }
   ],
   "examinationQuestions": [

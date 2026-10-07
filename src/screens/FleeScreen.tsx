@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Page } from "../components/Page";
 import { Action } from "../components/Action";
-import { randomItem, useBattlePacks } from "../content/selection";
+import { fleePrayers, randomItem, useBattlePacks } from "../content/selection";
+import { PrayerCard } from "../components/PrayerCard";
 import type { Pack } from "../content/loader";
 import { saveEntry } from "../data/pending";
 import { PrayerStep } from "../components/PrayerStep";
@@ -43,10 +44,7 @@ export default function FleeScreen() {
     pack,
     verse: randomItem(pack.verses),
     counsel: randomItem(pack.counsel),
-    // The first prayer is for confession after a fall.
-    prayer: randomItem(
-      pack.prayers.length > 1 ? pack.prayers.slice(1) : pack.prayers,
-    ),
+    prayer: randomItem(fleePrayers(pack)),
     action: randomItem(pack.fleeActions),
   });
   // With one battle there is nothing to ask; with several, the user says
@@ -131,6 +129,11 @@ export default function FleeScreen() {
           <button
             className="primary"
             onClick={() => {
+              // Another of this battle's prayers, so the second time is
+              // not the same words again.
+              const others = fleePrayers(pack).filter((p) => p !== prayer);
+              if (others.length)
+                setSelection({ ...selection, prayer: randomItem(others) });
               setNotYet(false);
               setStep(2);
             }}
@@ -182,12 +185,7 @@ export default function FleeScreen() {
             <ContentReading reading={counsel} prominent />
           </div>
         )}
-        {step === 2 && (
-          <div className="card accent">
-            <h2>{prayer.title}</h2>
-            <p className="verse">{prayer.text}</p>
-          </div>
-        )}
+        {step === 2 && <PrayerCard prayer={prayer} prominent />}
         {step === 3 && (
           <div className="stack">
             <PrayerStep

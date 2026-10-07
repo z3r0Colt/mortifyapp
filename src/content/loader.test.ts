@@ -51,6 +51,55 @@ describe("content validation", () => {
     await expect(loadPacks()).rejects.toThrow("Could not load");
   });
 });
+describe("prayers", () => {
+  const packs = (index as string[]).map((file) =>
+    packSchema.parse(
+      JSON.parse(readFileSync(`public/content/${file}`, "utf8")),
+    ),
+  );
+  it("every battle has a confession for after a fall and prayers for Flee", () => {
+    for (const p of packs) {
+      expect(p.prayers.filter((x) => x.for === "fall").length).toBeGreaterThan(
+        0,
+      );
+      expect(p.prayers.filter((x) => x.for === "flee").length).toBeGreaterThan(
+        1,
+      );
+      // The original confession is shown first after a fall.
+      expect(p.prayers[0]).toMatchObject({ for: "fall" });
+      expect(p.prayers[0].author).toBeUndefined();
+    }
+  });
+  it("a historic prayer always names its author and source", () => {
+    const prayer = { for: "flee", title: "T", text: "Words" };
+    const withPrayer = (extra: object) =>
+      packSchema.safeParse({
+        ...pack,
+        prayers: [...pack.prayers, { ...prayer, ...extra }],
+      }).success;
+    expect(withPrayer({})).toBe(true);
+    expect(withPrayer({ author: "Matthew Henry" })).toBe(false);
+    expect(
+      withPrayer({
+        author: "Matthew Henry",
+        source: "A Method for Prayer, ch. 3",
+      }),
+    ).toBe(true);
+    expect(
+      packSchema.safeParse({
+        ...pack,
+        prayers: pack.prayers.filter((p) => p.for !== "fall"),
+      }).success,
+    ).toBe(false);
+  });
+  it("the original prayers speak to sisters as well as brothers", () => {
+    for (const p of packs)
+      for (const x of p.prayers.filter((x) => !x.author))
+        expect(x.text, `${p.id}: ${x.title}`).not.toMatch(
+          /\b(brethren|a brother)\b/i,
+        );
+  });
+});
 describe("sermon links", () => {
   it("keeps sermons optional and accepts only SermonAudio links", () => {
     const { sermons, ...withoutSermons } = pack;
