@@ -9,6 +9,7 @@ import { usePreferences } from "../state/preferences";
 import { ListGroup, SwitchRow } from "../components/List";
 import { sharingChoices, type SharingKey } from "../brethren/sharing";
 import { useAuth } from "../state/auth";
+import { checkPlainName } from "../brethren/profiles";
 const points = [
   "A small closed circle of up to eight believers, ideally from your own church.",
   "Brothers link with brothers and sisters with sisters, only by a private code.",
@@ -98,6 +99,8 @@ export default function ProfileSetupScreen() {
         className="primary"
         run={async () => {
           if (!name.trim()) throw new Error("Enter a display name.");
+          checkPlainName(name, "name");
+          checkPlainName(church, "church name");
           await result(
             cloud().rpc("create_profile", {
               p_name: name.trim(),

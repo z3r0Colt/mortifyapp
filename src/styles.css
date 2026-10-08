@@ -1182,9 +1182,10 @@ a.verse-card:hover .read-button {
 .code {
   margin: 6px 0 18px;
   font-family: var(--display);
-  font-size: 2.7rem;
-  letter-spacing: 0.18em;
-  padding-left: 0.18em;
+  /* Eight characters still fit on one line of a small phone. */
+  font-size: clamp(2rem, 9.5vw, 2.7rem);
+  letter-spacing: 0.12em;
+  padding-left: 0.12em;
   line-height: 1.1;
   overflow-wrap: anywhere;
 }

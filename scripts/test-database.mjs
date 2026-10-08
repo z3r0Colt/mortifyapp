@@ -41,9 +41,14 @@ assert.equal(
   1,
   "unrelated profiles stay private",
 );
-await assert.rejects(
-  db.query("select public.request_link($1)", [profiles[2].brethren_code]),
-  /same sex/,
+assert.equal(
+  (
+    await db.query("select public.request_link($1) id", [
+      profiles[2].brethren_code,
+    ])
+  ).rows[0].id,
+  null,
+  "the other sex looks like no code at all",
 );
 const request = (
   await db.query("select public.request_link($1) id", [
@@ -264,15 +269,17 @@ assert.equal(
   0,
   "blocked message hidden",
 );
-await assert.rejects(
-  db.query("select request_link($1)", [profiles[0].brethren_code]),
-  /unavailable/,
+assert.equal(
+  (await db.query("select request_link($1) id", [profiles[0].brethren_code]))
+    .rows[0].id,
+  null,
   "reporter cannot relink",
 );
 await asUser(ids[0]);
-await assert.rejects(
-  db.query("select request_link($1)", [profiles[3].brethren_code]),
-  /unavailable/,
+assert.equal(
+  (await db.query("select request_link($1) id", [profiles[3].brethren_code]))
+    .rows[0].id,
+  null,
   "reported peer cannot relink",
 );
 await assert.rejects(
@@ -382,10 +389,152 @@ await assert.rejects(
   /permission denied/,
   "journal entries cannot be edited",
 );
+// Safety before launch (202610080001).
+assert.match(
+  profiles[11].brethren_code,
+  /^[A-Z2-9]{8}$/,
+  "new codes are 8 characters",
+);
+// A report keeps its evidence when the reported person deletes his account,
+// and the same message cannot be reported twice.
+await asUser(ids[11]);
+const evidenceLink = (
+  await db.query("select request_link($1) id", [profiles[10].brethren_code])
+).rows[0].id;
+await asUser(ids[10]);
+await db.query("select respond_link($1,true)", [evidenceLink]);
+const abusive = (
+  await db.query(
+    "select send_message($1,'encouragement','You are worthless') id",
+    [ids[11]],
+  )
+).rows[0].id;
+await asUser(ids[11]);
+for (let i = 0; i < 5; i++)
+  await db.query("select report_message($1)", [abusive]);
+await db.exec("reset role");
+assert.equal(
+  (
+    await db.query(
+      "select * from private.message_reports where message_id=$1",
+      [abusive],
+    )
+  ).rows.length,
+  1,
+  "one report per message, however often it is reported",
+);
+await db.query("delete from auth.users where id=$1", [ids[10]]);
+const kept = (
+  await db.query("select * from private.message_reports where reporter_id=$1", [
+    ids[11],
+  ])
+).rows;
+assert.equal(kept.length, 1, "the report outlives the reported account");
+assert.equal(
+  kept[0].message_body,
+  "You are worthless",
+  "the reported message is kept",
+);
+assert.equal(kept[0].reported_name, "Person 11", "the sender's name is kept");
+// Someone who only sends requests can be declined and blocked.
+await asUser(ids[11]);
+const unwanted = (
+  await db.query("select request_link($1) id", [profiles[4].brethren_code])
+).rows[0].id;
+await asUser(ids[4]);
+await db.query("select block_request($1)", [unwanted]);
+await asUser(ids[11]);
+assert.equal(
+  (await db.query("select request_link($1) id", [profiles[4].brethren_code]))
+    .rows[0].id,
+  null,
+  "a blocked requester cannot ask again",
+);
+// Names cannot carry web addresses.
+await assert.rejects(
+  db.query(
+    "update profiles set display_name='Visit evil.example.com now' where id=auth.uid()",
+  ),
+  /check constraint/,
+);
+await assert.rejects(
+  db.query(
+    "update profiles set church_name='https://evil.example/x' where id=auth.uid()",
+  ),
+  /check constraint/,
+);
+await db.query(
+  "update profiles set church_name='St. Paul''s Church' where id=auth.uid()",
+);
+// Wrong guesses are counted, so codes cannot be enumerated.
+for (let i = 0; i < 25; i++)
+  assert.equal(
+    (
+      await db.query("select request_link($1) id", [
+        `ZZ${String(i).padStart(4, "2")}ZZ`,
+      ])
+    ).rows[0].id,
+    null,
+  );
+assert.equal(
+  (
+    await db.query("select lookup_brethren($1) found", [
+      profiles[1].brethren_code,
+    ])
+  ).rows[0].found,
+  null,
+  "after twenty guesses in an hour, even a real code is unavailable",
+);
+// Anyone can change their code; the old one stops working.
+await asUser(ids[5]);
+const oldCode = profiles[5].brethren_code;
+const newCode = (await db.query("select rotate_brethren_code() code")).rows[0]
+  .code;
+assert.match(newCode, /^[A-Z2-9]{8}$/);
+await asUser(ids[6]);
+assert.equal(
+  (await db.query("select lookup_brethren($1) found", [oldCode])).rows[0].found,
+  null,
+  "an old code stops working",
+);
+assert.equal(
+  (await db.query("select lookup_brethren($1) found", [newCode])).rows[0].found
+    .display_name,
+  "Person 6",
+);
+// At most ten devices get notifications for one person.
+await asUser(ids[6]);
+for (let i = 0; i < 10; i++)
+  await db.query(
+    "insert into push_subscriptions(user_id,platform,device_id,subscription) values(auth.uid(),'web',gen_random_uuid(),'{\"endpoint\":\"https://fcm.googleapis.com/x\"}')",
+  );
+await assert.rejects(
+  db.query(
+    "insert into push_subscriptions(user_id,platform,device_id,subscription) values(auth.uid(),'web',gen_random_uuid(),'{}')",
+  ),
+  /many devices/,
+);
+const device = (
+  await db.query("select device_id from push_subscriptions limit 1")
+).rows[0].device_id;
+await db.query(
+  "insert into push_subscriptions(user_id,platform,device_id,subscription) values(auth.uid(),'web',$1,'{\"endpoint\":\"https://fcm.googleapis.com/y\"}') on conflict(user_id,device_id) do update set subscription=excluded.subscription",
+  [device],
+);
+await db.query("delete from push_subscriptions where device_id=$1", [device]);
+await assert.rejects(
+  db.query(
+    "insert into push_subscriptions(user_id,platform,device_id,subscription) values(auth.uid(),'web',gen_random_uuid(),$1)",
+    [JSON.stringify({ endpoint: "x".repeat(5000) })],
+  ),
+  /check constraint/,
+  "a subscription stays small",
+);
+await db.exec("reset role");
 await db.exec("set role anon");
 await assert.rejects(db.query("select * from profiles"), /permission denied/);
 await assert.rejects(db.query("select * from journals"), /permission denied/);
 await db.close();
 console.log(
-  "Database checks passed: profiles, links, same sex, both-side acceptance, sharing revocation, capacity, mutation permissions, message limits, private data isolation, reading rotation, and anonymous access.",
+  "Database checks passed: profiles, links, same sex, code guessing, report evidence, request blocking, plain names, code rotation, device limits, both-side acceptance, sharing revocation, capacity, mutation permissions, message limits, private data isolation, reading rotation, and anonymous access.",
 );

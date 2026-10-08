@@ -5,6 +5,7 @@ import { ListGroup, ListLink, SwitchRow } from "../components/List";
 import { useBrethren } from "../state/brethren";
 import { cloud, result } from "../brethren/client";
 import { sharingChoices } from "../brethren/sharing";
+import { checkPlainName } from "../brethren/profiles";
 export default function SharingScreen() {
   const { sharing, load, profile } = useBrethren();
   const [name, setName] = useState(profile?.display_name ?? "");
@@ -65,6 +66,8 @@ export default function SharingScreen() {
             className="primary"
             run={async () => {
               if (!name.trim()) throw new Error("Enter a display name.");
+              checkPlainName(name, "name");
+              checkPlainName(church, "church name");
               await result(
                 cloud()
                   .from("profiles")

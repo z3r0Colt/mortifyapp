@@ -61,3 +61,15 @@ export function eventLabel(type: SharedEvent["event_type"]) {
     blocker_on: "Protection on",
   }[type];
 }
+
+/**
+ * Names and churches are plain words: no web addresses or hidden characters.
+ * The database refuses them too; this gives the reason in plain words first.
+ */
+export function checkPlainName(text: string, field: string) {
+  if (
+    /(https?:\/\/|www\.|[a-z0-9-]+\.[a-z]{2,})/i.test(text) ||
+    /[\u0000-\u001f\u007f]/.test(text)
+  )
+    throw new Error(`Your ${field} cannot include a web address.`);
+}

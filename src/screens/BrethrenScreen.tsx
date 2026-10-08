@@ -42,6 +42,25 @@ export default function BrethrenScreen() {
           Share code
         </Action>
         {copied && <p role="status">Code copied. You may send it by text.</p>}
+        {/* A new code stops anyone who has the old one from asking to link.
+            Those already linked stay linked. */}
+        <Action
+          className="quiet"
+          run={async () => {
+            if (
+              !window.confirm(
+                `Get a new code? Your old code will stop working. Your ${circle} stay as they are.`,
+              )
+            )
+              return;
+            await result(cloud().rpc("rotate_brethren_code"));
+            setCopied(false);
+            await load();
+          }}
+        >
+          <Icon name="refresh" size={16} />
+          Get a new code
+        </Action>
       </article>
       {notify && notify !== "ready" && (
         <Link className="card person fade" to="/notifications">
@@ -99,6 +118,23 @@ export default function BrethrenScreen() {
                   Decline
                 </Action>
               </div>
+              <Action
+                className="quiet"
+                run={async () => {
+                  if (
+                    !window.confirm(
+                      `Decline and block ${r.display_name}? They will not be able to ask you again.`,
+                    )
+                  )
+                    return;
+                  await result(
+                    cloud().rpc("block_request", { p_link: r.link_id }),
+                  );
+                  await load();
+                }}
+              >
+                Decline and block
+              </Action>
             </article>
           ))}
         </>
