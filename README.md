@@ -2,6 +2,19 @@
 
 A browser-first Christian app for Scripture, prayer, private examination, and a small accepted circle of brethren. Work followed the three prompt files in order. The phase-by-phase file list and test instructions are in [docs/PHASES.md](docs/PHASES.md).
 
+## Screenshots
+
+<p>
+  <img src="docs/screenshots/play-1080x1920/1-home.png" alt="Home" width="180" />
+  <img src="docs/screenshots/play-1080x1920/2-flee.png" alt="Flee: Attend to the Word" width="180" />
+  <img src="docs/screenshots/play-1080x1920/3-flee-prayer.png" alt="Flee: Turn to prayer" width="180" />
+  <img src="docs/screenshots/play-1080x1920/4-reading.png" alt="Today's Reading" width="180" />
+  <img src="docs/screenshots/play-1080x1920/5-examine.png" alt="Tonight's Examination" width="180" />
+  <img src="docs/screenshots/play-1080x1920/6-brethren.png" alt="Brethren" width="180" />
+</p>
+
+Store-size light-mode screenshots are in [docs/screenshots](docs/screenshots): `play-1080x1920/` for Google Play and `appstore-1290x2796/` for the App Store.
+
 ## Run locally
 
 Use Node 22.18+ or Node 24. On Windows, use `npm.cmd` if PowerShell blocks `npm.ps1`.
@@ -41,4 +54,4 @@ Copy `.env.example` to `.env.local` and fill only public client configuration. F
 
 The production PWA builds; 29 unit/component tests and isolated PostgreSQL policy checks pass. The BSB build check verifies that the full, unchanged JSON is in the service-worker precache. All Edge Functions type-check with Deno; npm audit reports zero vulnerabilities. No browser surface was available in the connected computer-use tool, so visual/install/offline checks are still pending. The PWA is live on GitHub Pages at https://z3r0colt.github.io/mortifyapp/ with the brethren features off until Supabase keys are added. Supabase/Firebase deployment and live delivery have not been performed.
 
-Android sync and resource/manifest processing pass. Custom Kotlin sources compile directly against the SDK/dependencies, and DNS wire checks pass, but sandbox SDK access prevented the full Gradle build. The full VPN engine is included as pinned source and is built with `-PmortifyShield`; default native builds retain the guide when the binary is absent. iOS needs a Mac to complete Firebase SPM sync, compile, sign, and test. No signed store uploads or entitlement approvals have occurred. The privacy-policy operator/contact/retention fields still require owner information.
+Android sync and resource/manifest processing pass. Custom Kotlin sources compile directly against the SDK/dependencies, and DNS wire checks pass, but sandbox SDK access prevented the full Gradle build. The full VPN engine is included as pinned source and is built with `-PmortifyShield`; default native builds retain the guide when the binary is absent. iOS needs a Mac to complete Firebase SPM sync, compile, sign, and test. No signed store uploads or entitlement approvals have occurred.

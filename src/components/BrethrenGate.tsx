@@ -38,7 +38,6 @@ export function BrethrenGate({
     return (
       <Page title="Brethren">
         <p role="alert">{error}</p>
-        <p>Your readings and Flee still work without a connection.</p>
         <Action run={load}>Try again</Action>
       </Page>
     );

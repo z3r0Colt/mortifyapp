@@ -21,7 +21,7 @@ export const supabase =
 export function cloud() {
   if (!supabase)
     throw new Error(
-      "Brethren is not connected yet. Core readings and private entries still work.",
+      "Mortify cannot reach its server right now. Please try again later.",
     );
   return supabase;
 }

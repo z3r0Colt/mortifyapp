@@ -106,7 +106,7 @@ export const useBrethren = create<State>((set) => ({
         error:
           e instanceof Error
             ? e.message
-            : "Unable to load brethren. Core features remain available offline.",
+            : "Unable to load your circle. Please check your connection and try again.",
         loaded: true,
       });
     }

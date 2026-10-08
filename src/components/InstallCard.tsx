@@ -34,7 +34,7 @@ export function InstallCard({
         </span>
       </div>
       <p>
-        It opens like an app, and readings and Flee work even without signal.
+        It opens like an app, straight from your home screen.
         {ios && " On iPhone it is also needed for notifications."}
       </p>
       {ios ? (

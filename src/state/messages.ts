@@ -30,7 +30,7 @@ export const useMessages = create<{
     } catch {
       set({
         error:
-          "Messages are unavailable while offline. Your private readings and entries still work.",
+          "Messages need an internet connection. Please try again when you are connected.",
       });
     }
   },

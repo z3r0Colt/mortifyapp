@@ -30,7 +30,7 @@ export function AppNotice() {
   if (!online)
     return (
       <div className="app-notice fade" role="status">
-        <span>Offline. Readings and Flee still work.</span>
+        <span>You're offline. Some things will wait until you reconnect.</span>
       </div>
     );
   return null;

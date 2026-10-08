@@ -2,6 +2,8 @@
 
 Use these after replacing every content placeholder and verifying the listed features on store builds. Supply real support/privacy URLs and screenshots from the finished app; these drafts do not describe a shipped release.
 
+Light-mode screenshots are in `docs/screenshots/`: `play-1080x1920/` for Google Play phone screenshots and `appstore-1290x2796/` for the App Store 6.9-inch display. They show Home, Flee (the Word and the prayer step), Today's Reading, the Evening Examination and Brethren. The user and his brother have fictional names. The privacy policy is at https://mortify.gentleking.org/privacy-policy/.
+
 ## Google Play
 
 App name: Mortify
@@ -16,7 +18,7 @@ In a moment of temptation, open Flee for Scripture, counsel, prayer, and a pract
 
 Mortify points you toward Christ, the Word, prayer, the Lord's Day, and real believers in your church. It has no streaks, scores, trophies, public feed, or stranger search.
 
-Core readings and private entries work offline after installation. Journal and confession text stays encrypted on your device. Optional account features let you connect with up to eight accepted brethren of the same sex, ask for prayer, and choose which events they can see. Private journal text is never shared.
+Journal and confession text is encrypted on your device before it is saved, so only you can read it. Optional account features let you connect with up to eight accepted brethren of the same sex, ask for prayer, and choose which events they can see. Private journal text is never shared.
 
 Optional Android protection uses VpnService as a local on-device tunnel for DNS filtering, a bundled domain list, SafeSearch, and blocking common encrypted DNS resolvers. Traffic is forwarded on your phone; DNS questions are encrypted to CleanBrowsing's family resolver. Mortify keeps no browsing-history log. Filtering has limits and does not replace wise choices or pastoral care. Only protection on/off status is shared when you enable that choice.
 
@@ -30,7 +32,7 @@ Name: Mortify
 
 Subtitle: Scripture, prayer, brethren
 
-Promotional text: Quiet help for moments of temptation, daily examination, and asking trusted believers to pray. Private entries stay on your device.
+Promotional text: Quiet help for moments of temptation, daily examination, and asking trusted believers to pray. Private entries are encrypted so only you can read them.
 
 Description: Use the Google Play description above through the paragraph ending "Private journal text is never shared." Replace the Android protection paragraph with:
 
