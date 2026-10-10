@@ -9,6 +9,8 @@ import { eveningPsalmsSchema, proverbsFor } from "./daily";
 import { packSchema } from "./loader";
 import index from "../../public/content/index.json";
 import psalms from "../../public/content/evening-psalms.json";
+import lockVerses from "../../public/content/lock-verses.json";
+import { lockVersesSchema } from "./lockVerse";
 // Every reference the app can show must open in the bundled BSB.
 const bible = JSON.parse(
   readFileSync("public/bible/bsb.json", "utf8"),
@@ -43,4 +45,11 @@ it("there is a chapter of Proverbs for every day of the month", () => {
     expect(ref).toBe(`Proverbs ${day}`);
     expect(() => resolveChapterReference(bible, ref)).not.toThrow();
   }
+});
+
+it("the lock screen's verses open in the BSB, one for each day", () => {
+  const list = lockVersesSchema.parse(lockVerses);
+  expect(list.length).toBeGreaterThanOrEqual(31);
+  for (const ref of list)
+    expect(() => resolveReference(bible, ref), ref).not.toThrow();
 });
