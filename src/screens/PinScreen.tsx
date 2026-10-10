@@ -300,8 +300,9 @@ function LockView({ onForgot }: { onForgot: () => void }) {
           </button>
         )}
         {!usePin && (
-          <Link className="lock-flee" to="/flee">
-            In temptation? Flee
+          <Link className="button lock-flee" to="/flee">
+            <Icon name="exit" size={18} />
+            Flee
           </Link>
         )}
       </div>
