@@ -14,6 +14,7 @@ import { sharingChoices } from "../brethren/sharing";
 import { exportData, deleteDeviceData } from "../privacy/data";
 import { isNative } from "../native/platform";
 import { clock } from "../data/clock";
+import { heartRoots, occasionTags } from "../data/patterns";
 import { useDisplay } from "../state/display";
 import { useCircleWords } from "../brethren/words";
 // Each row says what is behind it and how it is set now, so no one has to
@@ -42,11 +43,11 @@ export default function SettingsScreen() {
     ? undefined
     : !security.lockEnabled
       ? "Off. Anyone who opens Mortify on this phone can read your journal."
-      : `On. Asks for your PIN ${
+      : `On. Asks for your ${security.biometricEnabled ? "fingerprint or face" : "PIN"} ${
           after === 0
             ? "each time you come back"
             : `after ${after} minute${after === 1 ? "" : "s"} away`
-        }${security.biometricEnabled ? ", or your fingerprint or face" : ""}.`;
+        }.`;
   const seen = sharing
     ? sharingChoices
         .filter(([key]) => sharing[key])
@@ -80,6 +81,12 @@ export default function SettingsScreen() {
           icon="bell"
           label="Notifications and reminders"
           detail={notifyDetail ?? undefined}
+        />
+        <ListLink
+          to="/settings/examination"
+          icon="pen"
+          label="Heart roots and occasions"
+          detail={`${(value.heartRoots ?? heartRoots).length} heart roots and ${(value.occasions ?? occasionTags).length} occasions of sin for your evening examination`}
         />
       </ListGroup>
       <h2 className="section-title">Display</h2>

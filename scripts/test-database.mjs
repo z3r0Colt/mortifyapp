@@ -531,10 +531,33 @@ await assert.rejects(
   "a subscription stays small",
 );
 await db.exec("reset role");
+// Each person's own heart roots and occasions (202610090001).
+await asUser(ids[7]);
+await db.query(
+  "insert into user_preferences(heart_roots,occasions) values(array['envy of others','weariness'],null)",
+);
+await assert.rejects(
+  db.query("update user_preferences set heart_roots=array[repeat('x',41)]"),
+  /check constraint/,
+  "a heart root stays short",
+);
+await assert.rejects(
+  db.query(
+    "update user_preferences set occasions=array(select 'o' || g from generate_series(1,31) g)",
+  ),
+  /check constraint/,
+  "the list stays short",
+);
+await assert.rejects(
+  db.query("update user_preferences set heart_roots=array[E'a\\nb']"),
+  /check constraint/,
+  "no hidden characters",
+);
+await db.exec("reset role");
 await db.exec("set role anon");
 await assert.rejects(db.query("select * from profiles"), /permission denied/);
 await assert.rejects(db.query("select * from journals"), /permission denied/);
 await db.close();
 console.log(
-  "Database checks passed: profiles, links, same sex, code guessing, report evidence, request blocking, plain names, code rotation, device limits, both-side acceptance, sharing revocation, capacity, mutation permissions, message limits, private data isolation, reading rotation, and anonymous access.",
+  "Database checks passed: profiles, links, same sex, code guessing, report evidence, request blocking, plain names, code rotation, device limits, editable heart roots, both-side acceptance, sharing revocation, capacity, mutation permissions, message limits, private data isolation, reading rotation, and anonymous access.",
 );

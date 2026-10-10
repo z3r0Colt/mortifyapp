@@ -57,6 +57,21 @@ function online(action: string) {
     throw new Error(`Connect to the internet to ${action}.`);
 }
 const day = 86400000;
+/**
+ * After three wrong PINs in a row, wait 30 seconds; each further mistake
+ * doubles the wait, up to 15 minutes.
+ */
+export function pinDelay(failed: number) {
+  if (failed < 3) return 0;
+  return Math.min(30_000 * 2 ** (failed - 3), 15 * 60_000);
+}
+/** "30 seconds", "2 minutes": how long until the next try. */
+export function waitText(ms: number) {
+  const seconds = Math.ceil(ms / 1000);
+  if (seconds < 60) return `${seconds} second${seconds === 1 ? "" : "s"}`;
+  const minutes = Math.ceil(seconds / 60);
+  return `${minutes} minute${minutes === 1 ? "" : "s"}`;
+}
 /** Once a year, ask whether the recovery code is still at hand. */
 export function codeCheckDue(security: Security | null, now = Date.now()) {
   return (
@@ -104,6 +119,7 @@ export const usePrivacy = create<State>((set, get) => {
       salt,
       pinKey,
       keyId,
+      pinLength: pin.length,
     };
     await db.security.put(security);
     set({ security, key: await importDataKey(raw) });
@@ -195,6 +211,7 @@ export const usePrivacy = create<State>((set, get) => {
         keyId,
         lockEnabled: true,
         codeCheckedAt: Date.now(),
+        pinLength: pin.length,
       };
       await db.security.put(security);
       set({
@@ -206,7 +223,38 @@ export const usePrivacy = create<State>((set, get) => {
       });
     },
     unlock: async (pin) => {
-      set({ key: await importDataKey(await rawKey(pin)) });
+      const security = get().security;
+      const wait = (security?.lockedUntil ?? 0) - Date.now();
+      if (wait > 0)
+        throw new Error(`Too many tries. Please wait ${waitText(wait)}.`);
+      let raw: string;
+      try {
+        raw = await rawKey(pin);
+      } catch (e) {
+        // Counted on this phone, so reloading does not start over.
+        const failedPins = (security?.failedPins ?? 0) + 1;
+        const delay = pinDelay(failedPins);
+        await patch({
+          failedPins,
+          lockedUntil: delay ? Date.now() + delay : undefined,
+        });
+        if (delay)
+          throw new Error(
+            `That PIN is not right. Please wait ${waitText(delay)} before trying again.`,
+          );
+        throw e;
+      }
+      if (
+        security?.failedPins ||
+        security?.lockedUntil ||
+        security?.pinLength !== pin.length
+      )
+        await patch({
+          failedPins: 0,
+          lockedUntil: undefined,
+          pinLength: pin.length,
+        });
+      set({ key: await importDataKey(raw) });
     },
     lock: () => {
       if (get().security?.lockEnabled) set({ key: null });

@@ -1690,3 +1690,200 @@ input.recovery-input {
 .prayer.prominent .prayer-body {
   font-size: 1.08rem;
 }
+
+/* ---------- Lock screen ---------- */
+/* An app's own lock screen, not a page: the mark and name, the PIN dots, a
+   number pad sized for a thumb, and one button. */
+.lock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  min-height: 100svh;
+  max-width: 420px;
+  margin: 0 auto;
+  padding: calc(env(safe-area-inset-top) + 7vh) var(--gutter-r)
+    calc(env(safe-area-inset-bottom) + 24px) var(--gutter);
+  text-align: center;
+  background: radial-gradient(
+    ellipse 120% 60% at 50% 0%,
+    var(--brass-soft),
+    transparent 70%
+  );
+}
+.lock-head h1 {
+  margin: 14px 0 6px;
+  font-size: 2.1rem;
+  letter-spacing: 0.01em;
+}
+.lock-head .mark.large {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto;
+  border-radius: 20px;
+}
+.lock-status {
+  min-height: 1.5em;
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  color: var(--muted);
+  text-wrap: balance;
+}
+.lock-pad {
+  width: 100%;
+}
+.lock-spacer {
+  flex: 1;
+}
+.lock-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+}
+.lock-actions button.primary {
+  width: 100%;
+  max-width: 320px;
+}
+.lock-flee {
+  margin-top: 10px;
+  font-family: var(--sans);
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+.pin-field {
+  position: relative;
+  display: block;
+  margin: 0 0 26px;
+}
+/* The real field sits over the dots, invisible, so taps focus it and a
+   keyboard can type into it. */
+.pin-hidden {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  caret-color: transparent;
+}
+.pin-dots {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  padding: 10px 0;
+}
+.pin-dots i {
+  width: 13px;
+  height: 13px;
+  border: 1.5px solid var(--brass);
+  border-radius: 50%;
+  transition: background-color 0.15s;
+}
+.pin-dots i.on {
+  border-color: var(--text);
+  background: var(--text);
+}
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 72px);
+  justify-content: center;
+  gap: 16px 26px;
+}
+.keypad-key {
+  width: 72px;
+  height: 72px;
+  min-height: 0;
+  padding: 0;
+  border-radius: 50%;
+  font-family: var(--display);
+  font-size: 1.9rem;
+  font-weight: 500;
+}
+.keypad-key:active:not(:disabled) {
+  background: var(--brass-soft);
+}
+.keypad-plain {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+.keypad-corner {
+  display: grid;
+  place-items: center;
+}
+.keypad-word {
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--accent-text);
+  text-decoration: none;
+}
+
+/* ---------- Heart roots and occasions ---------- */
+.tag-editor {
+  margin-bottom: 1.6rem;
+}
+.tag-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px 6px 14px;
+}
+.tag-row input {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  border-color: transparent;
+  background: transparent;
+  padding-left: 0;
+}
+.tag-row input:focus {
+  border-color: var(--line-strong);
+  background: var(--surface);
+  padding-left: 10px;
+}
+.tag-add {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+.tag-add input {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+}
+.tag-add button {
+  flex: none;
+}
+
+/* Smaller phones: the pad, the button and the way back all still fit. */
+@media (max-height: 760px) {
+  .lock {
+    gap: 10px;
+    padding-top: calc(env(safe-area-inset-top) + 3vh);
+  }
+  .lock-head .mark.large {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+  }
+  .lock-head h1 {
+    margin: 8px 0 2px;
+    font-size: 1.7rem;
+  }
+  .pin-field {
+    margin-bottom: 12px;
+  }
+  .keypad {
+    grid-template-columns: repeat(3, 62px);
+    gap: 10px 24px;
+  }
+  .keypad-key {
+    width: 62px;
+    height: 62px;
+    font-size: 1.65rem;
+  }
+}

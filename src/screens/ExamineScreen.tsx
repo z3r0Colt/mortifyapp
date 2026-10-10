@@ -15,6 +15,7 @@ import { ContentReading } from "../components/ContentReading";
 import { ChapterReading } from "../components/ChapterReading";
 import { useEveningReading, useQuestionSet } from "../content/useDaily";
 import { useDraft } from "../state/drafts";
+import { usePreferences } from "../state/preferences";
 export default function ExamineScreen() {
   const packs = useBattlePacks();
   // Held as a draft so a lock part-way through does not lose the writing.
@@ -27,6 +28,10 @@ export default function ExamineScreen() {
   const { battle, roots, occasions, text } = draft;
   const pack = packs.find((p) => p.id === battle);
   const reading = useEveningReading();
+  // The user's own lists from Settings, or the usual ones.
+  const prefs = usePreferences((s) => s.value);
+  const rootOptions = prefs.heartRoots ?? heartRoots;
+  const occasionOptions = prefs.occasions ?? occasionTags;
   const questions = useQuestionSet(pack);
   const [saved, setSaved] = useState<"saved" | "waiting" | null>(null);
   if (!pack)
@@ -113,13 +118,13 @@ export default function ExamineScreen() {
           </article>
           <Tags
             title="Heart roots"
-            options={heartRoots}
+            options={rootOptions}
             value={roots}
             onChange={(roots) => setDraft({ roots })}
           />
           <Tags
             title="Occasions of sin"
-            options={occasionTags}
+            options={occasionOptions}
             value={occasions}
             onChange={(occasions) => setDraft({ occasions })}
           />

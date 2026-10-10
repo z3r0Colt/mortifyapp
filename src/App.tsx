@@ -60,6 +60,7 @@ import WelcomeScreen from "./screens/WelcomeScreen";
 import JournalScreen from "./screens/JournalScreen";
 import AboutScreen from "./screens/AboutScreen";
 import BibleScreen from "./screens/BibleScreen";
+import TagsScreen from "./screens/TagsScreen";
 import { clearDrafts } from "./state/drafts";
 function Router() {
   const { value, loaded, error } = usePreferences();
@@ -295,6 +296,7 @@ function Router() {
           <Route path="/onboarding/times" element={<TimesScreen />} />
           <Route path="/" element={<HomeScreen />} />
           <Route path="/settings" element={<SettingsScreen />} />
+          <Route path="/settings/examination" element={<TagsScreen />} />
           <Route path="/flee" element={<FleeScreen />} />
           <Route path="/reading" element={<ReadingScreen />} />
           <Route path="/examine" element={<ExamineScreen />} />

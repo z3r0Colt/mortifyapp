@@ -18,6 +18,8 @@ type PreferencesRow = {
   timezone: string;
   protection_enabled: boolean;
   protection_checked_at: string | null;
+  heart_roots: string[] | null;
+  occasions: string[] | null;
 };
 export async function fetchPreferences(
   userId: string,
@@ -43,6 +45,8 @@ export async function fetchPreferences(
     protectionCheckedAt: row.protection_checked_at
       ? Date.parse(row.protection_checked_at)
       : undefined,
+    heartRoots: row.heart_roots ?? undefined,
+    occasions: row.occasions ?? undefined,
   };
 }
 export async function savePreferences(userId: string, value: Preferences) {
@@ -62,6 +66,11 @@ export async function savePreferences(userId: string, value: Preferences) {
         protection_checked_at: value.protectionCheckedAt
           ? new Date(value.protectionCheckedAt).toISOString()
           : null,
+        // Sent only once someone has edited them (null restores the usual).
+        ...(value.heartRoots !== undefined && {
+          heart_roots: value.heartRoots,
+        }),
+        ...(value.occasions !== undefined && { occasions: value.occasions }),
         updated_at: new Date().toISOString(),
       }),
   );

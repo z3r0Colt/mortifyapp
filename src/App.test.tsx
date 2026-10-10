@@ -577,3 +577,101 @@ test("a sister's circle is called Sisters", async () => {
   expect(screen.getByRole("link", { name: /Sisters/ })).toBeTruthy();
   expect(screen.queryByRole("link", { name: /Brethren/ })).toBeNull();
 });
+
+test("three wrong PINs bring a wait, and a reload does not start it over", async () => {
+  signedIn({ onboarded: true, trust: "yes", battles: ["lust"] });
+  await usePrivacy.getState().setup("123456");
+  usePrivacy.getState().acknowledgeRecoveryCode();
+  usePrivacy.setState({ loaded: false, security: null, key: null });
+  render(<App />);
+  for (let i = 0; i < 3; i++) {
+    fireEvent.change(await screen.findByLabelText("PIN"), {
+      target: { value: "999999" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Open Mortify" }));
+    await waitFor(() =>
+      expect(usePrivacy.getState().security?.failedPins).toBe(i + 1),
+    );
+  }
+  await screen.findByText(/Try again in 30 seconds/);
+  expect(
+    (screen.getByRole("button", { name: "Open Mortify" }) as HTMLButtonElement)
+      .disabled,
+  ).toBe(true);
+  // Saved on the phone, so the wait holds after the app reopens.
+  expect((await db.security.get("main"))?.lockedUntil).toBeGreaterThan(
+    Date.now(),
+  );
+  await expect(usePrivacy.getState().unlock("123456")).rejects.toThrow(
+    /Too many tries/,
+  );
+  expect(usePrivacy.getState().key).toBeNull();
+});
+
+test("with fingerprint or face, the lock screen has one button and no PIN box", async () => {
+  signedIn({ onboarded: true, trust: "yes", battles: ["lust"] });
+  await usePrivacy.getState().setup("123456");
+  usePrivacy.getState().acknowledgeRecoveryCode();
+  const security = await db.security.get("main");
+  await db.security.put({ ...security!, biometricEnabled: true });
+  usePrivacy.setState({ loaded: false, security: null, key: null });
+  render(<App />);
+  const open = await screen.findByRole("button", { name: "Open Mortify" });
+  expect(screen.queryByLabelText("PIN")).toBeNull();
+  expect(screen.getAllByRole("button")).toHaveLength(1);
+  // Without a working fingerprint or face, the PIN is offered instead.
+  fireEvent.click(open);
+  fireEvent.click(
+    await screen.findByRole("button", { name: "Use my PIN instead" }),
+  );
+  fireEvent.change(await screen.findByLabelText("PIN"), {
+    target: { value: "123456" },
+  });
+  fireEvent.click(screen.getByRole("button", { name: "Open Mortify" }));
+  await screen.findByRole("heading", { name: "Watch and pray" });
+});
+
+test("heart roots and occasions can be edited, and the examination uses them", async () => {
+  signedIn({ onboarded: true, trust: "yes", battles: ["lust"] });
+  await usePrivacy.getState().setup("123456");
+  usePrivacy.getState().acknowledgeRecoveryCode();
+  usePrivacy.setState({ loaded: false, security: null, key: null });
+  window.history.replaceState({}, "", "/settings/examination");
+  render(<App />);
+  fireEvent.change(await screen.findByLabelText("PIN"), {
+    target: { value: "123456" },
+  });
+  fireEvent.click(screen.getByRole("button", { name: "Open Mortify" }));
+  fireEvent.change(await screen.findByLabelText("New heart root"), {
+    target: { value: "envy of others" },
+  });
+  fireEvent.click(screen.getAllByRole("button", { name: "Add" })[0]);
+  fireEvent.click(screen.getByRole("button", { name: "Remove boredom" }));
+  fireEvent.change(screen.getByLabelText("occasion 1"), {
+    target: { value: "early morning" },
+  });
+  fireEvent.click(screen.getByRole("button", { name: "Save changes" }));
+  await screen.findByText(/Saved/);
+  expect(savedPrefs()?.heartRoots).toContain("envy of others");
+  expect(savedPrefs()?.heartRoots).not.toContain("boredom");
+  expect(savedPrefs()?.occasions?.[0]).toBe("early morning");
+  act(() => {
+    window.history.pushState({}, "", "/examine");
+    window.dispatchEvent(new PopStateEvent("popstate"));
+  });
+  await screen.findByRole("checkbox", { name: "envy of others" });
+  expect(screen.queryByRole("checkbox", { name: "boredom" })).toBeNull();
+  expect(screen.getByRole("checkbox", { name: "early morning" })).toBeTruthy();
+});
+
+test("the PIN opens Mortify on its last digit, without a button", async () => {
+  signedIn({ onboarded: true, trust: "yes", battles: ["lust"] });
+  await usePrivacy.getState().setup("246810");
+  usePrivacy.getState().acknowledgeRecoveryCode();
+  usePrivacy.setState({ loaded: false, security: null, key: null });
+  render(<App />);
+  fireEvent.change(await screen.findByLabelText("PIN"), {
+    target: { value: "246810" },
+  });
+  await screen.findByRole("heading", { name: "Watch and pray" });
+});

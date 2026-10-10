@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Mark, Page } from "../components/Page";
 import { Action } from "../components/Action";
@@ -6,7 +6,8 @@ import { ActionForm } from "../components/ActionForm";
 import { Icon } from "../components/Icon";
 import { PinInput } from "../components/PinInput";
 import { OnboardingBar } from "../components/Steps";
-import { usePrivacy } from "../state/privacy";
+import { PinPad } from "../components/PinPad";
+import { usePrivacy, waitText } from "../state/privacy";
 import { useCircleWords } from "../brethren/words";
 import { signOut } from "../brethren/account";
 type Mode = "pin" | "recover" | "reset";
@@ -148,61 +149,153 @@ export default function PinScreen() {
         </div>
       </Page>
     );
+  if (security) return <LockView onForgot={() => reset("recover")} />;
   return (
     <Page
       bare
-      title={security ? "Open your study" : "Keep your journal private"}
-      lede={
-        security
-          ? "Enter your PIN to continue."
-          : "Choose a PIN of 6 to 12 digits. Your journal is encrypted with it before it leaves this phone, so only you can read it."
-      }
-      bar={security ? mark : <OnboardingBar step={6} />}
+      title="Keep your journal private"
+      lede="Choose a PIN of 6 to 12 digits. Your journal is encrypted with it before it leaves this phone, so only you can read it."
+      bar={<OnboardingBar step={6} />}
     >
       <ActionForm>
         <PinInput label="PIN" value={pin} onChange={setPin} autoFocus />
-        {!security && (
-          <PinInput label="Confirm PIN" value={repeat} onChange={setRepeat} />
-        )}
+        <PinInput label="Confirm PIN" value={repeat} onChange={setRepeat} />
         <div className="stack">
           <Action
             className="primary"
             run={async () => {
-              if (security) {
-                await unlock(pin);
-                setPin("");
-              } else {
-                if (pin !== repeat) throw new Error("The PINs do not match.");
-                await setup(pin);
-                setPin("");
-                setRepeat("");
-              }
+              if (pin !== repeat) throw new Error("The PINs do not match.");
+              await setup(pin);
+              setPin("");
+              setRepeat("");
             }}
           >
-            {security ? "Open Mortify" : "Set PIN"}
+            Set PIN
           </Action>
-          {security?.biometricEnabled && (
-            <Action run={unlockBiometric}>
-              Open with fingerprint or Face ID
-            </Action>
-          )}
         </div>
-        {security ? (
+        <p className="hint" style={{ marginTop: 16 }}>
+          <Icon name="lock" size={16} />
+          Next you will get a recovery code in case you ever forget it.
+        </p>
+      </ActionForm>
+    </Page>
+  );
+}
+// The everyday lock screen: the app, then either the number pad or, when this
+// phone opens with a fingerprint or face, a single Open Mortify button.
+function LockView({ onForgot }: { onForgot: () => void }) {
+  const { security, unlock, unlockBiometric } = usePrivacy();
+  const biometric = !!security?.biometricEnabled;
+  const [pin, setPin] = useState("");
+  const [usePin, setUsePin] = useState(!biometric);
+  const [failed, setFailed] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+  const [now, setNow] = useState(() => Date.now());
+  const wait = Math.max(0, (security?.lockedUntil ?? 0) - now);
+  useEffect(() => {
+    if (!wait) return;
+    const timer = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(timer);
+  }, [wait > 0]);
+  const open = async (entered = pin) => {
+    if (busy) return;
+    setBusy(true);
+    setError("");
+    try {
+      if (usePin) {
+        if (entered.length < 6) throw new Error("Enter your PIN.");
+        await unlock(entered);
+      } else await unlockBiometric();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Mortify did not open.");
+      if (usePin) setPin("");
+      else setFailed(true);
+      setNow(Date.now());
+    } finally {
+      setBusy(false);
+    }
+  };
+  const flee = (
+    <Link className="keypad-word" to="/flee">
+      Flee
+    </Link>
+  );
+  return (
+    <main className="lock fade">
+      <div className="lock-head">
+        <Mark large />
+        <h1>Mortify</h1>
+        <p className="lock-status" role="status">
+          {wait
+            ? `Too many tries. Try again in ${waitText(wait)}.`
+            : error ||
+              (usePin
+                ? "Enter your PIN"
+                : "Locked with your fingerprint or face")}
+        </p>
+      </div>
+      {usePin ? (
+        <div className="lock-pad">
+          <PinPad
+            value={pin}
+            onChange={(next) => {
+              setPin(next);
+              setError("");
+              // Opens on the last digit, as a phone's own lock screen does.
+              if (security?.pinLength && next.length === security.pinLength)
+                void open(next);
+            }}
+            onSubmit={() => void open()}
+            disabled={!!wait || busy}
+            corner={flee}
+          />
+        </div>
+      ) : (
+        <div className="lock-pad lock-spacer" />
+      )}
+      <div className="lock-actions">
+        <button
+          className="primary"
+          aria-busy={busy}
+          disabled={busy || (usePin && !!wait)}
+          onClick={() => void open()}
+        >
+          Open Mortify
+        </button>
+        {usePin && biometric && (
           <button
-            type="button"
             className="quiet"
-            onClick={() => reset("recover")}
+            onClick={() => {
+              setUsePin(false);
+              setError("");
+            }}
           >
+            Use my fingerprint or face
+          </button>
+        )}
+        {!usePin && failed && (
+          <button
+            className="quiet"
+            onClick={() => {
+              setUsePin(true);
+              setError("");
+            }}
+          >
+            Use my PIN instead
+          </button>
+        )}
+        {usePin && (
+          <button className="quiet" onClick={onForgot}>
             I have forgotten my PIN
           </button>
-        ) : (
-          <p className="hint" style={{ marginTop: 16 }}>
-            <Icon name="lock" size={16} />
-            Next you will get a recovery code in case you ever forget it.
-          </p>
         )}
-      </ActionForm>
-      {security && flee}
-    </Page>
+        {!usePin && (
+          <Link className="lock-flee" to="/flee">
+            In temptation? Flee
+          </Link>
+        )}
+      </div>
+    </main>
   );
 }

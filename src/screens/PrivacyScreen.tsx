@@ -15,8 +15,8 @@ type Pending =
   "lock-off" | "biometric-on" | "biometric-off" | "change-pin" | "new-code";
 const confirmLabel: Record<Pending, string> = {
   "lock-off": "Turn off PIN lock",
-  "biometric-on": "Use fingerprint or Face ID",
-  "biometric-off": "Turn off fingerprint or Face ID",
+  "biometric-on": "Open with my fingerprint or face",
+  "biometric-off": "Open with my PIN",
   "change-pin": "Change PIN",
   "new-code": "Make a new recovery code",
 };
@@ -36,6 +36,7 @@ export default function PrivacyScreen() {
   const [next, setNext] = useState("");
   const [repeat, setRepeat] = useState("");
   const [done, setDone] = useState("");
+  const [choiceError, setChoiceError] = useState("");
   const native = isNative();
   // On the web, fingerprint or face unlock works through a passkey where the
   // browser supports it; elsewhere the switch stays hidden.
@@ -85,28 +86,56 @@ export default function PrivacyScreen() {
             await setLock(on);
           }}
         />
-        {(native || webBiometric || security?.biometricEnabled) && (
-          <SwitchRow
-            label="Fingerprint or Face ID"
-            detail={
-              native
-                ? "Open Mortify without typing your PIN."
-                : "Open Mortify without typing your PIN. Your phone keeps a passkey for Mortify that works only on this phone."
-            }
-            checked={!!security?.biometricEnabled}
-            onChange={async (on) => {
-              if (
-                on &&
-                !(await (native ? biometricAvailable() : passkeyAvailable()))
-              )
-                throw new Error(
-                  "Set up fingerprint or Face ID in your phone settings first.",
-                );
-              open(on ? "biometric-on" : "biometric-off");
-            }}
-          />
-        )}
       </ListGroup>
+      {security?.lockEnabled &&
+        (native || webBiometric || security.biometricEnabled) && (
+          <article className="card">
+            <p className="label" id="unlock-label">
+              Open Mortify with
+            </p>
+            <div
+              className="segmented"
+              role="group"
+              aria-labelledby="unlock-label"
+            >
+              <button
+                aria-pressed={!security.biometricEnabled}
+                onClick={() => {
+                  setChoiceError("");
+                  if (security.biometricEnabled) open("biometric-off");
+                }}
+              >
+                PIN
+              </button>
+              <button
+                aria-pressed={!!security.biometricEnabled}
+                onClick={async () => {
+                  setChoiceError("");
+                  if (security.biometricEnabled) return;
+                  if (
+                    !(await (native
+                      ? biometricAvailable()
+                      : passkeyAvailable()))
+                  ) {
+                    setChoiceError(
+                      "Set up a fingerprint or face in your phone's settings first.",
+                    );
+                    return;
+                  }
+                  open("biometric-on");
+                }}
+              >
+                Fingerprint or face
+              </button>
+            </div>
+            <p className="hint" style={{ marginBottom: 0 }}>
+              {native
+                ? "With a fingerprint or face, the lock screen shows one button. Your PIN still works if it fails."
+                : "With a fingerprint or face, the lock screen shows one button. Your phone keeps a passkey for Mortify that works only on this phone, and your PIN still works if it fails."}
+            </p>
+            {choiceError && <p role="alert">{choiceError}</p>}
+          </article>
+        )}
       {pending && (
         <ActionForm className="card fade">
           <PinInput

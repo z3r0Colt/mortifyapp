@@ -16,6 +16,9 @@ export type Preferences = {
   timezone: string;
   protectionCheckedAt?: number;
   protectionEnabled?: boolean;
+  /** The user's own lists for the evening examination; unset means the usual. */
+  heartRoots?: string[] | null;
+  occasions?: string[] | null;
 };
 export type FleeRow = {
   id: string;
@@ -66,6 +69,11 @@ export type Security = {
   /** When the recovery code was last confirmed, and any "remind me later". */
   codeCheckedAt?: number;
   codeCheckSnoozedUntil?: number;
+  /** Wrong PINs in a row on this phone, and when the next try is allowed. */
+  failedPins?: number;
+  lockedUntil?: number;
+  /** How many digits the PIN has, so the lock screen opens on the last one. */
+  pinLength?: number;
 };
 export type ReadingHistory = { key: string; last: number; index: number };
 export const db = new Dexie("mortify") as Dexie & {
