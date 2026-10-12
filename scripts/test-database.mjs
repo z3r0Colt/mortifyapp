@@ -609,10 +609,67 @@ for (const body of [
   assert.ok(sent, `"${body}" is sent once cleaned`);
 }
 await db.exec("reset role");
+// Reminders are due within a window in each person's own time zone, once
+// (202610110003).
+const [early, nepal, off, mars] = [
+  "00000000-0000-4000-8000-000000000101",
+  "00000000-0000-4000-8000-000000000102",
+  "00000000-0000-4000-8000-000000000103",
+  "00000000-0000-4000-8000-000000000104",
+];
+for (const id of [early, nepal, off, mars])
+  await db.query("insert into auth.users(id) values($1)", [id]);
+await db.query(
+  `insert into reminder_settings(user_id,timezone,morning,evening,enabled) values
+   ($1,'UTC',((now() at time zone 'UTC') - interval '5 minutes')::time,((now() at time zone 'UTC') + interval '2 hours')::time,true),
+   ($2,'Asia/Kathmandu',((now() at time zone 'Asia/Kathmandu') - interval '3 minutes')::time,'21:00',true),
+   ($3,'UTC',((now() at time zone 'UTC') - interval '5 minutes')::time,'21:00',false),
+   ($4,'Mars/Base',((now() at time zone 'UTC') - interval '5 minutes')::time,'21:00',true)`,
+  [early, nepal, off, mars],
+);
+await db.exec("set role service_role");
+const dueNow = async () =>
+  (await db.query("select * from public.due_reminders()")).rows.filter((r) =>
+    [early, nepal, off, mars].includes(r.user_id),
+  );
+let due = await dueNow();
+assert.deepEqual(
+  due
+    .map(
+      (r) =>
+        `${r.user_id === early ? "early" : r.user_id === nepal ? "nepal" : "other"}:${r.slot}`,
+    )
+    .sort(),
+  ["early:morning", "nepal:morning"],
+  "due in the window, in each time zone; not later times, not disabled, not unknown zones",
+);
+const first = due.find((r) => r.user_id === early);
+assert.equal(
+  (
+    await db.query("select public.claim_reminder($1,$2,$3) claimed", [
+      first.user_id,
+      first.slot,
+      first.local_date,
+    ])
+  ).rows[0].claimed,
+  true,
+);
+due = await dueNow();
+assert.ok(
+  !due.some((r) => r.user_id === early),
+  "a sent reminder is not due again",
+);
+await db.exec("reset role");
+await asUser(ids[5]);
+await assert.rejects(
+  db.query("select * from public.due_reminders()"),
+  /permission denied/,
+);
+await db.exec("reset role");
 await db.exec("set role anon");
 await assert.rejects(db.query("select * from profiles"), /permission denied/);
 await assert.rejects(db.query("select * from journals"), /permission denied/);
 await db.close();
 console.log(
-  "Database checks passed: profiles, links, same sex, code guessing, report evidence, request blocking, plain names, code rotation, device limits, editable heart roots, reminders without a circle, message cleaning, both-side acceptance, sharing revocation, capacity, mutation permissions, message limits, private data isolation, reading rotation, and anonymous access.",
+  "Database checks passed: profiles, links, same sex, code guessing, report evidence, request blocking, plain names, code rotation, device limits, editable heart roots, reminders without a circle, message cleaning, reminder windows, both-side acceptance, sharing revocation, capacity, mutation permissions, message limits, private data isolation, reading rotation, and anonymous access.",
 );
