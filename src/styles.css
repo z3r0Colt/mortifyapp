@@ -1838,8 +1838,8 @@ input.recovery-input {
   display: block;
   margin: 0 0 26px;
 }
-/* The real field sits over the dots, invisible, so taps focus it and a
-   keyboard can type into it. */
+/* The field sits under the dots, invisible and out of reach of taps, so no
+   phone keyboard opens for it. */
 .pin-hidden {
   position: absolute;
   inset: 0;
@@ -1847,6 +1847,7 @@ input.recovery-input {
   height: 100%;
   opacity: 0;
   caret-color: transparent;
+  pointer-events: none;
 }
 .pin-dots {
   display: flex;

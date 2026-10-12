@@ -1,8 +1,9 @@
-import type { ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { Icon } from "./Icon";
-// A phone-style number pad over a real PIN field. The field keeps the label
-// for screen readers and takes a physical keyboard; inputMode "none" stops the
-// phone's own keyboard from covering the pad.
+// A phone-style number pad. The field under the dots keeps the PIN's label
+// but is read-only and never focused, because some phones open their own
+// keyboard over the pad for any field that is, whatever inputMode says. A
+// physical keyboard still types, through the listener below.
 export function PinPad({
   value,
   onChange,
@@ -24,6 +25,31 @@ export function PinPad({
   const press = (digit: string) => {
     if (!busy && value.length < 12) onChange(value + digit);
   };
+  const latest = useRef({ press, value, onChange, onSubmit, disabled, busy });
+  latest.current = { press, value, onChange, onSubmit, disabled, busy };
+  useEffect(() => {
+    const key = (e: KeyboardEvent) => {
+      const { press, value, onChange, onSubmit, disabled, busy } =
+        latest.current;
+      const target = e.target instanceof Element ? e.target : null;
+      if (
+        disabled ||
+        e.ctrlKey ||
+        e.metaKey ||
+        e.altKey ||
+        target?.closest("input, textarea, select, [contenteditable]")
+      )
+        return;
+      if (/^[0-9]$/.test(e.key)) press(e.key);
+      else if (e.key === "Backspace" && !busy) onChange(value.slice(0, -1));
+      else if (e.key === "Enter" && !busy && !target?.closest("button, a"))
+        onSubmit();
+      else return;
+      e.preventDefault();
+    };
+    window.addEventListener("keydown", key);
+    return () => window.removeEventListener("keydown", key);
+  }, []);
   return (
     <>
       <label className="pin-field">
@@ -32,25 +58,17 @@ export function PinPad({
           className="pin-hidden"
           type="text"
           inputMode="none"
-          maxLength={12}
+          readOnly
+          tabIndex={-1}
           autoComplete="off"
-          autoCorrect="off"
-          spellCheck={false}
           data-1p-ignore=""
           data-lpignore="true"
           data-bwignore=""
           data-form-type="other"
-          autoFocus
-          disabled={disabled}
-          readOnly={busy}
           value={value}
-          onChange={(e) => onChange(e.target.value.replace(/\D/g, ""))}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && !busy) {
-              e.preventDefault();
-              onSubmit();
-            }
-          }}
+          onChange={(e) =>
+            onChange(e.target.value.replace(/\D/g, "").slice(0, 12))
+          }
         />
         <span className="pin-dots" aria-hidden="true">
           {Array.from({ length: Math.max(6, value.length) }, (_, i) => (

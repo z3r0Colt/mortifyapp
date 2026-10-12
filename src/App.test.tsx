@@ -767,3 +767,18 @@ test("choosing battles from Settings returns to Settings", async () => {
   await screen.findByRole("heading", { name: "Settings" });
   expect(savedPrefs()?.battles).toContain("pride");
 });
+
+test("the PIN pad never takes focus, so no phone keyboard opens, yet a physical keyboard types", async () => {
+  signedIn({ onboarded: true, trust: "yes", battles: ["lust"] });
+  await usePrivacy.getState().setup("123456");
+  usePrivacy.getState().acknowledgeRecoveryCode();
+  usePrivacy.setState({ loaded: false, security: null, key: null });
+  render(<App />);
+  const field = (await screen.findByLabelText("PIN")) as HTMLInputElement;
+  expect(field.readOnly).toBe(true);
+  expect(document.activeElement).not.toBe(field);
+  for (const key of "1239") fireEvent.keyDown(window, { key });
+  fireEvent.keyDown(window, { key: "Backspace" });
+  for (const key of "456") fireEvent.keyDown(window, { key });
+  await screen.findByRole("heading", { name: "Watch and pray" });
+});
