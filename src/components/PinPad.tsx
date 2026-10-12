@@ -8,17 +8,21 @@ export function PinPad({
   onChange,
   onSubmit,
   disabled = false,
+  busy = false,
   corner,
 }: {
   value: string;
   onChange: (value: string) => void;
   onSubmit: () => void;
   disabled?: boolean;
+  /** Checking the PIN: presses are ignored, but the pad does not dim, so it
+   *  does not flicker on every try. */
+  busy?: boolean;
   /** Fills the empty key beside 0, as a phone puts Emergency there. */
   corner?: ReactNode;
 }) {
   const press = (digit: string) => {
-    if (value.length < 12) onChange(value + digit);
+    if (!busy && value.length < 12) onChange(value + digit);
   };
   return (
     <>
@@ -38,10 +42,11 @@ export function PinPad({
           data-form-type="other"
           autoFocus
           disabled={disabled}
+          readOnly={busy}
           value={value}
           onChange={(e) => onChange(e.target.value.replace(/\D/g, ""))}
           onKeyDown={(e) => {
-            if (e.key === "Enter") {
+            if (e.key === "Enter" && !busy) {
               e.preventDefault();
               onSubmit();
             }
@@ -79,7 +84,9 @@ export function PinPad({
           className="keypad-key keypad-plain"
           aria-label="Delete"
           disabled={disabled || !value}
-          onClick={() => onChange(value.slice(0, -1))}
+          onClick={() => {
+            if (!busy) onChange(value.slice(0, -1));
+          }}
         >
           <Icon name="back" size={24} />
         </button>

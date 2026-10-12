@@ -1855,7 +1855,6 @@ input.recovery-input {
   height: 13px;
   border: 1.5px solid var(--brass);
   border-radius: 50%;
-  transition: background-color 0.15s;
 }
 .pin-dots i.on {
   border-color: var(--text);

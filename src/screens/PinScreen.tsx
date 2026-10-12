@@ -211,6 +211,8 @@ function LockView({ onForgot }: { onForgot: () => void }) {
     try {
       if (usePin) {
         if (entered.length < 6) throw new Error("Enter your PIN.");
+        // Let the last dot show before the PIN is checked.
+        await nextPaint();
         await unlock(entered);
       } else await unlockBiometric();
     } catch (e) {
@@ -252,7 +254,8 @@ function LockView({ onForgot }: { onForgot: () => void }) {
                 void open(next);
             }}
             onSubmit={() => void open()}
-            disabled={!!wait || busy}
+            disabled={!!wait}
+            busy={busy}
             corner={flee}
           />
         </div>
@@ -268,7 +271,7 @@ function LockView({ onForgot }: { onForgot: () => void }) {
         <button
           className="primary"
           aria-busy={busy}
-          disabled={busy || (usePin && !!wait)}
+          disabled={usePin && !!wait}
           onClick={() => void open()}
         >
           Open Mortify
@@ -310,6 +313,10 @@ function LockView({ onForgot }: { onForgot: () => void }) {
     </main>
   );
 }
+const nextPaint = () =>
+  new Promise<void>((done) =>
+    requestAnimationFrame(() => requestAnimationFrame(() => done())),
+  );
 /** "Thursday · October 10", or the Lord's Day on Sunday, as on Home. */
 function dayLine(now: number) {
   const date = new Date(now);
