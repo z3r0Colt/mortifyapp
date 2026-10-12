@@ -11,6 +11,8 @@ import "./styles.css";
 import App from "./App";
 import { applyDisplay, readDisplay } from "./state/display";
 applyDisplay(readDisplay());
+import { captureLink } from "./brethren/links";
+captureLink();
 import { registerSW } from "virtual:pwa-register";
 import { isNative } from "./native/platform";
 import { applyWaitingUpdate, busy, usePwa, watchInstall } from "./state/pwa";

@@ -12,13 +12,19 @@ import { devicePlatform, isInstalled } from "../platform";
 import { isNative } from "../native/platform";
 import { useCircleWords } from "../brethren/words";
 import { db } from "../data/db";
+import { pendingCode, pendingInvite } from "../brethren/links";
 // The last onboarding step: a gentle daily nudge back to the Word and prayer.
 export default function RemindersScreen() {
   const { circle } = useCircleWords();
   const user = useAuth((s) => s.user);
   const prefs = usePreferences((s) => s.value);
   const navigate = useNavigate();
-  const home = () => navigate("/", { replace: true });
+  // Someone who came by an invite or a shared code goes on to it.
+  const home = () =>
+    navigate(
+      pendingInvite() ? "/brethren" : pendingCode() ? "/brethren/add" : "/",
+      { replace: true },
+    );
   const needsInstall =
     !isNative() && devicePlatform() === "ios" && !isInstalled();
   return (

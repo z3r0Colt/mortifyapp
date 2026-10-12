@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Page } from "../components/Page";
 import { Action } from "../components/Action";
 import { cloud, result } from "../brethren/client";
 import { useBrethren } from "../state/brethren";
 import { Initial } from "../components/BrotherCard";
 import { useCircleWords } from "../brethren/words";
+import { clearCode, pendingCode } from "../brethren/links";
+import { plainError } from "../components/errors";
 // Every failure reads the same, so a code cannot be probed for who it is.
 const unavailable =
   "Code unavailable. Check it with the one who gave it to you, or try again later.";
@@ -17,6 +19,49 @@ export default function AddBrethrenScreen() {
   const [sent, setSent] = useState(false);
   const { peers, load } = useBrethren();
   const { circle, Circle } = useCircleWords();
+  const [waitingError, setWaitingError] = useState("");
+  // Brings the person found, and Confirm, into view above the tab bar.
+  const card = useRef<HTMLElement>(null);
+  useEffect(() => {
+    if (found) card.current?.scrollIntoView?.({ block: "center" });
+  }, [found]);
+  const find = async (code: string) => {
+    if (code.length !== 6 && code.length !== 8)
+      throw new Error("Enter the whole code.");
+    if (peers.length >= 8)
+      throw new Error(`Your circle already has eight ${circle}.`);
+    // One answer, or none. (Before the 2026-10-08 database update the
+    // answer came as a list; accept both while the two roll out.)
+    const raw = (await result(
+      cloud().rpc("lookup_brethren", { p_code: code }),
+    )) as typeof found | (typeof found)[];
+    const match = Array.isArray(raw) ? (raw[0] ?? null) : raw;
+    if (!match) throw new Error(unavailable);
+    setFound(match);
+  };
+  // Opened from a shared code link: the code is filled in and looked up, so
+  // only Confirm is left. It is let go once this screen has used it, since
+  // the screen can open twice while the circle loads.
+  useEffect(() => {
+    const waiting = pendingCode();
+    if (!waiting) return;
+    let active = true;
+    setCode(waiting);
+    find(waiting).then(
+      () => {
+        if (active) clearCode();
+      },
+      (e) => {
+        if (!active) return;
+        clearCode();
+        setWaitingError(plainError(e, unavailable));
+      },
+    );
+    return () => {
+      active = false;
+    };
+    // Once, on opening.
+  }, []);
   return (
     <Page
       title="Add by private code"
@@ -35,30 +80,22 @@ export default function AddBrethrenScreen() {
             setCode(e.target.value.toUpperCase().replace(/[^A-Z2-9]/g, ""));
             setFound(null);
             setSent(false);
+            setWaitingError("");
           }}
         />
       </label>
       <Action
         className="primary"
-        run={async () => {
-          if (code.length !== 6 && code.length !== 8)
-            throw new Error("Enter the whole code.");
-          if (peers.length >= 8)
-            throw new Error(`Your circle already has eight ${circle}.`);
-          // One answer, or none. (Before the 2026-10-08 database update the
-          // answer came as a list; accept both while the two roll out.)
-          const raw = (await result(
-            cloud().rpc("lookup_brethren", { p_code: code }),
-          )) as typeof found | (typeof found)[];
-          const match = Array.isArray(raw) ? (raw[0] ?? null) : raw;
-          if (!match) throw new Error(unavailable);
-          setFound(match);
+        run={() => {
+          setWaitingError("");
+          return find(code);
         }}
       >
         Find by code
       </Action>
+      {waitingError && <p role="alert">{waitingError}</p>}
       {found && (
-        <article className="card fade" style={{ marginTop: 22 }}>
+        <article ref={card} className="card fade" style={{ marginTop: 22 }}>
           <div className="person" style={{ marginBottom: 16 }}>
             <Initial name={found.display_name} />
             <span className="row-text">

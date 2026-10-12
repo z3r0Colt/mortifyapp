@@ -9,6 +9,7 @@ import { usePreferences } from "../state/preferences";
 import { ListGroup, SwitchRow } from "../components/List";
 import { sharingChoices, type SharingKey } from "../brethren/sharing";
 import { useAuth } from "../state/auth";
+import { pendingCode, pendingInvite } from "../brethren/links";
 import { checkPlainName } from "../brethren/profiles";
 const points = [
   "A small closed circle of up to eight believers, ideally from your own church.",
@@ -120,9 +121,16 @@ export default function ProfileSetupScreen() {
             () => false,
           );
           await load();
-          navigate(chosen ? "/brethren" : "/brethren/sharing", {
-            replace: true,
-          });
+          navigate(
+            !chosen
+              ? "/brethren/sharing"
+              : pendingCode() && !pendingInvite()
+                ? "/brethren/add"
+                : "/brethren",
+            {
+              replace: true,
+            },
+          );
         }}
       >
         Save profile

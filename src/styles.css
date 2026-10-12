@@ -301,6 +301,10 @@ footer::before {
   grid-template-columns: 1fr 1fr;
   gap: 12px;
 }
+.share-row button {
+  white-space: nowrap;
+  padding-inline: 10px;
+}
 .section-title {
   margin: 2.4rem 0 0.9rem;
   font-family: var(--sans);

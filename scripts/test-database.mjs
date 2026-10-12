@@ -666,10 +666,105 @@ await assert.rejects(
   /permission denied/,
 );
 await db.exec("reset role");
+// Invites: made once, linked at once on confirming, same sex only, used
+// once (202610120001).
+const [inviter, invited, sisterInvited, stranger] = [
+  "00000000-0000-4000-8000-000000000201",
+  "00000000-0000-4000-8000-000000000202",
+  "00000000-0000-4000-8000-000000000203",
+  "00000000-0000-4000-8000-000000000204",
+];
+await db.exec("reset role");
+for (const id of [inviter, invited, sisterInvited, stranger])
+  await db.query("insert into auth.users(id) values($1)", [id]);
+await asUser(inviter);
+await db.query("select public.create_profile('Inviter','brother')");
+const token = (await db.query("select public.create_invite() token")).rows[0]
+  .token;
+assert.match(token, /^[0-9a-f]{64}$/);
+await asUser(invited);
+await db.query("insert into user_preferences(sex) values('brother')");
+assert.deepEqual(
+  (await db.query("select public.invite_details($1) d", [token])).rows[0].d,
+  { display_name: "Inviter", church_name: null },
+  "a new brother sees who invited him before he has a profile",
+);
+await assert.rejects(
+  db.query("select public.accept_invite($1)", [token]),
+  /Set up your profile first/,
+);
+await asUser(sisterInvited);
+await db.query("insert into user_preferences(sex) values('sister')");
+assert.equal(
+  (await db.query("select public.invite_details($1) d", [token])).rows[0].d,
+  null,
+  "a sister does not see a brother's invite",
+);
+await db.query("select public.create_profile('Sister','sister')");
+await assert.rejects(
+  db.query("select public.accept_invite($1)", [token]),
+  /same sex/,
+);
+await asUser(invited);
+await db.query("select public.create_profile('Invited','brother')");
+await db.query("select public.accept_invite($1)", [token]);
+assert.deepEqual(
+  (await db.query("select display_name from profiles where id<>auth.uid()"))
+    .rows,
+  [{ display_name: "Inviter" }],
+  "linked at once on confirming",
+);
+await asUser(inviter);
+assert.deepEqual(
+  (await db.query("select display_name from profiles where id<>auth.uid()"))
+    .rows,
+  [{ display_name: "Invited" }],
+  "and the inviter sees him too",
+);
+await asUser(stranger);
+await db.query("select public.create_profile('Stranger','brother')");
+assert.equal(
+  (await db.query("select public.invite_details($1) d", [token])).rows[0].d,
+  null,
+  "an invite works once",
+);
+await assert.rejects(
+  db.query("select public.accept_invite($1)", [token]),
+  /unavailable/,
+);
+await assert.rejects(
+  db.query("select public.accept_invite($1)", ["0".repeat(64)]),
+  /unavailable/,
+);
+await asUser(inviter);
+const old = (await db.query("select public.create_invite() token")).rows[0]
+  .token;
+await db.exec("reset role");
+await db.query(
+  "update private.brethren_invites set expires_at=now()-interval '1 minute' where token_hash=private.invite_hash($1)",
+  [old],
+);
+await asUser(stranger);
+await assert.rejects(
+  db.query("select public.accept_invite($1)", [old]),
+  /unavailable/,
+  "an invite expires",
+);
+await assert.rejects(
+  db.query("select * from private.brethren_invites"),
+  /permission denied/,
+);
+await asUser(inviter);
+for (let i = 2; i < 20; i++) await db.query("select public.create_invite()");
+await assert.rejects(
+  db.query("select public.create_invite()"),
+  /many invites today/,
+);
+await db.exec("reset role");
 await db.exec("set role anon");
 await assert.rejects(db.query("select * from profiles"), /permission denied/);
 await assert.rejects(db.query("select * from journals"), /permission denied/);
 await db.close();
 console.log(
-  "Database checks passed: profiles, links, same sex, code guessing, report evidence, request blocking, plain names, code rotation, device limits, editable heart roots, reminders without a circle, message cleaning, reminder windows, both-side acceptance, sharing revocation, capacity, mutation permissions, message limits, private data isolation, reading rotation, and anonymous access.",
+  "Database checks passed: profiles, links, same sex, code guessing, report evidence, request blocking, plain names, code rotation, device limits, editable heart roots, reminders without a circle, message cleaning, reminder windows, invites, both-side acceptance, sharing revocation, capacity, mutation permissions, message limits, private data isolation, reading rotation, and anonymous access.",
 );

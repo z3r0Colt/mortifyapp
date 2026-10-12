@@ -6,6 +6,7 @@ import { useContent } from "../content/useContent";
 import { loadBible } from "../bible/loader";
 import { resolveReference } from "../bible/resolver";
 import { useAuth } from "../state/auth";
+import { pendingCode, pendingInvite } from "../brethren/links";
 const features: [IconName, string, string][] = [
   [
     "exit",
@@ -35,6 +36,7 @@ export default function WelcomeScreen() {
   // Mortify is for adults: its circles pair grown believers in private.
   const [adult, setAdult] = useState(false);
   const { data: bible } = useContent(loadBible);
+  const [invited] = useState(() => !!(pendingInvite() || pendingCode()));
   let verse = "";
   try {
     if (bible) verse = resolveReference(bible, "Romans 8:13").text;
@@ -64,6 +66,12 @@ export default function WelcomeScreen() {
       }
     >
       <div className="welcome fade">
+        {invited && (
+          <p className="notice">
+            Someone has asked you to pray for and watch over one another. Once
+            you have set up Mortify, you will find them waiting for you.
+          </p>
+        )}
         {verse && (
           <blockquote className="card verse-card welcome-verse">
             <p className="verse-text">{verse}</p>
