@@ -3,7 +3,9 @@ import { allEntries, fetchPreferences } from "../data/remote";
 import { waiting } from "../data/pending";
 import { useAuth } from "../state/auth";
 import { supabase } from "../brethren/client";
-import { decryptText } from "./crypto";
+import { openText } from "./crypto";
+const unreadable =
+  "[Written before the journal was started again; it cannot be opened.]";
 import { journalKey } from "../state/privacy";
 import { clearNativeKey } from "../native/vault";
 import { cancelReminders } from "../native/reminders";
@@ -29,14 +31,14 @@ export async function exportData() {
   const journals = await Promise.all(
     [...saved.journals, ...waitingJournals].map(async ({ body, ...row }) => ({
       ...row,
-      text: await decryptText(key, body),
+      text: (await openText(key, body)) ?? unreadable,
     })),
   );
   const falls = await Promise.all(
     [...saved.falls, ...waitingFalls].map(async (row) => ({
       ...row,
-      confession: await decryptText(key, row.confession),
-      reflection: await decryptText(key, row.reflection),
+      confession: (await openText(key, row.confession)) ?? unreadable,
+      reflection: (await openText(key, row.reflection)) ?? unreadable,
     })),
   );
   const fleeLogs = [...saved.fleeLogs, ...waitingFlee];

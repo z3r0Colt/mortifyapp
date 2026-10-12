@@ -26,9 +26,20 @@ export function cloud() {
   return supabase;
 }
 export async function result<T>(
-  promise: PromiseLike<{ data: T; error: { message: string } | null }>,
+  promise: PromiseLike<{
+    data: T;
+    error: { message: string; code?: string } | null;
+  }>,
 ): Promise<T> {
   const { data, error } = await promise;
-  if (error) throw new Error(error.message);
+  // The database's error code is kept, so a refusal can be told apart from a
+  // lost connection.
+  if (error)
+    throw Object.assign(new Error(error.message), { code: error.code });
   return data;
+}
+/** True when the database refused the request itself, so retrying is useless. */
+export function refused(e: unknown) {
+  const code = (e as { code?: unknown } | null)?.code;
+  return typeof code === "string" && /^(22|23|42|P0)/.test(code);
 }

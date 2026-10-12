@@ -675,3 +675,95 @@ test("the PIN opens Mortify on its last digit, without a button", async () => {
   });
   await screen.findByRole("heading", { name: "Watch and pray" });
 });
+
+test("settings are not saved before the account's own have opened", async () => {
+  useAuth.setState({ user: me, ready: true });
+  usePreferences.setState({ loaded: false, userId: null });
+  await expect(
+    usePreferences.getState().save({ sex: "brother" }),
+  ).rejects.toThrow(/still opening/);
+  expect(account.prefs.get(me.id)).toBeUndefined();
+});
+
+test("a returning account that signs in goes home, not back through onboarding", async () => {
+  signedIn({ onboarded: true, trust: "yes", battles: ["lust"] });
+  await usePrivacy.getState().setup("123456");
+  usePrivacy.getState().acknowledgeRecoveryCode();
+  usePrivacy.setState({ loaded: false, security: null, key: null });
+  window.history.replaceState({}, "", "/onboarding/sign-in");
+  render(<App />);
+  fireEvent.change(await screen.findByLabelText("PIN"), {
+    target: { value: "123456" },
+  });
+  await screen.findByRole("heading", { name: "Watch and pray" });
+  expect(
+    screen.queryByRole("heading", { name: "Are you a brother or a sister?" }),
+  ).toBeNull();
+});
+
+test("recovering a forgotten PIN clears the wait from wrong tries", async () => {
+  signedIn({ onboarded: true, trust: "yes", battles: ["lust"] });
+  await usePrivacy.getState().setup("123456");
+  const code = usePrivacy.getState().recoveryCode!;
+  usePrivacy.getState().acknowledgeRecoveryCode();
+  for (let i = 0; i < 3; i++)
+    await expect(usePrivacy.getState().unlock("999999")).rejects.toThrow();
+  expect(usePrivacy.getState().security?.lockedUntil).toBeGreaterThan(
+    Date.now(),
+  );
+  await usePrivacy.getState().recover(code, "135790");
+  expect(usePrivacy.getState().security?.failedPins).toBe(0);
+  expect(usePrivacy.getState().security?.lockedUntil).toBeUndefined();
+  usePrivacy.getState().lock();
+  await usePrivacy.getState().unlock("135790");
+  expect(usePrivacy.getState().key).not.toBeNull();
+});
+
+test("one entry that cannot be opened does not hide the rest of the journal", async () => {
+  signedIn({ onboarded: true, trust: "yes", battles: ["lust"] });
+  await usePrivacy.getState().setup("123456");
+  const key = usePrivacy.getState().key!;
+  account.rows.journals.push(
+    {
+      id: "kept",
+      created_at: new Date().toISOString(),
+      battle: "lust",
+      roots: [],
+      occasions: [],
+      body: await encryptText(key, "WORDS THAT STILL OPEN"),
+    },
+    {
+      id: "old",
+      created_at: new Date(Date.now() - 86400000).toISOString(),
+      battle: "lust",
+      roots: [],
+      occasions: [],
+      body: { v: 1, iv: "AAAAAAAAAAAAAAAA", data: "AAAAAAAAAAAAAAAAAAAAAA==" },
+    },
+  );
+  usePrivacy.getState().acknowledgeRecoveryCode();
+  usePrivacy.setState({ loaded: false, security: null, key: null });
+  window.history.replaceState({}, "", "/journal");
+  render(<App />);
+  fireEvent.change(await screen.findByLabelText("PIN"), {
+    target: { value: "123456" },
+  });
+  expect(await screen.findByText("WORDS THAT STILL OPEN")).toBeTruthy();
+  expect(screen.getByText(/cannot be opened/)).toBeTruthy();
+});
+
+test("choosing battles from Settings returns to Settings", async () => {
+  signedIn({ onboarded: true, trust: "yes", battles: ["lust"] });
+  await usePrivacy.getState().setup("123456");
+  usePrivacy.getState().acknowledgeRecoveryCode();
+  usePrivacy.setState({ loaded: false, security: null, key: null });
+  window.history.replaceState({}, "", "/onboarding/battles");
+  render(<App />);
+  fireEvent.change(await screen.findByLabelText("PIN"), {
+    target: { value: "123456" },
+  });
+  fireEvent.click(await screen.findByRole("checkbox", { name: "Pride" }));
+  fireEvent.click(screen.getByRole("button", { name: "Continue" }));
+  await screen.findByRole("heading", { name: "Settings" });
+  expect(savedPrefs()?.battles).toContain("pride");
+});

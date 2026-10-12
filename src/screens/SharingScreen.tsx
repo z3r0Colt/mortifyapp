@@ -68,13 +68,19 @@ export default function SharingScreen() {
               if (!name.trim()) throw new Error("Enter a display name.");
               checkPlainName(name, "name");
               checkPlainName(church, "church name");
+              // Dots are common in phone numbers; the database takes spaces.
+              const number = phone.trim().replace(/\./g, " ");
+              if (number && !/^\+?[0-9 ()-]{7,25}$/.test(number))
+                throw new Error(
+                  "Write your phone number with digits, spaces, dashes or brackets, such as 555-123-4567.",
+                );
               await result(
                 cloud()
                   .from("profiles")
                   .update({
                     display_name: name.trim(),
                     church_name: church.trim() || null,
-                    phone: phone.trim() || null,
+                    phone: number || null,
                   })
                   .eq("id", profile!.id),
               );

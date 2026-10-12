@@ -13,6 +13,9 @@ export default function TimesScreen() {
   const [evening, setEvening] = useState(value.evening);
   const navigate = useNavigate();
   const user = useAuth((s) => s.user);
+  // Reminders follow the phone's own time zone.
+  const zone =
+    Intl.DateTimeFormat().resolvedOptions().timeZone || value.timezone;
   return (
     <Page
       bare
@@ -52,7 +55,7 @@ export default function TimesScreen() {
         </label>
         <p className="hint">
           <Icon name="clock" size={16} />
-          Time zone: {value.timezone}
+          Time zone: {zone}
         </p>
       </div>
       <div className="dock">
@@ -68,12 +71,12 @@ export default function TimesScreen() {
               navigate("/onboarding/battles");
               return;
             }
-            await save({ morning, evening, onboarded: true });
+            await save({ morning, evening, timezone: zone, onboarded: true });
             // Keep web reminders, if any, at the new times.
             if (user && supabase)
               void supabase
                 .from("reminder_settings")
-                .update({ morning, evening, timezone: value.timezone })
+                .update({ morning, evening, timezone: zone })
                 .eq("user_id", user.id)
                 .then(
                   () => {},

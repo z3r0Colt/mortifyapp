@@ -8,7 +8,7 @@ import { useApp } from "../state/app";
 import { allEntries, deleteEntry } from "../data/remote";
 import { waiting } from "../data/pending";
 import { db } from "../data/db";
-import { decryptText } from "../privacy/crypto";
+import { openText } from "../privacy/crypto";
 type Entry = {
   id: string;
   kind: "journals" | "falls";
@@ -19,6 +19,8 @@ type Entry = {
   tags?: string[];
   confession?: string;
   reflection?: string;
+  /** Locked with a key this phone no longer has. */
+  unreadable?: boolean;
 };
 const blank = (entry: Entry) =>
   !entry.text && !entry.confession && !entry.reflection && !entry.tags?.length;
@@ -63,7 +65,10 @@ export default function JournalScreen() {
           date: new Date(row.created_at),
           battle: row.battle,
           waiting: queued.has(row.id),
-          text: await decryptText(key, row.body),
+          ...(await (async () => {
+            const text = await openText(key, row.body);
+            return text === null ? { unreadable: true } : { text };
+          })()),
           tags: [...row.roots, ...row.occasions],
         }),
       ),
@@ -75,8 +80,13 @@ export default function JournalScreen() {
         date: new Date(row.created_at),
         battle: row.battle,
         waiting: queued.has(row.id),
-        confession: await decryptText(key, row.confession),
-        reflection: await decryptText(key, row.reflection),
+        ...(await (async () => {
+          const confession = await openText(key, row.confession);
+          const reflection = await openText(key, row.reflection);
+          return confession === null || reflection === null
+            ? { unreadable: true }
+            : { confession, reflection };
+        })()),
       })),
     );
     const unique = new Map<string, Entry>();
@@ -168,7 +178,14 @@ export default function JournalScreen() {
                   <p className="journal-text">{entry.reflection}</p>
                 </>
               )}
-              {blank(entry) && <p className="label">No words were written.</p>}
+              {entry.unreadable ? (
+                <p className="label">
+                  This entry was written before your journal was started again,
+                  and cannot be opened.
+                </p>
+              ) : (
+                blank(entry) && <p className="label">No words were written.</p>
+              )}
               <Action
                 className="quiet"
                 run={async () => {

@@ -28,8 +28,11 @@ export async function nativeLifecycle(navigate: (path: string) => void) {
   };
   const handles = await Promise.all([
     App.addListener("appStateChange", ({ isActive }) => {
-      if (!isActive) usePrivacy.getState().lock();
+      // The same delay as the web page, so a moment away (a permission
+      // prompt, a call from Flee) does not lock at once.
+      if (!isActive) usePrivacy.getState().away();
       else {
+        usePrivacy.getState().back();
         void nativeAppearance();
         void flushOutbox();
         void checkShield();

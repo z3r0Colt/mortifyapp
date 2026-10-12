@@ -26,6 +26,7 @@ export default function PinScreen() {
     recover,
     forget,
     unlockBiometric,
+    restarted,
   } = usePrivacy();
   const [mode, setMode] = useState<Mode>("pin");
   const [pin, setPin] = useState("");
@@ -160,7 +161,7 @@ export default function PinScreen() {
       bare
       title="Keep your journal private"
       lede="Choose a PIN of 6 to 12 digits. Your journal is encrypted with it before it leaves this phone, so only you can read it."
-      bar={<OnboardingBar step={6} />}
+      bar={restarted ? mark : <OnboardingBar step={6} />}
     >
       <ActionForm>
         <PinInput label="PIN" value={pin} onChange={setPin} autoFocus />

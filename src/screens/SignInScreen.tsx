@@ -7,22 +7,16 @@ import { Icon } from "../components/Icon";
 import { OnboardingBar } from "../components/Steps";
 import { cloud, result, supabase } from "../brethren/client";
 import { useAuth } from "../state/auth";
-import { usePreferences } from "../state/preferences";
 // Sign-in uses a code typed into the app. On iPhone an installed web app cannot
 // receive a tapped email link; the link would open Safari instead.
 export default function SignInScreen() {
   const user = useAuth((s) => s.user);
-  const onboarded = usePreferences((s) => s.value.onboarded);
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
   const [token, setToken] = useState("");
-  if (user)
-    return (
-      <Navigate
-        to={onboarded ? "/" : "/onboarding/brother-or-sister"}
-        replace
-      />
-    );
+  // Where to go depends on the account's own settings, which have not opened
+  // yet; Home's gate sends an unfinished account on through onboarding.
+  if (user) return <Navigate to="/" replace />;
   const send = async () => {
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.trim()))
       throw new Error("Enter your email address.");

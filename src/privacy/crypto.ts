@@ -41,6 +41,15 @@ export async function encryptText(
   );
   return { v: 1, iv: toBase64(iv), data: toBase64(new Uint8Array(data)) };
 }
+/** The text, or null when this key cannot open it (an entry locked by an
+ *  earlier key), so one such entry does not stop the rest from opening. */
+export async function openText(key: CryptoKey, text: CipherText) {
+  try {
+    return await decryptText(key, text);
+  } catch {
+    return null;
+  }
+}
 export async function decryptText(key: CryptoKey, text: CipherText) {
   return new TextDecoder().decode(
     await crypto.subtle.decrypt(

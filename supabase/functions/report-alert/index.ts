@@ -20,9 +20,7 @@ Deno.serve(async (request) => {
     "",
     "The reporter's link was removed and the sender blocked at once. Please review the report in the Supabase SQL editor:",
     "",
-    `select r.*, m.message_type, m.body, m.created_at as sent_at`,
-    `from private.message_reports r left join public.messages m on m.id = r.message_id`,
-    `where r.id = '${id}';`,
+    `select r.* from private.message_reports r where r.id = '${id}';`,
   ].join("\n");
   const sent = await fetch("https://api.resend.com/emails", {
     method: "POST",

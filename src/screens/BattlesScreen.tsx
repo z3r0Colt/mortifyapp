@@ -45,7 +45,7 @@ export default function BattlesScreen() {
             className="primary"
             run={async () => {
               await save({ battles });
-              navigate("/onboarding/times");
+              navigate(value.onboarded ? "/settings" : "/onboarding/times");
             }}
           >
             Continue

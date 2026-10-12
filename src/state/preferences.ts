@@ -5,6 +5,8 @@ import { useAuth } from "./auth";
 type State = {
   value: Preferences;
   loaded: boolean;
+  /** Whose preferences these are; saving waits until they are the user's. */
+  userId: string | null;
   error: string | null;
   load: () => Promise<void>;
   save: (changes: Partial<Preferences>) => Promise<void>;
@@ -14,11 +16,17 @@ type State = {
 export const usePreferences = create<State>((set, get) => ({
   value: defaultPreferences,
   loaded: false,
+  userId: null,
   error: null,
   load: async () => {
     const user = useAuth.getState().user;
     if (!user) {
-      set({ value: defaultPreferences, loaded: true, error: null });
+      set({
+        value: defaultPreferences,
+        loaded: true,
+        userId: null,
+        error: null,
+      });
       return;
     }
     let cached: (Preferences & { userId?: string }) | undefined;
@@ -34,13 +42,13 @@ export const usePreferences = create<State>((set, get) => ({
     const mine = cached?.userId === user.id ? cached : undefined;
     if (mine) {
       const { userId: _, ...value } = mine;
-      set({ value, loaded: true, error: null });
+      set({ value, loaded: true, userId: user.id, error: null });
     }
     try {
       const value = (await fetchPreferences(user.id)) ?? defaultPreferences;
       if (useAuth.getState().user?.id !== user.id) return;
       await db.preferences.put({ ...value, userId: user.id });
-      set({ value, loaded: true, error: null });
+      set({ value, loaded: true, userId: user.id, error: null });
     } catch {
       if (!mine)
         set({
@@ -53,6 +61,10 @@ export const usePreferences = create<State>((set, get) => ({
   save: async (changes) => {
     const user = useAuth.getState().user;
     if (!user) throw new Error("Sign in first.");
+    // Until this account's settings have opened, the defaults are showing;
+    // saving them would wipe the account's own.
+    if (!get().loaded || get().userId !== user.id)
+      throw new Error("Your settings are still opening. Please try again.");
     if (!navigator.onLine)
       throw new Error(
         "You're offline. Connect to the internet to save this change.",

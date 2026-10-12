@@ -1,6 +1,7 @@
 import { useId, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { Icon, type IconName } from "./Icon";
+import { plainError } from "./errors";
 export function ListGroup({
   title,
   children,
@@ -83,11 +84,7 @@ export function SwitchRow({
             try {
               await onChange(!checked);
             } catch (e) {
-              setError(
-                e instanceof Error
-                  ? e.message
-                  : "Could not save. Please try again.",
-              );
+              setError(plainError(e));
             } finally {
               setBusy(false);
             }

@@ -1,5 +1,5 @@
 import { db } from "../data/db";
-import { cloud, result, supabase } from "./client";
+import { cloud, refused, result, supabase } from "./client";
 import { useAuth } from "../state/auth";
 import { useBrethren } from "../state/brethren";
 import { usePreferences } from "../state/preferences";
@@ -51,7 +51,13 @@ export async function flushOutbox() {
             }),
           );
         await db.outbox.delete(item.id);
-      } catch {
+      } catch (e) {
+        // A refusal will never succeed; set it aside so it cannot hold up
+        // the prayer requests and events queued behind it.
+        if (refused(e)) {
+          await db.outbox.delete(item.id);
+          continue;
+        }
         break;
       }
     }

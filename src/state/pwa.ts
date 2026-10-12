@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { usePrivacy } from "./privacy";
 // Connection and update state for the installed web app.
 export type InstallPrompt = Event & {
   prompt: () => Promise<void>;
@@ -98,6 +99,8 @@ function routePath() {
 /** True when switching versions now could lose something or interrupt. */
 export function busy(path = routePath()) {
   if (flows.includes(path)) return true;
+  // The recovery code is shown once; a reload would lose it.
+  if (usePrivacy.getState().recoveryCode) return true;
   return [...document.querySelectorAll("textarea, input")].some(
     (field) =>
       !["checkbox", "time", "hidden"].includes(

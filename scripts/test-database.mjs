@@ -554,10 +554,65 @@ await assert.rejects(
   "no hidden characters",
 );
 await db.exec("reset role");
+// Reminders and notifications work before joining a circle (202610110001).
+const newcomer = "00000000-0000-4000-8000-000000000099";
+await db.query("insert into auth.users(id) values($1)", [newcomer]);
+await asUser(newcomer);
+await db.query(
+  "insert into push_subscriptions(user_id,platform,device_id,subscription) values(auth.uid(),'web',gen_random_uuid(),'{\"endpoint\":\"https://fcm.googleapis.com/z\"}')",
+);
+await db.query(
+  "insert into reminder_settings(user_id,morning,evening,timezone,enabled) values(auth.uid(),'10:00','23:00','America/Indianapolis',true)",
+);
+const later = (
+  await db.query(
+    "select * from public.create_profile('Newcomer','brother',null)",
+  )
+).rows[0];
+assert.equal(
+  later.display_name,
+  "Newcomer",
+  "a profile can still be made afterwards",
+);
+assert.equal(
+  (await db.query("select enabled, morning from reminder_settings")).rows[0]
+    .morning,
+  "10:00:00",
+  "reminders chosen before joining are kept",
+);
+await db.exec("reset role");
+await db.query("delete from auth.users where id=$1", [newcomer]);
+assert.equal(
+  (
+    await db.query("select * from push_subscriptions where user_id=$1", [
+      newcomer,
+    ])
+  ).rows.length,
+  0,
+  "deleting the account removes its notification addresses",
+);
+// A note ending in "www." or "https://" is cleaned, not refused (202610110002).
+await asUser(ids[0]);
+const peerOfZero = ids[5];
+for (const body of [
+  "Pray now https://",
+  "see http:// ok",
+  "www. later",
+  "on www.",
+]) {
+  const sent = (
+    await db.query("select send_message($1,'encouragement',$2) id", [
+      peerOfZero,
+      body,
+    ])
+  ).rows[0].id;
+  assert.ok(sent, `"${body}" is sent once cleaned`);
+}
+await db.exec("reset role");
 await db.exec("set role anon");
 await assert.rejects(db.query("select * from profiles"), /permission denied/);
 await assert.rejects(db.query("select * from journals"), /permission denied/);
 await db.close();
 console.log(
-  "Database checks passed: profiles, links, same sex, code guessing, report evidence, request blocking, plain names, code rotation, device limits, editable heart roots, both-side acceptance, sharing revocation, capacity, mutation permissions, message limits, private data isolation, reading rotation, and anonymous access.",
+  "Database checks passed: profiles, links, same sex, code guessing, report evidence, request blocking, plain names, code rotation, device limits, editable heart roots, reminders without a circle, message cleaning, both-side acceptance, sharing revocation, capacity, mutation permissions, message limits, private data isolation, reading rotation, and anonymous access.",
 );

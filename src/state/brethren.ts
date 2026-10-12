@@ -8,12 +8,15 @@ import type {
   SentRequest,
 } from "../brethren/types";
 import { db } from "../data/db";
+import { plainError } from "../components/errors";
 type State = {
   profile: Profile | null;
   peers: Profile[];
   requests: LinkRequest[];
   sent: SentRequest[];
   sharing: Sharing | null;
+  /** Whether this account has a profile, as last seen; for when offline. */
+  knownProfile: boolean;
   loaded: boolean;
   error: string;
   load: () => Promise<void>;
@@ -25,6 +28,7 @@ export const useBrethren = create<State>((set) => ({
   requests: [],
   sent: [],
   sharing: null,
+  knownProfile: false,
   loaded: false,
   error: "",
   clear: () =>
@@ -34,6 +38,7 @@ export const useBrethren = create<State>((set) => ({
       requests: [],
       sent: [],
       sharing: null,
+      knownProfile: false,
       loaded: false,
       error: "",
     }),
@@ -98,17 +103,34 @@ export const useBrethren = create<State>((set) => ({
           requests: requests as LinkRequest[],
           sent: sent as SentRequest[],
           sharing: sharing as Sharing,
+          knownProfile: true,
           loaded: true,
           error: "",
         });
     } catch (e) {
+      // Offline: a profile was seen before if its sharing choices were kept.
+      const knownProfile = !!(await db.cloudKv
+        .get(`sharing-${user.id}`)
+        .catch(() => undefined));
       set({
-        error:
-          e instanceof Error
-            ? e.message
-            : "Unable to load your circle. Please check your connection and try again.",
+        knownProfile,
+        error: plainError(
+          e,
+          "Unable to load your circle. Please check your connection and try again.",
+        ),
         loaded: true,
       });
     }
   },
 }));
+
+/** True when there is no one in the circle to ask, online or off. */
+export function useNoCircle() {
+  return useBrethren((s) =>
+    !s.loaded
+      ? false
+      : s.error
+        ? !s.knownProfile
+        : !s.profile || !s.peers.length,
+  );
+}

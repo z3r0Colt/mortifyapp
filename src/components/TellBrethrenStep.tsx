@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Action } from "./Action";
 import { Icon } from "./Icon";
-import { useBrethren } from "../state/brethren";
+import { useBrethren, useNoCircle } from "../state/brethren";
 import { useAuth } from "../state/auth";
 import { queueEvent, circleNote } from "../brethren/outbox";
 import { Scripture } from "./Scripture";
@@ -9,9 +9,7 @@ import { useCircleWords } from "../brethren/words";
 export function TellBrethrenStep({ battle }: { battle: string }) {
   const { circle, one } = useCircleWords();
   const { sharing } = useBrethren();
-  const noCircle = useBrethren(
-    (s) => s.loaded && !s.error && (!s.profile || !s.peers.length),
-  );
+  const noCircle = useNoCircle();
   const user = useAuth((s) => s.user);
   const [note, setNote] = useState("");
   const [sent, setSent] = useState(false);

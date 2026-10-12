@@ -89,10 +89,12 @@ export default function RecoveryCodeScreen() {
             const reason = recoveryReason;
             acknowledgeRecoveryCode();
             navigate(
-              reason === "setup" ? "/onboarding/reminders" : "/privacy",
-              {
-                replace: true,
-              },
+              reason === "setup"
+                ? "/onboarding/reminders"
+                : reason === "restart"
+                  ? "/"
+                  : "/privacy",
+              { replace: true },
             );
           }}
         >

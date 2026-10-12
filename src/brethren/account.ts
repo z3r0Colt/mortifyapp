@@ -7,6 +7,7 @@ import { useAuth } from "../state/auth";
 import { useBrethren } from "../state/brethren";
 import { useMessages } from "../state/messages";
 import { disableNativePush } from "../native/push";
+import { cancelReminders } from "../native/reminders";
 export async function signOut() {
   const user = useAuth.getState().user;
   if (user) {
@@ -17,6 +18,8 @@ export async function signOut() {
       );
   }
   await disableNativePush();
+  // The phone's own morning and evening reminders belong to this account.
+  await cancelReminders().catch(() => {});
   if (user && supabase && navigator.onLine) {
     await cloud()
       .from("push_subscriptions")

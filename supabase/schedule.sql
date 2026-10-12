@@ -28,16 +28,21 @@ $$);
 -- reads the message itself and checks the link before notifying anyone.
 create or replace function private.notify_new_message() returns trigger
 language plpgsql security definer set search_path = '' as $$
+declare push_url text := (select decrypted_secret from vault.decrypted_secrets where name = 'mortify_push_url');
 begin
-  perform net.http_post(
-    url := (select decrypted_secret from vault.decrypted_secrets where name = 'mortify_push_url'),
-    headers := jsonb_build_object(
-      'Content-Type', 'application/json',
-      'x-mortify-secret', (select decrypted_secret from vault.decrypted_secrets where name = 'mortify_webhook_secret')
-    ),
-    body := jsonb_build_object('type', 'INSERT', 'record', jsonb_build_object('id', new.id)),
-    timeout_milliseconds := 5000
-  );
+  if push_url is not null then
+    perform net.http_post(
+      url := push_url,
+      headers := jsonb_build_object(
+        'Content-Type', 'application/json',
+        'x-mortify-secret', (select decrypted_secret from vault.decrypted_secrets where name = 'mortify_webhook_secret')
+      ),
+      body := jsonb_build_object('type', 'INSERT', 'record', jsonb_build_object('id', new.id)),
+      timeout_milliseconds := 5000
+    );
+  end if;
+  return new;
+exception when others then
   return new;
 end; $$;
 revoke all on function private.notify_new_message() from public, anon, authenticated;

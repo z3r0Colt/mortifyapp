@@ -51,6 +51,7 @@ import { useBrethren } from "./state/brethren";
 import { nativeLifecycle } from "./native/lifecycle";
 import { scheduleReminders } from "./native/reminders";
 import { db } from "./data/db";
+import { supabase } from "./brethren/client";
 import DiscreetScreen from "./screens/DiscreetScreen";
 import { checkShield } from "./native/protection";
 import ChapterScreen from "./screens/ChapterScreen";
@@ -120,13 +121,45 @@ function Router() {
   // answer the same so the question is never asked of someone with a circle.
   const profileSex = useBrethren((s) => s.profile?.sex);
   const savedSex = usePreferences((s) => s.value.sex);
+  // Only once this account's own preferences have opened; before that the
+  // signed-out defaults are showing, and saving would overwrite the account.
+  const prefsReady = usePreferences(
+    (s) => s.loaded && !s.error && !!user && s.userId === user.id,
+  );
   useEffect(() => {
-    if (profileSex && profileSex !== savedSex && navigator.onLine)
+    if (prefsReady && profileSex && profileSex !== savedSex && navigator.onLine)
       void usePreferences
         .getState()
         .save({ sex: profileSex })
         .catch(() => {});
-  }, [profileSex, savedSex]);
+  }, [prefsReady, profileSex, savedSex]);
+  // Web reminders are sent by the server in the account's time zone; keep it
+  // with the phone when the user travels or moves.
+  const savedZone = usePreferences((s) => s.value.timezone);
+  const onboarded = usePreferences((s) => s.value.onboarded);
+  useEffect(() => {
+    const zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    if (
+      !prefsReady ||
+      !onboarded ||
+      !zone ||
+      zone === savedZone ||
+      !navigator.onLine
+    )
+      return;
+    void usePreferences
+      .getState()
+      .save({ timezone: zone })
+      .then(() =>
+        user && supabase
+          ? supabase
+              .from("reminder_settings")
+              .update({ timezone: zone })
+              .eq("user_id", user.id)
+          : undefined,
+      )
+      .catch(() => {});
+  }, [prefsReady, onboarded, savedZone, user?.id]);
   useEffect(() => {
     useMessages.setState({ rows: [], error: "" });
     if (user) return watchMessages(user.id);
@@ -134,17 +167,10 @@ function Router() {
   // Lock when the app has been away longer than the chosen delay, so a quick
   // call to a brother from Flee does not send you back to the PIN screen.
   useEffect(() => {
-    let hiddenAt = 0;
     const change = () => {
-      const { security, lock } = usePrivacy.getState();
-      const after = (security?.lockAfter ?? 1) * 60000;
-      if (document.visibilityState === "hidden") {
-        if (after === 0) lock();
-        else hiddenAt = Date.now();
-      } else {
-        if (hiddenAt && Date.now() - hiddenAt >= after) lock();
-        hiddenAt = 0;
-      }
+      const { away, back } = usePrivacy.getState();
+      if (document.visibilityState === "hidden") away();
+      else back();
     };
     document.addEventListener("visibilitychange", change);
     return () => document.removeEventListener("visibilitychange", change);
@@ -201,12 +227,19 @@ function Router() {
     )
   )
     return <Navigate to="/onboarding/brother-or-sister" replace />;
+  // A signed-in account that has not finished onboarding carries on where it
+  // left off, rather than starting again at the welcome.
   if (
     !value.onboarded &&
     !location.pathname.startsWith("/onboarding") &&
     location.pathname !== "/debug"
   )
-    return <Navigate to="/onboarding/welcome" replace />;
+    return (
+      <Navigate
+        to={value.sex ? "/onboarding/trust" : "/onboarding/brother-or-sister"}
+        replace
+      />
+    );
   return (
     <>
       <div hidden={!!background}>
@@ -335,7 +368,7 @@ export default function App() {
   // Everything private belongs to an account, so load it once we know whose.
   useEffect(() => {
     if (!authReady) return;
-    usePreferences.setState({ loaded: false, error: null });
+    usePreferences.setState({ loaded: false, userId: null, error: null });
     usePrivacy.setState({
       loaded: false,
       key: null,

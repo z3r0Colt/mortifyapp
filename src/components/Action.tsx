@@ -1,4 +1,5 @@
 import { useState, type ReactNode } from "react";
+import { plainError } from "./errors";
 export function Action({
   run,
   children,
@@ -26,11 +27,7 @@ export function Action({
           try {
             await run();
           } catch (e) {
-            setError(
-              e instanceof Error
-                ? e.message
-                : "Could not save. Please try again.",
-            );
+            setError(plainError(e));
           } finally {
             setBusy(false);
           }

@@ -34,7 +34,12 @@ type State = {
   /** A recovery code to show once, then forget. */
   recoveryCode: string | null;
   /** Why the code is showing: a first PIN, or a replacement code. */
-  recoveryReason: "setup" | "new" | null;
+  recoveryReason: "setup" | "new" | "restart" | null;
+  /** The journal was cleared after a lost recovery code; not onboarding. */
+  restarted: boolean;
+  /** Mortify was put away, or came back: locks after the chosen delay. */
+  away: () => void;
+  back: () => void;
   load: () => Promise<void>;
   setup: (pin: string) => Promise<void>;
   unlock: (pin: string) => Promise<void>;
@@ -86,6 +91,9 @@ function signedIn() {
   return user;
 }
 export const usePrivacy = create<State>((set, get) => {
+  /** When Mortify was put away; shared by the web page and the phone app. */
+  let awayAt = 0;
+  const lockAfter = () => (get().security?.lockAfter ?? 1) * 60000;
   /** Opens the journal key with the PIN, or explains that the PIN is wrong. */
   const rawKey = async (pin: string) => {
     const security = get().security;
@@ -120,6 +128,9 @@ export const usePrivacy = create<State>((set, get) => {
       pinKey,
       keyId,
       pinLength: pin.length,
+      // A new PIN starts with no wrong tries behind it.
+      failedPins: 0,
+      lockedUntil: undefined,
     };
     await db.security.put(security);
     set({ security, key: await importDataKey(raw) });
@@ -132,6 +143,7 @@ export const usePrivacy = create<State>((set, get) => {
     error: "",
     recoveryCode: null,
     recoveryReason: null,
+    restarted: false,
     load: async () => {
       const user = useAuth.getState().user;
       try {
@@ -219,7 +231,8 @@ export const usePrivacy = create<State>((set, get) => {
         hasVault: true,
         key: await importDataKey(raw),
         recoveryCode: code,
-        recoveryReason: "setup",
+        recoveryReason: get().restarted ? "restart" : "setup",
+        restarted: false,
       });
     },
     unlock: async (pin) => {
@@ -317,6 +330,8 @@ export const usePrivacy = create<State>((set, get) => {
               .catch(() => null)
           : null;
       if (!key) throw new Error("Use your PIN to open the journal.");
+      if (security.failedPins || security.lockedUntil)
+        await patch({ failedPins: 0, lockedUntil: undefined });
       set({ key });
     },
     changePin: async (current, next) => {
@@ -405,7 +420,15 @@ export const usePrivacy = create<State>((set, get) => {
         .filter((item) => item.table !== "flee_logs")
         .delete();
       await db.security.clear();
-      set({ security: null, hasVault: false, key: null });
+      set({ security: null, hasVault: false, key: null, restarted: true });
+    },
+    away: () => {
+      if (lockAfter() === 0) get().lock();
+      else if (!awayAt) awayAt = Date.now();
+    },
+    back: () => {
+      if (awayAt && Date.now() - awayAt >= lockAfter()) get().lock();
+      awayAt = 0;
     },
   };
 });

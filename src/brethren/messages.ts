@@ -16,7 +16,7 @@ export type Message = {
 };
 export function plainMessage(text: string) {
   return text
-    .replace(/(?:https?:\/\/\S+|www\.\S+|[a-z0-9-]+\.[a-z]{2,}\S*)/gi, "")
+    .replace(/(?:https?:\/\/\S*|www\.\S*|[a-z0-9-]+\.[a-z]{2,}\S*)/gi, "")
     .trim();
 }
 export async function sendMessage(

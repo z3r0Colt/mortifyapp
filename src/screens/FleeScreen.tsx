@@ -17,7 +17,7 @@ import { SermonList } from "../components/SermonList";
 import { useContent } from "../content/useContent";
 import { loadFeaturedSermons } from "../content/loader";
 import { useCircleWords } from "../brethren/words";
-import { useBrethren } from "../state/brethren";
+import { useNoCircle } from "../state/brethren";
 const titles = [
   "Attend to the Word",
   "Receive counsel",
@@ -36,9 +36,7 @@ export default function FleeScreen() {
   const [notYet, setNotYet] = useState(false);
   // With no brethren linked yet there is no one to ask in the app, so the
   // prayer step does not hold the user back.
-  const noCircle = useBrethren(
-    (s) => s.loaded && !s.error && (!s.profile || !s.peers.length),
-  );
+  const noCircle = useNoCircle();
   const { data: featured } = useContent(loadFeaturedSermons);
   const choose = (pack: Pack) => ({
     pack,
